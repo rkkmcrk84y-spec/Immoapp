@@ -1,0 +1,791 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<style>
+/* Grundgerüst: Abstand zu Notch und Home-Leiste, [hidden] blendet sicher aus */
+:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}
+img{max-width:100%}
+[hidden]{display:none!important}
+</style>
+<title>ImmoApp Wertcheck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Kopfleiste mit Konto, Banner, Objektart-Kacheln, dann zweispaltig Eingabe | Ergebnis (Wert, Ampel, Kosten, Rechenweg, Speichern), einspaltig auf dem Handy, darunter Tarife */
+:root{
+  --bg:#F3F5F4; --surface:#FFFFFF; --ink:#18242B; --muted:#5B6A71; --line:#D5DCDA;
+  --accent:#1F5C7A; --accent-ink:#FFFFFF; --accent-soft:#E2EDF2; --plus:#2F7A4E; --minus:#A8452F; --note:#8A6A12; --note-bg:#FBF4DF;
+  --g:#2F8F57; --y:#C9921A; --r:#C2452D; --err:#A8452F;
+  --ad-bg:#ECEFEE; --ad-line:#B9C3C0; --gold:#9A6B12; --gold-soft:#F6EBD3; --scrim:rgba(17,26,31,.55);
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
+  --accent:#7FB8D4; --accent-ink:#0E1A20; --accent-soft:#1E3442; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
+  --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
+  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
+  --accent:#7FB8D4; --accent-ink:#0E1A20; --accent-soft:#1E3442; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
+  --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
+  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+.wrap{max-width:1140px;margin:0 auto;padding:0 16px;padding-block:18px 56px;display:flex;flex-direction:column;gap:22px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-family:var(--display);font-weight:800;font-size:18px;color:var(--accent);letter-spacing:.01em}
+.acct{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.plan{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
+.plan.premium{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
+header{display:flex;flex-direction:column;gap:6px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:64ch;margin:0}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+/* Objektart-Kacheln */
+.types{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:640px){.types{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.type{display:flex;flex-direction:column;gap:4px;align-items:flex-start;text-align:left;font:600 15px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:pointer;min-width:0}
+.type svg{width:34px;height:24px;stroke:var(--muted);fill:none;stroke-width:1.6}
+.type small{font-weight:400;color:var(--muted);font-size:12px}
+.type[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.type[aria-pressed="true"] svg{stroke:var(--accent)}
+.method{font-size:14px;color:var(--muted);margin:-8px 0 0}
+.method b{color:var(--ink)}
+.grid{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:880px){.grid{grid-template-columns:minmax(0,1fr)}}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:20px;min-width:0}
+fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;min-width:0}
+legend{font-family:var(--display);font-weight:700;font-size:15px;margin-bottom:10px;padding:0}
+legend small{font:400 12px var(--mono);color:var(--muted);letter-spacing:.04em;margin-left:6px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.row.plz{grid-template-columns:110px minmax(0,1fr)}
+label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;color:var(--muted);min-width:0}
+label .opt{font-weight:400}
+label.check,.radio label{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);font-weight:400}
+.radio{display:flex;flex-direction:column;gap:6px}
+input[type=number],input[type=text],input[type=email],input[type=password],select{font:500 15px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
+input[type=text],input[type=email],input[type=password],select{font-family:var(--body);font-weight:400}
+input[type=checkbox],input[type=radio]{width:18px;height:18px;accent-color:var(--accent);margin:0}
+input[aria-invalid="true"]{border-color:var(--err)}
+.hint{font-size:13px;color:var(--muted);margin:0}
+.hint a{color:var(--accent)}
+.sample{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:13px;color:var(--note);background:var(--note-bg);border-radius:8px;padding:8px 12px}
+.sample .btn{border-color:var(--note);color:var(--note);background:transparent}
+.btn{font:600 14px var(--body);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.small{padding:4px 10px;font-size:13px}
+.btn.gold{background:var(--gold);border-color:var(--gold);color:var(--surface)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+/* Bauteil-Ampel */
+.comps{display:flex;flex-direction:column;gap:8px}
+.comp{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.comp .nm{font-size:14px;min-width:0}
+.tri{display:inline-flex;gap:4px}
+.tri button{display:inline-flex;align-items:center;gap:6px;font:400 12px var(--body);color:var(--muted);background:var(--bg);border:1px solid var(--line);border-radius:999px;padding:4px 9px;cursor:pointer}
+.tri button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);opacity:.35}
+.tri button[aria-pressed="true"]{color:var(--ink);border-color:var(--c);font-weight:600}
+.tri button[aria-pressed="true"]::before{opacity:1}
+.legend-tri{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.legend-tri span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:5px}
+/* Werbeflächen */
+.ad{position:relative;border:1px dashed var(--ad-line);background:var(--ad-bg);border-radius:10px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:13px;padding:22px 14px 14px;min-width:0}
+.ad::before{content:"Anzeige";position:absolute;top:6px;left:10px;font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+.ad b{display:block;font:500 12px var(--mono);color:var(--ink);margin-bottom:2px}
+.ad.banner{min-height:90px}
+.ad.native{place-items:start;text-align:left;gap:4px}
+.ad.native .nt{font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink)}
+/* Ergebnis */
+.result-head{display:flex;flex-direction:column;gap:4px}
+.label{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.range{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.4vw,38px);line-height:1.1;font-variant-numeric:tabular-nums}
+.range span{color:var(--muted);font-weight:500}
+.range.err{font-size:17px;color:var(--err);font-family:var(--body);font-weight:600}
+.meta{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
+.meta b{font-family:var(--mono);color:var(--ink);font-weight:500}
+.scale{position:relative;height:10px;border-radius:5px;background:var(--accent-soft);margin-top:6px}
+.scale i{position:absolute;top:-4px;width:3px;height:18px;background:var(--accent);border-radius:2px}
+.split{display:flex;height:10px;border-radius:5px;overflow:hidden;background:var(--line)}
+.split i{display:block;height:100%}
+.keys{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.keys span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:6px}
+h2{font-family:var(--display);font-size:17px;margin:0}
+.blk{display:flex;flex-direction:column;gap:10px}
+.state{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
+.chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;min-width:0}
+.chip i{flex:none;width:10px;height:10px;border-radius:50%;background:var(--c)}
+.chip small{display:block;color:var(--muted);font-size:12px}
+.costs{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cost{border-radius:10px;padding:12px 14px;border:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.cost .v{font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
+.cost.now{border-color:var(--r)} .cost.now .v{color:var(--r)}
+.cost.mid{border-color:var(--y)} .cost.mid .v{color:var(--y)}
+.cost p{margin:0;font-size:12px;color:var(--muted)}
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.step{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;padding:12px 0;border-top:1px solid var(--line);align-items:start}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--muted);padding-top:3px}
+.step .t{font-weight:600}
+.step .d{grid-column:2/3;font-size:13px;color:var(--muted)}
+.step .fx{font-family:var(--mono);font-size:14px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.step .run{grid-column:3/4;font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right;white-space:nowrap}
+.step .bar{grid-column:2/4;height:6px;position:relative}
+.step .bar i{position:absolute;top:0;height:6px;border-radius:3px}
+.pos{color:var(--plus)} .neg{color:var(--minus)} .neu{color:var(--ink)}
+.step.base .fx,.step.sub .fx{color:var(--accent)}
+.step.sub{border-top:1px dashed var(--line)}
+.step.sub .t{font-family:var(--display)}
+.step.total{border-top:2px solid var(--ink)}
+.step.total .t,.step.total .fx{font-family:var(--display);font-size:17px;font-weight:800}
+.actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.toast{font-size:13px;color:var(--accent)}
+.saved{display:flex;flex-direction:column;gap:6px}
+.sv{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;flex-wrap:wrap}
+.sv b{font-family:var(--mono);font-weight:500}
+.sv .a{display:flex;gap:6px}
+.notice{border-left:3px solid var(--note);background:var(--note-bg);padding:12px 14px;border-radius:0 8px 8px 0;font-size:14px;display:flex;flex-direction:column;gap:6px}
+.notice p{margin:0}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:600}
+.tbl{overflow-x:auto;margin-top:10px}
+table{border-collapse:collapse;font-size:13px;width:100%;min-width:440px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+td:last-child{font-family:var(--mono);text-align:right;white-space:nowrap}
+th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:500}
+@media (max-width:420px){.costs{grid-template-columns:1fr}}
+/* Erklärung Modernisierungsampel */
+.amp{font-size:14px;display:flex;flex-direction:column;gap:8px}
+.amp summary{color:var(--accent)}
+.amp p{margin:8px 0 0;color:var(--muted)}
+.amp ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.amp li{position:relative;padding-left:18px}
+.amp li::before{content:"";position:absolute;left:0;top:7px;width:10px;height:10px;border-radius:50%;background:var(--c)}
+/* Freischaltung */
+.tag{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle}
+.tag.pro{color:var(--gold)}
+.lock{border:1px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.lock.pro{border-color:var(--gold);background:var(--gold-soft)}
+.lock p{margin:0;color:var(--ink)}
+.szen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.szen .v{font-size:19px}
+#szNbox.good{border-color:var(--g)} #szNbox.good .v{color:var(--g)}
+#szNbox.bad{border-color:var(--r)} #szNbox.bad .v{color:var(--r)}
+@media (max-width:520px){.szen{grid-template-columns:1fr}}
+/* Tarife */
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tier{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.tier.hl{border-color:var(--gold);background:var(--gold-soft)}
+.tier h3{font-family:var(--display);font-size:17px;margin:0}
+.price{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
+.price small{font:400 13px var(--body);color:var(--muted)}
+.tier ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.tier .cur{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+/* Dialog */
+.overlay{position:fixed;inset:0;background:var(--scrim);display:grid;place-items:center;padding:16px;z-index:20}
+.dlg{background:var(--surface);border-radius:14px;border:1px solid var(--line);width:100%;max-width:400px;padding:22px;display:flex;flex-direction:column;gap:14px;max-height:calc(100% - 32px);overflow:auto}
+.dlg h2{font-size:20px}
+.tabs{display:flex;gap:4px;border:1px solid var(--line);border-radius:9px;padding:3px}
+.tabs button{flex:1;font:600 14px var(--body);border:0;background:transparent;color:var(--muted);padding:7px;border-radius:6px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--accent-soft);color:var(--accent)}
+.or{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--muted)}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.demo{font-size:12px;color:var(--note);background:var(--note-bg);border-radius:6px;padding:6px 10px}
+.x{align-self:flex-end;background:transparent;border:0;color:var(--muted);font-size:14px;cursor:pointer;margin:-8px -6px -6px 0}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.consent .in{max-width:1140px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px}
+.consent p{margin:0;max-width:62ch}
+@media (prefers-reduced-motion:no-preference){.step .bar i,.scale i,.split i{transition:all .25s ease}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <div class="top">
+    <div class="brand">ImmoApp</div>
+    <div class="acct" id="acct"></div>
+  </div>
+
+  <div class="ad banner" data-ad><div><b>Banner 728 × 90 · mobil 320 × 100</b>Werbefläche, z. B. über Google AdSense</div></div>
+
+  <header>
+    <h1>Wertcheck mit offenem Rechenweg</h1>
+    <p class="lead">Schätzt den Marktwert aus amtlichen Daten, bewertet den Zustand Bauteil für Bauteil und zeigt, welche Sanierungskosten anstehen. Jeder Rechenschritt ist sichtbar.</p>
+  </header>
+
+  <div class="types" role="group" aria-label="Objektart" id="types"></div>
+  <p class="method" id="method"></p>
+
+  <div class="grid">
+    <div class="col">
+      <form class="panel" id="f" autocomplete="off" novalidate>
+        <div class="sample" id="sampleBar"><span>Beispielwerte, keine echte Immobilie</span><button type="button" class="btn small" id="reset">Beispiel laden</button></div>
+
+        <fieldset>
+          <legend>1 · Lage</legend>
+          <label>Straße und Hausnummer <span class="opt">(optional)</span><input type="text" id="str"></label>
+          <div class="row plz">
+            <label>PLZ<input type="text" id="plz" inputmode="numeric" maxlength="5"></label>
+            <label>Ort<input type="text" id="ort"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>2 · Marktdaten <small>Gutachterausschuss</small></legend>
+          <div class="row haus-only">
+            <label>Bodenrichtwert (€/m²)<input type="number" id="brw" min="0" step="5"></label>
+            <label>Regionalfaktor<input type="number" id="rf" min="0.5" max="2" step="0.01"></label>
+          </div>
+          <label class="haus-only">Baupreisindex (2010 = 100)<input type="number" id="bpi" min="100" step="0.1"></label>
+          <div class="radio haus-only" role="radiogroup" aria-label="Sachwertfaktor">
+            <label><input type="radio" name="swfm" value="known" id="swfKnown">Ich kenne den Sachwertfaktor</label>
+            <label><input type="radio" name="swfm" value="unknown" id="swfUnknown">Weiß ich nicht, Spanne 0,85–1,20 nehmen</label>
+          </div>
+          <label class="haus-only" id="swfWrap">Sachwertfaktor<input type="number" id="swf" min="0.3" max="3" step="0.01"></label>
+          <label class="etw-only" hidden>Immobilienrichtwert (€/m² Wohnfläche)<input type="number" id="irw" min="0" step="10"></label>
+          <div class="row etw-only" hidden>
+            <label>Normobjekt Baujahr<input type="number" id="nbj" min="1850" max="2030"></label>
+            <label>Normobjekt Wfl. (m²)<input type="number" id="nwf" min="10" step="1"></label>
+          </div>
+          <p class="hint haus-only">Bodenrichtwert kostenlos über <a href="https://www.bodenrichtwerte-boris.de" target="_blank" rel="noopener">BORIS-D</a>, in NRW über <a href="https://www.boris.nrw.de" target="_blank" rel="noopener">BORIS-NRW</a>. Sachwert- und Regionalfaktor stehen im Grundstücksmarktbericht des örtlichen Gutachterausschusses.</p>
+          <p class="hint etw-only" hidden>Immobilienrichtwerte gibt es nicht in allen Bundesländern, z. B. in <a href="https://www.boris.nrw.de" target="_blank" rel="noopener">BORIS-NRW</a>. Alternativ den Vergleichsfaktor aus dem Grundstücksmarktbericht nehmen.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend>3 · Objekt</legend>
+          <div class="row">
+            <label>Wohnfläche (m²)<input type="number" id="wf" min="10" step="1"></label>
+            <label>Baujahr<input type="number" id="bj" min="1850" max="2030"></label>
+          </div>
+          <label class="haus-only">Grundstück (m²)<input type="number" id="gr" min="0" step="10"></label>
+          <label class="etw-only" hidden>Lage im Gebäude
+            <select id="geschoss">
+              <option value="eg">Erdgeschoss</option>
+              <option value="og">Obergeschoss</option>
+              <option value="dg">Dachgeschoss</option>
+              <option value="ph">Penthouse</option>
+            </select></label>
+          <label>Ausstattungsstandard
+            <select id="ausst">
+              <option value="einfach">Einfach (Standardstufe 2)</option>
+              <option value="mittel">Mittel (Standardstufe 3)</option>
+              <option value="gehoben">Gehoben (Standardstufe 4)</option>
+              <option value="stark">Stark gehoben (Standardstufe 5)</option>
+            </select></label>
+          <label class="check haus-only"><input type="checkbox" id="keller">Unterkellert</label>
+          <label class="check etw-only" hidden><input type="checkbox" id="balkon">Balkon, Loggia oder Terrasse</label>
+          <label class="check etw-only" hidden><input type="checkbox" id="vermietet">Vermietet verkauft</label>
+          <div class="row">
+            <label>Garage / Stellplatz
+              <select id="stp">
+                <option value="0">Keiner</option>
+                <option value="aussen">Außenstellplatz</option>
+                <option value="garage">Garage / Tiefgarage</option>
+              </select></label>
+            <label>Wert (€)<input type="number" id="stpw" min="0" step="500"></label>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>4 · Zustand & Modernisierung <span class="tag">Konto</span></legend>
+          <div class="lock" id="compsLock" hidden>
+            <b>Modernisierungen mit kostenlosem Konto</b>
+            <p>Bewerten Sie Dach, Fassade, Heizung, Bad und weitere Bauteile. Modernisierte Teile erhöhen den Wert, ein Sanierungsstau wird abgezogen. Ohne Anmeldung rechnen wir mit durchschnittlichem Zustand.</p>
+            <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button><button type="button" class="btn ghost small" data-open="in">Anmelden</button></div>
+          </div>
+          <div class="legend-tri compsOn"><span style="--c:var(--g)">Modernisiert (ca. 15 J.)</span><span style="--c:var(--y)">Älter, intakt</span><span style="--c:var(--r)">Sanierung nötig</span></div>
+          <div class="comps compsOn" id="comps"></div>
+          <details class="amp compsOn" id="ampHelp">
+            <summary>So funktioniert die Modernisierungsampel</summary>
+            <p>Wählen Sie für jedes Bauteil, in welchem Zustand es heute ist. Die Farbe bestimmt, wie das Bauteil in den Wert eingeht.</p>
+            <ul>
+              <li style="--c:var(--g)"><b>Grün · Neu:</b> in den letzten rund 15 Jahren erneuert, z. B. neue Heizung, gedämmtes Dach, neues Bad. Beim Haus gibt es dafür Modernisierungspunkte (Dach und Fassade je 4, die übrigen Bauteile je 2, höchstens 20). Sie verlängern die Restnutzungsdauer und senken so die Alterswertminderung. Bei der Wohnung gibt es einen Zuschlag von 1 bis 3 % je Bauteil.</li>
+              <li style="--c:var(--y)"><b>Gelb · Mittel:</b> älter, aber funktionsfähig. Kein Zu- oder Abschlag. Die Kosten erscheinen unter „In 5–10 Jahren“, nur zur Planung.</li>
+              <li style="--c:var(--r)"><b>Rot · Schlecht:</b> defekt oder am Ende der Lebensdauer, z. B. undichtes Dach, Heizung über 30 Jahre. Die geschätzten Sanierungskosten werden voll vom Wert abgezogen, so wie ein Käufer sie einpreisen würde.</li>
+            </ul>
+            <p>Wenn Sie unsicher sind, wählen Sie Gelb. Die Kostenansätze je Bauteil stehen unter „Alle Bewertungsannahmen ansehen“.</p>
+          </details>
+          <p class="hint etw-only" hidden>Dach, Fassade und Heizung gehören meist zum Gemeinschaftseigentum und laufen über Rücklage oder Sonderumlage. Hier nur die Bauteile der Wohnung.</p>
+        </fieldset>
+      </form>
+
+      <div class="ad native" data-ad>
+        <span class="nt">Partnerfläche: Baufinanzierung</span>
+        <span>Passendes Angebot zur Region und zum ermittelten Wert. Abrechnung je vermitteltem Kontakt.</span>
+        <span class="hint">Platzhalter für einen Partner, z. B. Finanzierer, Energieberater oder Gutachter</span>
+      </div>
+    </div>
+
+    <section class="panel" aria-live="polite">
+      <div class="result-head">
+        <div class="label">Geschätzter Marktwert</div>
+        <div class="range" id="range">–</div>
+        <div class="scale" aria-hidden="true"><i id="mark"></i></div>
+        <div class="meta">
+          <span>Schätzwert <b id="mid">–</b></span>
+          <span>je m² <b id="sqm">–</b></span>
+          <span>Unsicherheit <b id="unc">–</b></span>
+        </div>
+      </div>
+
+      <div class="blk haus-only" id="splitBlk">
+        <div class="split" aria-hidden="true"><i id="pB" style="background:var(--accent)"></i><i id="pG" style="background:var(--muted)"></i></div>
+        <div class="keys"><span style="--c:var(--accent)" id="kB">Boden</span><span style="--c:var(--muted)" id="kG">Gebäude</span></div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn" id="save">Bewertung speichern</button>
+        <button type="button" class="btn ghost" id="pdf">PDF-Bericht</button>
+        <span class="toast" id="toast" role="status"></span>
+      </div>
+      <div class="saved" id="saved"></div>
+
+      <div class="lock" id="resLock" hidden>
+        <b>Zustand und Sanierungskosten sehen</b>
+        <p>Mit einem kostenlosen Konto zeigt der Wertcheck, welche Bauteile jetzt und in 5–10 Jahren Geld kosten, und rechnet Modernisierungen in den Wert ein.</p>
+        <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button></div>
+      </div>
+
+      <div class="blk resOn">
+        <h2>Zustand auf einen Blick</h2>
+        <div class="state" id="state"></div>
+      </div>
+
+      <div class="blk resOn">
+        <h2>Lohnt sich die Sanierung? <span class="tag pro">Premium</span></h2>
+        <div class="lock pro" id="szLock">
+          <p>Premium rechnet aus, was Ihre Immobilie nach der Sanierung der rot markierten Bauteile wert wäre, und stellt den Wertzuwachs den Kosten gegenüber.</p>
+          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+        </div>
+        <div class="szen" id="szen" hidden>
+          <div class="cost"><span class="label">Wert nach Sanierung</span><span class="v" id="szV">–</span><p id="szD"></p></div>
+          <div class="cost"><span class="label">Kosten</span><span class="v" id="szK">–</span><p>Rote Bauteile</p></div>
+          <div class="cost" id="szNbox"><span class="label">Ergebnis</span><span class="v" id="szN">–</span><p id="szT"></p></div>
+        </div>
+      </div>
+
+      <div class="blk resOn">
+        <h2>Sanierungskosten</h2>
+        <div class="costs">
+          <div class="cost now"><span class="label">Jetzt nötig</span><span class="v" id="cnow">–</span><p>Rote Bauteile, im Wert abgezogen</p></div>
+          <div class="cost mid"><span class="label">In 5–10 Jahren</span><span class="v" id="cmid">–</span><p>Gelbe Bauteile, nur zur Planung</p></div>
+        </div>
+        <p class="hint">Grobe Richtwerte, Abweichung ± 30 % üblich. Ein Angebot vom Fachbetrieb ersetzen sie nicht.</p>
+      </div>
+
+      <div class="blk" style="gap:4px">
+        <h2>So kommt der Wert zustande</h2>
+        <ol class="steps" id="steps"></ol>
+      </div>
+
+      <div class="notice">
+        <p><b>Automatisierte Schätzung, kein Verkehrswertgutachten nach § 194 BauGB.</b></p>
+        <p>Das Sachwertverfahren lehnt sich an die ImmoWertV 2021 und die NHK 2010 an, ist aber vereinfacht. Die Modernisierungspunkte und Kostenansätze sind Annahmen dieses Prototyps.</p>
+      </div>
+
+      <details>
+        <summary>Alle Bewertungsannahmen ansehen</summary>
+        <div class="tbl"><table id="assume"><thead><tr><th>Bereich</th><th>Annahme</th><th>Wert</th></tr></thead><tbody></tbody></table></div>
+      </details>
+    </section>
+  </div>
+
+  <section class="panel" id="tarife" aria-labelledby="ht">
+    <h2 id="ht">Tarife</h2>
+    <div class="tiers" id="tiers"></div>
+    <p class="hint">Beispielpreise für den Prototyp. Anmeldung und Bezahlung sind hier nur simuliert, es werden keine Daten übertragen.</p>
+  </section>
+</div>
+
+<div class="overlay" id="ov" hidden>
+  <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT">
+    <button type="button" class="x" id="close">Schließen</button>
+    <h2 id="dlgT">Anmelden</h2>
+    <p class="hint" id="dlgWhy"></p>
+    <div class="tabs"><button type="button" id="tabIn" aria-pressed="true">Anmelden</button><button type="button" id="tabUp" aria-pressed="false">Registrieren</button></div>
+    <button type="button" class="btn ghost" id="google">Mit Google fortfahren</button>
+    <div class="or">oder</div>
+    <form id="lf" style="display:flex;flex-direction:column;gap:10px" novalidate>
+      <label>E-Mail<input type="email" id="em" autocomplete="off"></label>
+      <label>Passwort<input type="password" id="pw" autocomplete="off"></label>
+      <label class="check" id="agb" hidden><input type="checkbox" id="agbc">Ich akzeptiere AGB und Datenschutzerklärung</label>
+      <button type="submit" class="btn" id="lsub">Anmelden</button>
+    </form>
+    <div class="demo">Demo: Eingaben werden nicht gesendet und nicht gespeichert.</div>
+  </div>
+</div>
+
+<div class="consent" id="consent" hidden>
+  <div class="in">
+    <p>Wir finanzieren den kostenlosen Wertcheck über Werbung. Dafür nutzen wir mit Ihrer Einwilligung Cookies von Werbepartnern. <span class="hint">(Demo-Hinweis)</span></p>
+    <div class="actions"><button type="button" class="btn ghost small" id="cNo">Nur notwendige</button><button type="button" class="btn small" id="cYes">Alle akzeptieren</button></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const eur = n => new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Math.round(n));
+  const num = (n,d=0) => Number(n).toLocaleString('de-DE',{minimumFractionDigits:d,maximumFractionDigits:d});
+  const pctf = p => (p>0?'+':p<0?'−':'±') + num(Math.abs(p*100),1).replace(',0','') + ' %';
+  const signE = n => (n>0.5?'+':n<-0.5?'−':'±') + eur(Math.abs(n));
+  const esc = s => String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const ls = {get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){return false}}};
+  const YEAR = 2026;
+
+  // NHK 2010, Gebäudeart 1.01 (KG, EG, ausgebautes DG), €/m² BGF je Standardstufe 1–5
+  const NHK = {frei:[655,725,835,1005,1260], dhh:[615,685,785,945,1180], rmh:[575,640,735,885,1105]};
+  const STUFE = {einfach:2, mittel:3, gehoben:4, stark:5};
+  const GND = 80, SWF_UNK = [0.85,1.0,1.20];
+
+  const OBJ = {
+    frei:{t:'haus',nm:'Einfamilienhaus',sub:'freistehend',svg:'<path d="M4 22V11L17 3l13 8v11zM14 22v-6h6v6"/>'},
+    dhh:{t:'haus',nm:'Doppelhaushälfte',sub:'oder Reihenendhaus',svg:'<path d="M3 22V11L11 5l8 6v11zM19 22V11l-8-6M19 11l6-6 6 6v11H19"/>'},
+    rmh:{t:'haus',nm:'Reihenhaus',sub:'Mittelhaus',svg:'<path d="M2 22V10l5-5 5 5 5-5 5 5 5-5 5 5v12z"/>'},
+    etw:{t:'etw',nm:'Eigentumswohnung',sub:'Vergleichswert',svg:'<path d="M8 22V3h18v19M12 7h3M19 7h3M12 12h3M19 12h3M15 22v-5h4v5"/>'}
+  };
+
+  const COMPS = {
+    haus:[
+      {id:'dach',     nm:'Dach & Dämmung oben', pts:4, cost:w=>w*180, ct:'180 €/m² Wfl.'},
+      {id:'fassade',  nm:'Fassade & Außenwand', pts:4, cost:w=>w*200, ct:'200 €/m² Wfl.'},
+      {id:'fenster',  nm:'Fenster & Außentüren', pts:2, cost:w=>w*110, ct:'110 €/m² Wfl.'},
+      {id:'heizung',  nm:'Heizung',             pts:2, cost:()=>28000, ct:'28.000 € pauschal'},
+      {id:'leitung',  nm:'Elektrik & Leitungen', pts:2, cost:w=>w*110, ct:'110 €/m² Wfl.'},
+      {id:'bad',      nm:'Bad & Sanitär',       pts:2, cost:()=>20000, ct:'20.000 € pauschal'},
+      {id:'innen',    nm:'Innenausbau & Böden', pts:2, cost:w=>w*90,  ct:'90 €/m² Wfl.'}
+    ],
+    etw:[
+      {id:'bad',      nm:'Bad & Sanitär',       pct:0.03, cost:()=>18000, ct:'18.000 € pauschal'},
+      {id:'innen',    nm:'Innenausbau & Böden', pct:0.02, cost:w=>w*80,  ct:'80 €/m² Wfl.'},
+      {id:'leitung',  nm:'Elektrik in der Wohnung', pct:0.01, cost:w=>w*90, ct:'90 €/m² Wfl.'},
+      {id:'fenster',  nm:'Fenster',             pct:0.02, cost:w=>w*100, ct:'100 €/m² Wfl.'}
+    ]
+  };
+  const ST = {g:['Modernisiert','--g'], y:['Älter, intakt','--y'], r:['Sanierung nötig','--r']};
+
+  const ETWF = {
+    bjJahr:0.005, bjCap:0.25, flExp:0.12,
+    ausst:{einfach:-0.05,mittel:0,gehoben:0.06,stark:0.12},
+    geschoss:{eg:[-0.02,'Erdgeschoss'],og:[0,'Obergeschoss'],dg:[0.02,'Dachgeschoss'],ph:[0.06,'Penthouse']},
+    balkon:-0.03, vermietet:-0.05
+  };
+  const STP = {haus:{aussen:5000,garage:12000}, etw:{aussen:6000,garage:15000}};
+
+  const SAMPLE = {
+    haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:183.3,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
+          comp:{dach:'y',fassade:'r',fenster:'g',heizung:'r',leitung:'y',bad:'g',innen:'y'}},
+    etw:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',irw:2900,nbj:1990,nwf:75,wf:82,bj:1978,geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'garage',stpw:15000,
+         comp:{bad:'r',innen:'y',leitung:'y',fenster:'g'}}
+  };
+  const clone = o => JSON.parse(JSON.stringify(o));
+  const state = {type:'haus', data:{haus:clone(SAMPLE.haus), etw:clone(SAMPLE.etw)}};
+  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw'];
+  let last = null;
+
+  // ---- Konto & Tarif (simuliert) ----
+  const AKEY='immoapp-demo-plan';
+  let plan=ls.get(AKEY,'guest');
+  const TIERS=[
+    {id:'guest',nm:'Ohne Anmeldung',price:'0 €',per:'',items:['Wertcheck für Haus und Wohnung','Vollständiger Rechenweg','Zustand pauschal als durchschnittlich','Mit Werbung']},
+    {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Bauteil-Ampel','Sanierungskosten jetzt und in 5–10 Jahren','3 Bewertungen speichern','Mit Werbung']},
+    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
+    {id:'single',nm:'Einzelbericht',price:'19 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Ohne Abo, ohne Anmeldung']}
+  ];
+  function renderAcct(){
+    const lbl={guest:'Gast',free:'Kostenloses Konto',premium:'Premium'}[plan];
+    $('acct').innerHTML = plan==='guest'
+      ? `<span class="plan">${lbl}</span><button type="button" class="btn ghost small" data-open="in">Anmelden</button><button type="button" class="btn small" data-open="up">Registrieren</button>`
+      : `<span class="plan${plan==='premium'?' premium':''}">${lbl}</span>${plan==='free'?'<button type="button" class="btn gold small" data-up="premium">Premium testen</button>':''}<button type="button" class="btn ghost small" id="logout">Abmelden</button>`;
+    $('tiers').innerHTML=TIERS.map(t=>{
+      let btn='';
+      if(t.id==='free'&&plan==='guest') btn='<button type="button" class="btn" data-open="up">Kostenlos registrieren</button>';
+      if(t.id==='premium'&&plan!=='premium') btn='<button type="button" class="btn gold" data-up="premium">Premium testen</button>';
+      if(t.id==='single') btn='<button type="button" class="btn ghost" data-up="single">Bericht kaufen</button>';
+      return `<div class="tier${t.hl?' hl':''}">${t.id===plan?'<span class="cur">Ihr aktueller Tarif</span>':''}<h3>${t.nm}</h3><div class="price">${t.price} <small>${t.per}</small></div><ul>${t.items.map(i=>`<li>${i}</li>`).join('')}</ul>${btn}</div>`;
+    }).join('');
+    document.querySelectorAll('[data-ad]').forEach(a=>a.hidden=(plan==='premium'));
+    $('pdf').textContent = plan==='premium'?'PDF-Bericht erstellen':'PDF-Bericht (Premium)';
+    renderSaved(); if(typeof calc==='function') calc();
+  }
+  function setPlan(p){ plan=p; ls.set(AKEY,p); renderAcct(); }
+
+  let mode='in', pendingSave=false;
+  function openDlg(m,why){
+    mode=m; $('dlgWhy').textContent=why||'Mit einem kostenlosen Konto bewerten Sie Modernisierungen, sehen die Sanierungskosten und speichern bis zu 3 Bewertungen.';
+    $('tabIn').setAttribute('aria-pressed',m==='in'); $('tabUp').setAttribute('aria-pressed',m==='up');
+    $('agb').hidden=m!=='up'; $('lsub').textContent=m==='up'?'Konto erstellen':'Anmelden';
+    $('dlgT').textContent=m==='up'?'Kostenloses Konto erstellen':'Anmelden';
+    $('em').value=''; $('pw').value=''; $('ov').hidden=false; $('em').focus();
+  }
+  function closeDlg(){ $('ov').hidden=true; pendingSave=false; }
+  function loggedIn(){ $('ov').hidden=true; setPlan('free'); flash('Angemeldet'); if(pendingSave){pendingSave=false; doSave();} }
+  document.addEventListener('click',e=>{
+    const o=e.target.closest('[data-open]'); if(o){ openDlg(o.dataset.open); return; }
+    const u=e.target.closest('[data-up]'); if(u){
+      if(u.dataset.up==='premium'){ if(plan==='guest'){ openDlg('up','Für Premium brauchen Sie zuerst ein Konto.'); return; } setPlan('premium'); flash('Premium aktiviert (Demo, keine Zahlung)'); }
+      else flash('Kauf folgt in der echten App, z. B. über Stripe');
+      return; }
+    if(e.target.id==='logout') setPlan('guest');
+  });
+  $('close').addEventListener('click',closeDlg);
+  $('ov').addEventListener('click',e=>{ if(e.target===$('ov')) closeDlg(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape'&&!$('ov').hidden) closeDlg(); });
+  $('tabIn').addEventListener('click',()=>openDlg('in',$('dlgWhy').textContent));
+  $('tabUp').addEventListener('click',()=>openDlg('up',$('dlgWhy').textContent));
+  $('google').addEventListener('click',loggedIn);
+  $('lf').addEventListener('submit',e=>{
+    e.preventDefault();
+    const okM=/.+@.+\..+/.test($('em').value), okP=$('pw').value.length>=8;
+    $('em').setAttribute('aria-invalid',okM?'false':'true'); $('pw').setAttribute('aria-invalid',okP?'false':'true');
+    if(!(okM&&okP&&(mode==='in'||$('agbc').checked))){ $('dlgWhy').textContent='Bitte gültige E-Mail und ein Passwort mit mindestens 8 Zeichen eingeben'+(mode==='up'?' und den AGB zustimmen.':'.'); return; }
+    loggedIn();
+  });
+
+  const CKEY='immoapp-demo-consent';
+  if(ls.get(CKEY,null)===null) $('consent').hidden=false;
+  $('cYes').addEventListener('click',()=>{ls.set(CKEY,'all');$('consent').hidden=true;});
+  $('cNo').addEventListener('click',()=>{ls.set(CKEY,'necessary');$('consent').hidden=true;});
+
+  // ---- Rechner ----
+  $('types').innerHTML=Object.entries(OBJ).map(([k,o])=>`<button type="button" class="type" data-o="${k}" aria-pressed="false"><svg viewBox="0 0 34 24" aria-hidden="true">${o.svg}</svg>${o.nm}<small>${o.sub}</small></button>`).join('');
+  const objKey = () => state.type==='etw' ? 'etw' : state.data.haus.hausart;
+
+  function renderComps(){
+    const t=state.type, d=state.data[t];
+    $('comps').innerHTML = COMPS[t].map(c=>`<div class="comp"><span class="nm">${c.nm}</span><span class="tri" role="group" aria-label="${c.nm}">${
+      Object.entries(ST).map(([k,v])=>`<button type="button" data-c="${c.id}" data-s="${k}" style="--c:var(${v[1]})" aria-pressed="${d.comp[c.id]===k}">${k==='g'?'Neu':k==='y'?'Mittel':'Schlecht'}</button>`).join('')
+    }</span></div>`).join('');
+  }
+  function syncUI(){
+    const t=state.type, d=state.data[t];
+    document.querySelectorAll('.type').forEach(b=>b.setAttribute('aria-pressed',b.dataset.o===objKey()));
+    document.querySelectorAll('.etw-only').forEach(e=>e.hidden=t!=='etw');
+    document.querySelectorAll('.haus-only').forEach(e=>e.hidden=t!=='haus');
+    if(t==='haus') $('swfWrap').hidden=d.swfm!=='known';
+    const on=plan!=='guest';
+    $('compsLock').hidden=on; $('resLock').hidden=on;
+    document.querySelectorAll('.compsOn,.resOn').forEach(e=>e.hidden=!on);
+    $('method').innerHTML = t==='haus'
+      ? 'Verfahren: <b>Sachwertverfahren</b> (Bodenwert + Gebäudewert, an den Markt angepasst)'
+      : 'Verfahren: <b>Vergleichswertverfahren</b> über den Immobilienrichtwert';
+  }
+  function fill(){
+    const d=state.data[state.type];
+    fields.forEach(k=>{ const el=$(k); if(!el) return; if(el.type==='checkbox') el.checked=!!d[k]; else el.value=(d[k]??''); });
+    if(state.type==='haus'){ $('swfKnown').checked=d.swfm==='known'; $('swfUnknown').checked=d.swfm!=='known'; }
+    renderComps(); syncUI();
+  }
+  function read(){
+    const d=state.data[state.type];
+    fields.forEach(k=>{ const el=$(k); if(!el||el.closest('[hidden]')) return;
+      d[k] = el.type==='checkbox'?el.checked:(el.type==='number'?parseFloat(el.value):el.value.trim()); });
+    if(state.type==='haus') d.swfm=$('swfKnown').checked?'known':'unknown';
+    // Adresse gilt für beide Objektarten
+    const o=state.data[state.type==='haus'?'etw':'haus']; ['str','plz','ort'].forEach(k=>o[k]=d[k]);
+  }
+  function setObj(k){
+    read();
+    if(k==='etw') state.type='etw'; else { state.type='haus'; state.data.haus.hausart=k; }
+    fill(); calc();
+  }
+
+  // Gäste rechnen mit durchschnittlichem Zustand (alle Bauteile „Älter, intakt“)
+  const compsOn = () => plan!=='guest';
+  function effComp(d){ if(compsOn()) return d.comp; const o={}; COMPS[state.type].forEach(c=>o[c.id]='y'); return o; }
+
+  function costs(t,d,comp){
+    let now=0, mid=0, pts=0, pctUp=0;
+    const items = COMPS[t].map(c=>{ const s=comp[c.id]||'y'; const k=c.cost(d.wf||0);
+      if(s==='r') now+=k; if(s==='y') mid+=k; if(s==='g'){ pts+=c.pts||0; pctUp+=c.pct||0; }
+      return {c,s,k}; });
+    return {items,now,mid,pts,pctUp};
+  }
+
+  function fail(msg){
+    last=null; $('range').className='range err'; $('range').textContent=msg;
+    ['mid','sqm','unc'].forEach(i=>$(i).textContent='–'); $('steps').innerHTML=''; $('save').disabled=true;
+    $('pB').style.width='0'; $('pG').style.width='0';
+  }
+
+  // Reines Bewertungsmodell: liefert Rechenschritte und Wert für eine Zustandsangabe
+  function model(t,d,comp){
+    const steps=[], K=costs(t,d,comp), on=compsOn();
+    let v, unc, bigCount=0, vorl=0, extra=null, bw=0;
+    const pct=(title,p,desc)=>{ const b=v; v=v*(1+p); if(Math.abs(p)>=0.05) bigCount++; steps.push({t:title,d:desc,eur:v-b,fx:pctf(p),run:v}); };
+    const abs=(title,a,desc)=>{ v+=a; steps.push({t:title,d:desc,eur:a,fx:signE(a),run:v}); };
+    if(t==='haus'){
+      bw=d.brw*d.gr;
+      const stufe=STUFE[d.ausst], nhk=NHK[d.hausart][stufe-1];
+      const bgf=Math.round(d.wf/(d.keller?0.70:0.80));
+      const hk=nhk*bgf*(d.bpi/100)*d.rf;
+      v=hk;
+      steps.push({kind:'base',t:'Herstellungskosten Gebäude',d:`${nhk} €/m² BGF (NHK 2010, ${OBJ[d.hausart].nm}, Standardstufe ${stufe}) × ${bgf} m² Bruttogrundfläche × Baupreisindex ${num(d.bpi/100,3)}${d.rf!==1?` × Regionalfaktor ${num(d.rf,2)}`:''}`,fx:eur(hk),run:v});
+      const alter=Math.max(0,YEAR-d.bj);
+      const pts=Math.min(20,K.pts);
+      const fikt=alter*(1-0.75*pts/20);
+      let rnd=Math.max(GND-fikt, pts>0?GND*0.25:GND*0.15); rnd=Math.min(rnd,GND);
+      abs('Alterswertminderung',-(hk*(1-rnd/GND)),on
+        ? `Alter ${alter} J., ${pts} von 20 Modernisierungspunkten → Restnutzungsdauer ${Math.round(rnd)} von ${GND} Jahren (linear)`
+        : `Alter ${alter} J., ohne Modernisierungen → Restnutzungsdauer ${Math.round(rnd)} von ${GND} Jahren. Modernisierungen mit kostenlosem Konto`);
+      const gsw=v;
+      abs('Außenanlagen',gsw*0.04,'4 % des Gebäudesachwerts für Wege, Zäune, Anschlüsse');
+      const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.haus[d.stp]);
+      if(sp>0) abs('Garage / Stellplatz',sp,'Fester Betrag');
+      abs('Bodenwert',bw,`${num(d.gr)} m² × ${num(d.brw)} €/m² Bodenrichtwert`);
+      vorl=v;
+      steps.push({kind:'sub',t:'Vorläufiger Sachwert',d:'Bodenwert + Gebäude + Außenanlagen',fx:eur(v),run:v});
+      if(d.swfm==='known') pct('Marktanpassung',d.swf-1,`Sachwertfaktor ${num(d.swf,2)} laut Gutachterausschuss. So viel zahlt der Markt im Verhältnis zum Sachwert`);
+      else { pct('Marktanpassung',SWF_UNK[1]-1,`Sachwertfaktor unbekannt: Schätzwert mit ${num(SWF_UNK[1],2)}, die Spanne deckt ${num(SWF_UNK[0],2)} bis ${num(SWF_UNK[2],2)} ab`); extra=SWF_UNK; }
+      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bauteile, voll abgezogen');
+      unc=extra?0.06:0.12;
+    } else {
+      v=d.irw*d.wf;
+      steps.push({kind:'base',t:'Ausgangswert',d:`${num(d.irw)} €/m² Immobilienrichtwert × ${d.wf} m² Wohnfläche`,fx:eur(v),run:v});
+      const diff=d.bj-d.nbj, pb=Math.max(-ETWF.bjCap,Math.min(ETWF.bjCap,diff*ETWF.bjJahr));
+      pct('Baujahr',pb,diff===0?'Entspricht dem Normobjekt':`${Math.abs(diff)} Jahre ${diff<0?'älter':'jünger'} als das Normobjekt (${d.nbj}), 0,5 % je Jahr`);
+      pct('Wohnfläche',Math.pow(d.nwf/d.wf,ETWF.flExp)-1,`${d.wf} m² statt ${d.nwf} m². Größere Einheiten kosten je m² etwas weniger`);
+      const g=ETWF.geschoss[d.geschoss]; pct('Lage im Gebäude',g[0],g[1]);
+      pct('Ausstattung',ETWF.ausst[d.ausst],'Ausstattungsstandard gegenüber mittlerem Standard');
+      if(on) pct('Modernisierte Bauteile',K.pctUp,K.pctUp?'Grün markierte Bauteile der Wohnung':'Keine Bauteile als modernisiert markiert');
+      pct('Balkon / Terrasse',d.balkon?0:ETWF.balkon,d.balkon?'Vorhanden':'Fehlt, Abschlag');
+      if(d.vermietet) pct('Vermietung',ETWF.vermietet,'Vermietet verkauft, für Selbstnutzer weniger attraktiv');
+      const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.etw[d.stp]);
+      if(sp>0) abs('Stellplatz',sp,'Fester Betrag');
+      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bauteile, voll abgezogen');
+      unc=0.08+(Math.abs(diff)>30?0.03:0);
+    }
+    if(!on) unc+=0.04; // Zustand unbekannt
+    unc=Math.min(0.24,unc+0.015*bigCount);
+    return {steps,v,unc,vorl,extra,K,bw};
+  }
+
+  function calc(){
+    read(); syncUI();
+    const t=state.type, d=state.data[t], on=compsOn();
+    const ok=v=>Number.isFinite(v)&&v>0;
+    const need = t==='haus' ? [d.brw,d.gr,d.wf,d.bj,d.bpi,d.rf].concat(d.swfm==='known'?[d.swf]:[]) : [d.irw,d.wf,d.bj,d.nbj,d.nwf];
+    if(!need.every(ok)) return fail('Bitte alle Zahlenfelder ausfüllen');
+    if(d.bj>YEAR) return fail(`Baujahr bitte bis ${YEAR} angeben`);
+    const M=model(t,d,effComp(d)), {steps,v,unc,vorl,extra,K,bw}=M;
+    const mid=Math.round(v/1000)*1000, r5=n=>Math.round(n/5000)*5000;
+    let lo=r5(mid*(1-unc)), hi=r5(mid*(1+unc));
+    if(extra){ lo=r5(mid*(1-unc)-vorl*(extra[1]-extra[0])); hi=r5(mid*(1+unc)+vorl*(extra[2]-extra[1])); }
+    steps.push({kind:'total',t:'Geschätzter Marktwert',d:on?'Gerundet auf volle Tausend':'Gerundet auf volle Tausend, Zustand als durchschnittlich angenommen',fx:eur(mid)});
+    last={mid,lo,hi};
+
+    if(t==='haus'){ const pb=bw/vorl*100;
+      $('pB').style.width=pb+'%'; $('pG').style.width=(100-pb)+'%';
+      $('kB').textContent=`Boden ${num(pb)} % · ${eur(bw)}`; $('kG').textContent=`Gebäude ${num(100-pb)} %`; }
+    $('save').disabled=false;
+    $('range').className='range';
+    $('range').innerHTML=`${eur(lo)} <span>bis</span> ${eur(hi)}`;
+    $('mid').textContent=eur(mid); $('sqm').textContent=eur(mid/d.wf)+'/m²';
+    $('unc').textContent=extra?`− ${Math.round((mid-lo)/mid*100)} / + ${Math.round((hi-mid)/mid*100)} %`:'± '+Math.round(unc*100)+' %';
+    $('mark').style.left=`calc(${((mid-lo)/((hi-lo)||1))*100}% - 1.5px)`;
+    $('cnow').textContent=eur(K.now); $('cmid').textContent=eur(K.mid);
+    $('state').innerHTML=K.items.map(x=>`<div class="chip" style="--c:var(${ST[x.s][1]})"><i></i><span>${x.c.nm}<small>${ST[x.s][0]}${x.s!=='g'?' · ca. '+eur(Math.round(x.k/500)*500):''}</small></span></div>`).join('');
+
+    // Premium: Wert nach Sanierung der roten Bauteile
+    const pro=plan==='premium';
+    $('szLock').hidden=pro; $('szen').hidden=!pro;
+    if(pro){
+      const reds=K.items.filter(x=>x.s==='r');
+      if(!reds.length){ $('szV').textContent=eur(mid); $('szD').textContent='Keine Bauteile rot markiert'; $('szK').textContent=eur(0); $('szN').textContent='–'; $('szT').textContent='Kein Sanierungsstau'; $('szNbox').className='cost'; }
+      else {
+        const c2={...d.comp}; reds.forEach(x=>c2[x.c.id]='g');
+        const after=Math.round(model(t,d,c2).v/1000)*1000, gain=after-mid, net=gain-K.now;
+        $('szV').textContent=eur(after); $('szD').textContent=`${signE(gain)} gegenüber heute`;
+        $('szK').textContent=eur(K.now);
+        $('szN').textContent=signE(net);
+        $('szT').textContent=net>=0?'Wertzuwachs übersteigt die Kosten':'Kosten höher als der Wertzuwachs';
+        $('szNbox').className='cost '+(net>=0?'good':'bad');
+      }
+    }
+
+    const maxE=Math.max(1,...steps.filter(s=>s.eur!==undefined).map(s=>Math.abs(s.eur)));
+    let n=0;
+    $('steps').innerHTML=steps.map(s=>{
+      const tone=s.eur===undefined?'neu':(s.eur>0.5?'pos':s.eur<-0.5?'neg':'neu');
+      let bar='';
+      if(s.eur!==undefined&&Math.abs(s.eur)>0.5){ const w=Math.abs(s.eur)/maxE*50;
+        bar=`<div class="bar"><i style="left:${s.eur>0?50:50-w}%;width:${w}%;background:var(--${s.eur>0?'plus':'minus'})"></i><i style="left:50%;width:1px;background:var(--line)"></i></div>`; }
+      const isPct=s.fx.includes('%');
+      const run = s.kind ? '' : (isPct?signE(s.eur)+' → ':'')+'= '+eur(s.run);
+      const nr = s.kind==='total'?'=':s.kind==='sub'?'Σ':String(++n).padStart(2,'0');
+      return `<li class="step ${s.kind||''}"><span class="n">${nr}</span><span class="t">${s.t}</span><span class="fx ${s.kind?'':tone}">${s.fx}</span><span class="d">${s.d}</span><span class="run">${run}</span>${bar}</li>`;
+    }).join('');
+  }
+
+  // ---- Speichern (nur mit Konto) ----
+  const SKEY='immoapp-wertcheck-bewertungen';
+  const limit=()=>plan==='premium'?Infinity:3;
+  function renderSaved(){
+    if(plan==='guest'){ $('saved').innerHTML=''; return; }
+    const a=ls.get(SKEY,[]);
+    $('saved').innerHTML=a.length?`<div class="label">Meine Bewertungen (${plan==='premium'?a.length:a.length+' von '+limit()})</div>`+a.map((x,i)=>{
+      const d=x.data, nm=x.type==='etw'?OBJ.etw.nm:OBJ[d.hausart].nm;
+      return `<div class="sv"><span>${esc(d.ort||'Ohne Ort')}${d.str?', '+esc(d.str):''} · ${nm}<br><b>${eur(x.lo)} bis ${eur(x.hi)}</b></span><span class="a"><button type="button" class="btn ghost small" data-load="${i}">Öffnen</button><button type="button" class="btn ghost small" data-del="${i}">Entfernen</button></span></div>`;
+    }).join(''):'';
+  }
+  function flash(t){ $('toast').textContent=t; clearTimeout(flash.t); flash.t=setTimeout(()=>$('toast').textContent='',3000); }
+  function doSave(){
+    if(!last) return;
+    const a=ls.get(SKEY,[]);
+    if(a.length>=limit()){ flash('3 Bewertungen gespeichert. Entfernen Sie eine oder speichern Sie mit Premium unbegrenzt.'); return; }
+    a.unshift({type:state.type,data:clone(state.data[state.type]),...last,at:Date.now()});
+    flash(ls.set(SKEY,a)?'Gespeichert':'Speichern in diesem Browser nicht möglich'); renderSaved();
+  }
+  $('save').addEventListener('click',()=>{ if(plan==='guest'){ pendingSave=true; openDlg('up','Melden Sie sich kostenlos an, um diese Bewertung zu speichern.'); return; } doSave(); });
+  $('pdf').addEventListener('click',()=>{ if(plan!=='premium'){ $('tarife').scrollIntoView({behavior:'smooth'}); flash('PDF-Bericht gibt es mit Premium oder als Einzelbericht'); return; } flash('PDF-Export folgt in der echten App'); });
+  $('saved').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return; const a=ls.get(SKEY,[]);
+    if(b.dataset.load!==undefined){ const x=a[+b.dataset.load]; if(!x) return; state.type=x.type; state.data[x.type]=clone(x.data); fill(); calc(); }
+    if(b.dataset.del!==undefined){ a.splice(+b.dataset.del,1); ls.set(SKEY,a); renderSaved(); }
+  });
+
+  function assumptions(){
+    const rows=[
+      ['Sachwert','NHK 2010, Typ 1.01, freistehend Stufe 1–5','655–1.260 €/m²'],
+      ['Sachwert','Doppel-/Reihenendhaus, Reihenmittelhaus','−6 % / −12 %'],
+      ['Sachwert','Bruttogrundfläche aus Wohnfläche','Wfl ÷ 0,70 (mit Keller) / 0,80'],
+      ['Sachwert','Baupreisindex Beispiel: BMF-Wert für Stichtage 2025','183,3'],
+      ['Sachwert','Gesamtnutzungsdauer Ein-/Zweifamilienhaus','80 Jahre'],
+      ['Sachwert','Fiktives Alter = Alter × (1 − 0,75 × Punkte ÷ 20)','vereinfacht'],
+      ['Sachwert','Mindest-Restnutzungsdauer ohne / mit Modernisierung','15 % / 25 % GND'],
+      ['Sachwert','Außenanlagen','4 %'],
+      ['Sachwert','Sachwertfaktor unbekannt: Schätzwert / Spanne','1,00 / 0,85–1,20'],
+      ...COMPS.haus.map(c=>['Haus · '+c.nm,'Modernisierungspunkte · Kosten',`${c.pts} P. · ${c.ct}`]),
+      ...COMPS.etw.map(c=>['Wohnung · '+c.nm,'Zuschlag wenn modernisiert · Kosten',`${pctf(c.pct)} · ${c.ct}`]),
+      ['Wohnung','Baujahr je Jahr Abweichung, max. ± 25 %','± 0,5 %'],
+      ['Wohnung','Wohnfläche (Normfläche ÷ Fläche) hoch 0,12','≈ ± 1–5 %'],
+      ['Wohnung','Ausstattung einfach / gehoben / stark gehoben','−5 / +6 / +12 %'],
+      ['Wohnung','Kein Balkon / vermietet','−3 % / −5 %'],
+      ['Unsicherheit','Grundwert Haus / Wohnung','± 12 % / ± 8 %'],
+      ['Unsicherheit','je Anpassung ≥ 5 %','+ 1,5 Pkt.'],
+    ];
+    document.querySelector('#assume tbody').innerHTML=rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join('');
+  }
+
+  $('types').addEventListener('click',e=>{ const b=e.target.closest('.type'); if(b) setObj(b.dataset.o); });
+  $('comps').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return;
+    state.data[state.type].comp[b.dataset.c]=b.dataset.s; renderComps(); calc(); });
+  $('stp').addEventListener('change',()=>{ const k=$('stp').value; $('stpw').value=k==='0'?0:STP[state.type][k]; });
+  $('f').addEventListener('input',()=>{ calc(); });
+  $('f').addEventListener('change',calc);
+  $('f').addEventListener('submit',e=>e.preventDefault());
+  $('reset').addEventListener('click',()=>{ state.data[state.type]=clone(SAMPLE[state.type]); fill(); calc(); });
+  assumptions(); fill(); calc(); renderAcct();
+})();
+</script>
+</body>
+</html>
+
+</body></html>
