@@ -94,6 +94,15 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .tri button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);opacity:.35}
 .tri button[aria-pressed="true"]{color:var(--ink);border-color:var(--c);font-weight:600}
 .tri button[aria-pressed="true"]::before{opacity:1}
+/* Ampel auf dem Handy: Bauteil oben, drei gleich breite Knöpfe darunter */
+@media (max-width:560px){
+  .comps{gap:12px}
+  .comp{flex-direction:column;align-items:stretch;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  .comp:last-child{border-bottom:0;padding-bottom:0}
+  .comp .nm{font-weight:600}
+  .tri{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .tri button{justify-content:center;min-height:44px;font-size:14px;padding:6px 4px;border-radius:10px}
+}
 .legend-tri{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .legend-tri span::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:5px}
 /* Werbeflächen */
