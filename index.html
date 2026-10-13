@@ -224,6 +224,12 @@ input.warn{border-color:var(--y)}
 .mbar .mv{display:flex;flex-direction:column;line-height:1.2}
 .mbar b{font-family:var(--display);font-weight:800;font-size:20px;font-variant-numeric:tabular-nums}
 body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
+/* Lage eingeklappt */
+.lage-sum{display:flex;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:10px 12px}
+.lage-sum .ls-t{display:flex;flex-direction:column;min-width:0;font-size:14px}
+.lage-sum .ls-t b{font-weight:600}
+.lage-sum .ls-t span{color:var(--muted);font-size:13px}
+.lage-body{display:flex;flex-direction:column;gap:12px}
 /* Freischaltung */
 .tag{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle}
 .tag.pro{color:var(--gold)}
@@ -289,6 +295,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
         <fieldset data-step="1">
           <legend>1 · Lage</legend>
+          <div class="lage-sum" id="lageSum" hidden>
+            <div class="ls-t"><b id="lageAdr"></b><span id="lageInfo"></span></div>
+            <button type="button" class="btn ghost small" id="lageEdit" aria-controls="lageBody" aria-expanded="false">Ändern</button>
+          </div>
+          <div class="lage-body" id="lageBody">
           <label>Straße und Hausnummer<input type="text" id="str" autocomplete="street-address"></label>
           <div class="row plz">
             <label>PLZ<input type="text" id="plz" inputmode="numeric" maxlength="5"></label>
@@ -310,7 +321,6 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
                 <label><span class="lbl">Baupreisindex <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Entwicklung der Baupreise seit 2010 (= 100), vom Statistischen Bundesamt. Wird automatisch aktuell gehalten.</span></span><input type="number" id="bpi" min="100" step="0.1"></label>
               </div>
               <p class="hint haus-only" id="bpiInfo"></p>
-              <label class="haus-only"><span class="lbl">Bruttogrundfläche (m²) <span class="opt">(falls bekannt)</span> <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Summe aller Geschossflächen inklusive Keller und Dachgeschoss, gemessen an den Außenmaßen. Steht in der Bauakte. Ohne Angabe schätzt der Wertcheck sie aus Wohnfläche, Geschossen, Dach und Keller.</span></span><input type="number" id="bgf" min="30" step="1"></label>
               <div class="radio haus-only" role="radiogroup" aria-label="Sachwertfaktor">
                 <span class="lbl rlbl">Sachwertfaktor <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Verhältnis von Kaufpreisen zum rechnerischen Sachwert in der Region. Kommt bei unterstützten Regionen automatisch aus dem Grundstücksmarktbericht.</span></span>
                 <label id="swfAutoWrap" hidden><input type="radio" name="swfm" value="auto" id="swfAuto">Automatisch aus dem Grundstücksmarktbericht</label>
@@ -326,6 +336,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
               <p class="hint haus-only">Sachwert- und Regionalfaktor stehen im Grundstücksmarktbericht des örtlichen Gutachterausschusses auf <a href="https://www.boris.nrw.de" target="_blank" rel="noopener">BORIS-NRW</a>.</p>
             </div>
           </details>
+          </div>
         </fieldset>
 
         <fieldset data-step="2">
@@ -349,11 +360,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
               <option value="gehoben">Gehoben (Standardstufe 4)</option>
               <option value="stark">Stark gehoben (Standardstufe 5)</option>
             </select></label>
-          <label class="haus-only"><span class="lbl">Wohneinheiten <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Einliegerwohnung: kleine zweite Wohnung im Haus, meist im Keller oder Dachgeschoss, untergeordnet zur Hauptwohnung. Zweifamilienhaus: zwei etwa gleichwertige Wohnungen. Der Markt bewertet beides anders als ein reines Einfamilienhaus.</span></span>
+          <label class="haus-only"><span class="lbl">Wohneinheiten <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Einliegerwohnung: kleine zweite Wohneinheit im Haus, meist im Keller oder Dachgeschoss, untergeordnet zur Hauptwohneinheit. Zweifamilienhaus: zwei etwa gleichwertige Wohneinheiten. Der Markt bewertet beides anders als ein reines Einfamilienhaus.</span></span>
             <select id="we">
-              <option value="1">1 Wohnung (Einfamilienhaus)</option>
-              <option value="elw">1 Wohnung mit Einliegerwohnung</option>
-              <option value="2">2 Wohnungen (Zweifamilienhaus)</option>
+              <option value="1">1 Wohneinheit (Einfamilienhaus)</option>
+              <option value="elw">1 Wohneinheit mit Einliegerwohnung</option>
+              <option value="2">2 Wohneinheiten (Zweifamilienhaus)</option>
             </select></label>
           <div class="row sel haus-only">
             <label><span class="lbl">Vollgeschosse <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Geschosse mit voller Raumhöhe, ohne Keller und Dachgeschoss. Bungalow oder Haus mit Erdgeschoss und ausgebautem Dach: 1. Erd- und Obergeschoss: 2.</span></span>
@@ -372,16 +383,20 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <label class="check etw-only" hidden><input type="checkbox" id="balkon">Balkon, Loggia oder Terrasse</label>
           <label class="check etw-only" hidden><input type="checkbox" id="vermietet">Vermietet verkauft</label>
           <label class="check"><input type="checkbox" id="denkmal">Steht unter Denkmalschutz (Einzeldenkmal oder Denkmalbereich)</label>
-          <div class="row sel">
-            <label>Garage / Stellplatz
-              <select id="stp">
-                <option value="0">Keiner</option>
-                <option value="aussen">Außenstellplatz</option>
-                <option value="garage">Garage / Tiefgarage</option>
-                <option value="doppel">Doppelgarage / zwei Stellplätze</option>
-              </select></label>
-            <label><span class="lbl">Wert (€) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Wird pauschal vorgeschlagen und kann angepasst werden.</span></span><input type="number" id="stpw" min="0" step="500"></label>
-          </div>
+          <label><span class="lbl">Garage / Stellplatz <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Stellplatz oder Carport: offener oder überdachter Platz ohne Wände. Garage: Einzelgarage, auch Fertiggarage, oder ein Tiefgaragenplatz. Doppelgarage: Garage für zwei Autos, zwei Einzelgaragen oder zwei Tiefgaragenplätze. Ein Stellplatz in der Einfahrt ohne eigene Fläche zählt nicht extra.</span></span>
+            <select id="stp">
+              <option value="0">Keiner</option>
+              <option value="aussen">Stellplatz oder Carport</option>
+              <option value="garage">Garage / Tiefgaragenplatz</option>
+              <option value="doppel">Doppelgarage / zwei Plätze</option>
+            </select></label>
+          <details class="expert" id="expert2">
+            <summary>Expertenangaben zum Objekt <span class="sub">sonst automatisch</span></summary>
+            <div class="expert-in">
+              <label><span class="lbl">Wert Garage / Stellplatz (€) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Pauschal angesetzt: beim Haus 5.000 € (Stellplatz/Carport), 12.000 € (Garage), 20.000 € (Doppelgarage). Bei Wohnungen 6.000 / 15.000 / 28.000 €. Hier anpassen, wenn Sie einen anderen Wert kennen.</span></span><input type="number" id="stpw" min="0" step="500"></label>
+              <label class="haus-only"><span class="lbl">Bruttogrundfläche (m²) <span class="opt">(falls bekannt)</span> <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Summe aller Geschossflächen inklusive Keller und Dachgeschoss, gemessen an den Außenmaßen. Steht in der Bauakte. Ohne Angabe schätzt der Wertcheck sie aus Wohnfläche, Geschossen, Dach und Keller.</span></span><input type="number" id="bgf" min="30" step="1"></label>
+            </div>
+          </details>
         </fieldset>
 
         <fieldset data-step="3">
@@ -749,7 +764,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   function setObj(k){
     read();
     if(k==='etw') state.type='etw'; else { state.type='haus'; state.data.haus.hausart=k; }
-    fill(); calc();
+    fill(); calc(); if(!$('lageSum').hidden&&!lageKomplett()) lageAuf(); else if(!$('lageSum').hidden) lageZu();
   }
 
   // Gäste rechnen mit durchschnittlichem Zustand (alle Bauteile „Älter, intakt“)
@@ -861,7 +876,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     document.querySelectorAll('#f input[aria-invalid]').forEach(e=>e.removeAttribute('aria-invalid'));
     if(missing.length){
       const nothing = ['wf','bj','gr','brw','irw'].every(k=>!ok(d[k]));
-      if(!nothing) missing.forEach(k=>{ $(k).setAttribute('aria-invalid','true'); if($(k).closest('#expert')) $('expert').open=true; });
+      if(!nothing) missing.forEach(k=>{ $(k).setAttribute('aria-invalid','true'); const dt=$(k).closest('details'); if(dt) dt.open=true; if($(k).closest('#lageBody')) lageAuf(); });
       return fail(nothing ? 'Geben Sie Adresse, Wohnfläche und Baujahr ein. Das Ergebnis erscheint hier sofort.' : 'Es fehlen noch: '+missing.map(k=>LABEL[k]).join(', '), nothing);
     }
     if(d.bj>YEAR){ $('bj').setAttribute('aria-invalid','true'); return fail(`Baujahr bitte bis ${YEAR} angeben`); }
@@ -1002,6 +1017,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     autoTimer=setTimeout(()=>{ if(adrKey()!==autoKey) brwAbrufen(); },1200);
   }
   ['str','plz','ort'].forEach(id=>$(id).addEventListener('input',autoAbruf));
+  ['brw','irw'].forEach(id=>$(id).addEventListener('change',()=>{ if($(id).value) lageAbgerufen=true; }));
   $('brwBtn').addEventListener('click',()=>brwAbrufen());
   async function brwAbrufen(){
     const str=$('str').value.trim(), plz=$('plz').value.trim(), ort=$('ort').value.trim();
@@ -1019,10 +1035,31 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       const tag=j.stichtag?new Date(j.stichtag).toLocaleDateString('de-DE'):'';
       brwInfo(`✓ Bodenrichtwert ${num(j.brw)} €/m² übernommen${j.markt?' · Sachwertfaktor aus dem Grundstücksmarktbericht':''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${tag?' · Stichtag '+tag:''}${j.abstand?` · nächstgelegene Zone für Ein- und Zweifamilienhäuser, rund ${j.abstand} m entfernt`:''}`,'ok');
       $('brwAuto').classList.add('done'); $('brwBtnTxt').textContent='Erneut abrufen';
+      lageAbgerufen=true; if(!$('lageBody').contains(document.activeElement)||document.activeElement===$('brwBtn')) setTimeout(lageZu,600);
       calc();
     }catch(e){ brwInfo('Abruf gerade nicht möglich. Bitte Bodenrichtwert von Hand eintragen.','err'); }
     finally{ btn.disabled=false; }
   }
+
+  // ---- Lage nach Eingabe einklappen ----
+  function lageKomplett(){ const d=state.data[state.type]; return /^\d{5}$/.test($('plz').value.trim()) && $('ort').value.trim() && (state.type==='haus'?d.brw>0:d.irw>0); }
+  function lageZu(){
+    if(!lageKomplett()) return;
+    const d=state.data[state.type];
+    $('lageAdr').textContent=[$('str').value.trim(),$('plz').value.trim()+' '+$('ort').value.trim()].filter(x=>x.trim()).join(', ');
+    $('lageInfo').textContent=state.type==='haus'
+      ? `Bodenrichtwert ${num(d.brw)} €/m²${d.markt?' · Marktdaten aus dem Grundstücksmarktbericht':''}`
+      : `Immobilienrichtwert ${num(d.irw)} €/m²`;
+    $('lageBody').hidden=true; $('lageSum').hidden=false; $('lageEdit').setAttribute('aria-expanded','false');
+  }
+  function lageAuf(){ $('lageBody').hidden=false; $('lageSum').hidden=true; $('lageEdit').setAttribute('aria-expanded','true'); }
+  $('lageEdit').addEventListener('click',()=>{ lageAuf(); $('str').focus(); });
+  let lageAbgerufen=false;
+  // Zuklappen, sobald die Angaben vollständig sind und der Nutzer den Bereich verlässt
+  $('lageBody').addEventListener('focusout',e=>{
+    if(e.relatedTarget&&$('lageBody').contains(e.relatedTarget)) return;
+    setTimeout(()=>{ if(!$('lageBody').contains(document.activeElement)&&lageAbgerufen) lageZu(); },150);
+  });
 
   // ---- Hilfe am Feld ----
   document.addEventListener('click',e=>{
@@ -1092,18 +1129,19 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(scroll) $('f').scrollIntoView({behavior:'smooth',block:'start'});
   }
   $('stepBack').addEventListener('click',()=>zeigeSchritt(step-1,true));
-  $('stepNext').addEventListener('click',()=>{ if(step===STEPS.length) $('ergebnis').scrollIntoView({behavior:'smooth',block:'start'}); else zeigeSchritt(step+1,true); });
+  $('stepNext').addEventListener('click',()=>{ if(step===STEPS.length) $('ergebnis').scrollIntoView({behavior:'smooth',block:'start'}); else { if(step===1) lageZu(); zeigeSchritt(step+1,true); } });
 
   $('types').addEventListener('click',e=>{ const b=e.target.closest('.type'); if(b) setObj(b.dataset.o); });
   $('comps').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return;
     state.data[state.type].comp[b.dataset.c]=b.dataset.s; renderComps(); calc(); });
   $('stp').addEventListener('change',()=>{ const k=$('stp').value; $('stpw').value=k==='0'?0:STP[state.type][k]; });
-  $('f').addEventListener('input',()=>{ calc(); });
+  $('f').addEventListener('input',()=>{ if(!isSample&&!eigene){ eigene=true; sampleUI(); } calc(); });
   $('f').addEventListener('change',calc);
   $('f').addEventListener('submit',e=>e.preventDefault());
-  function beispiel(){ state.data[state.type]=clone(SAMPLE[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=true; sampleUI(); fill(); calc(); }
-  function leeren(){ state.data[state.type]=clone(BLANK[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=false; sampleUI(); autoKey=''; brwInfo(''); $('brwAuto').classList.remove('done'); fill(); calc(); $('str').focus(); }
-  function sampleUI(){ $('sampleTxt').textContent=isSample?'Beispielwerte, keine echte Immobilie.':'Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.'; $('reset').hidden=isSample; $('clear').hidden=!isSample; }
+  function beispiel(){ state.data[state.type]=clone(SAMPLE[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=true; sampleUI(); fill(); calc(); lageZu(); }
+  function leeren(){ state.data[state.type]=clone(BLANK[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=false; eigene=false; sampleUI(); lageAuf(); autoKey=''; brwInfo(''); $('brwAuto').classList.remove('done'); fill(); calc(); $('str').focus(); }
+  let eigene=false;
+  function sampleUI(){ $('sampleBar').hidden=eigene&&!isSample; document.querySelectorAll('[data-sample]').forEach(b=>b.hidden=eigene||isSample); $('sampleTxt').textContent=isSample?'Beispielwerte, keine echte Immobilie.':'Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.'; $('reset').hidden=isSample; $('clear').hidden=!isSample; }
   $('reset').addEventListener('click',beispiel);
   $('clear').addEventListener('click',leeren);
   document.addEventListener('click',e=>{ if(e.target.closest('[data-sample]')) beispiel(); });
