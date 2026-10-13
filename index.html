@@ -1008,7 +1008,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       if(j.markt){ H.markt=j.markt; H.markt_gemeinde=j.gemeinde; H.swfm='auto'; H.rf=j.markt.modell.regionalfaktor; $('rf').value=H.rf; $('swfAuto').checked=true; }
       else { delete H.markt; if(H.swfm==='auto'){ H.swfm='unknown'; $('swfUnknown').checked=true; } }
       const tag=j.stichtag?new Date(j.stichtag).toLocaleDateString('de-DE'):'';
-      brwInfo(`✓ Bodenrichtwert ${num(j.brw)} €/m² übernommen${j.markt?' · Sachwertfaktor aus dem Grundstücksmarktbericht':''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${tag?' · Stichtag '+tag:''}${j.abstand?` · Zone für Ein- und Zweifamilienhäuser in rund ${j.abstand} m Entfernung, da die Adresse selbst in einer Zone für Geschossbauten liegt`:''}`,'ok');
+      brwInfo(`✓ Bodenrichtwert ${num(j.brw)} €/m² übernommen${j.markt?' · Sachwertfaktor aus dem Grundstücksmarktbericht':''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${tag?' · Stichtag '+tag:''}${j.abstand?` · nächstgelegene Zone für Ein- und Zweifamilienhäuser, rund ${j.abstand} m entfernt`:''}`,'ok');
       $('brwAuto').classList.add('done'); $('brwBtnTxt').textContent='Erneut abrufen';
       calc();
     }catch(e){ brwInfo('Abruf gerade nicht möglich. Bitte Bodenrichtwert von Hand eintragen.','err'); }
