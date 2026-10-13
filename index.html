@@ -238,8 +238,9 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
           <label>Straße und Hausnummer <span class="opt">(optional)</span><input type="text" id="str"></label>
           <div class="row plz">
             <label>PLZ<input type="text" id="plz" inputmode="numeric" maxlength="5"></label>
-            <label>Ort<input type="text" id="ort"></label>
+            <label>Ort<input type="text" id="ort" list="ortListe"><datalist id="ortListe"></datalist></label>
           </div>
+          <p class="hint" id="plzInfo" role="status" hidden></p>
           <div class="auto" id="brwAuto" hidden>
             <button type="button" class="btn ghost small" id="brwBtn">Bodenrichtwert automatisch abrufen</button>
             <p class="hint" id="brwInfo" role="status"></p>
@@ -254,9 +255,11 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
           </div>
           <label class="haus-only">Baupreisindex (2010 = 100)<input type="number" id="bpi" min="100" step="0.1"></label>
           <div class="radio haus-only" role="radiogroup" aria-label="Sachwertfaktor">
+            <label id="swfAutoWrap" hidden><input type="radio" name="swfm" value="auto" id="swfAuto">Automatisch aus dem Grundstücksmarktbericht</label>
             <label><input type="radio" name="swfm" value="known" id="swfKnown">Ich kenne den Sachwertfaktor</label>
             <label><input type="radio" name="swfm" value="unknown" id="swfUnknown">Weiß ich nicht, typische Spanne nehmen</label>
           </div>
+          <p class="hint haus-only" id="swfAutoInfo" hidden></p>
           <label class="haus-only" id="swfWrap">Sachwertfaktor<input type="number" id="swf" min="0.3" max="3" step="0.01"></label>
           <label class="etw-only" hidden>Immobilienrichtwert (€/m² Wohnfläche)<input type="number" id="irw" min="0" step="10"></label>
           <div class="row etw-only" hidden>
@@ -575,7 +578,10 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
     document.querySelectorAll('.type').forEach(b=>b.setAttribute('aria-pressed',b.dataset.o===objKey()));
     document.querySelectorAll('.etw-only').forEach(e=>e.hidden=t!=='etw');
     document.querySelectorAll('.haus-only').forEach(e=>e.hidden=t!=='haus');
-    if(t==='haus') $('swfWrap').hidden=d.swfm!=='known';
+    if(t==='haus'){ $('swfWrap').hidden=d.swfm!=='known';
+      const hasM=!!state.data.haus.markt; $('swfAutoWrap').hidden=!hasM;
+      $('swfAutoInfo').hidden=!(hasM&&d.swfm==='auto');
+      if(hasM) $('swfAutoInfo').textContent=`Marktanpassung nach ${state.data.haus.markt.quelle.replace(/, Kap.*$/,'')}, Stichtag ${new Date(state.data.haus.markt.stichtag).toLocaleDateString('de-DE')}.`; }
     $('brwAuto').hidden = !(API_URL && t==='haus');
     const on=plan!=='guest';
     $('compsLock').hidden=on; $('resLock').hidden=on;
@@ -587,14 +593,14 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
   function fill(){
     const d=state.data[state.type];
     fields.forEach(k=>{ const el=$(k); if(!el) return; if(el.type==='checkbox') el.checked=!!d[k]; else el.value=(d[k]??''); });
-    if(state.type==='haus'){ $('swfKnown').checked=d.swfm==='known'; $('swfUnknown').checked=d.swfm!=='known'; }
+    if(state.type==='haus'){ if(d.swfm==='auto'&&!d.markt) d.swfm='unknown'; $('swfAuto').checked=d.swfm==='auto'; $('swfKnown').checked=d.swfm==='known'; $('swfUnknown').checked=d.swfm==='unknown'; }
     renderComps(); syncUI();
   }
   function read(){
     const d=state.data[state.type];
     fields.forEach(k=>{ const el=$(k); if(!el||el.closest('[hidden]')) return;
       d[k] = el.type==='checkbox'?el.checked:(el.type==='number'?parseFloat(el.value):el.value.trim()); });
-    if(state.type==='haus') d.swfm=$('swfKnown').checked?'known':'unknown';
+    if(state.type==='haus') d.swfm=$('swfAuto').checked&&d.markt?'auto':$('swfKnown').checked?'known':'unknown';
     // Adresse gilt für beide Objektarten
     const o=state.data[state.type==='haus'?'etw':'haus']; ['str','plz','ort'].forEach(k=>o[k]=d[k]);
   }
@@ -622,6 +628,19 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
     $('pB').style.width='0'; $('pG').style.width='0';
   }
 
+  // Sachwertfaktor aus der Funktion des Gutachterausschusses: y = a·x + b, Faktor = y / x.
+  // x wird auf den ausgewerteten Bereich begrenzt (keine Extrapolation).
+  function marktFaktor(M,d,x){
+    let stufe=M.stufen.findIndex(g=>d.brw<=g)+1; if(stufe===0) stufe=M.stufen.length;
+    const inStadt=(d.markt_gemeinde||'')===M.stadt;
+    const list=(M.f[d.hausart]||[]).filter(e=>e.s.includes(stufe)&&(!e.stadt||(e.stadt==='nur')===inStadt));
+    let e=list[0];
+    if(!e){ const all=M.f[d.hausart]||[]; e=all.reduce((best,c)=>{ const dd=Math.min(...c.s.map(z=>Math.abs(z-stufe))); return !best||dd<best.dd?{...c,dd}:best; },null); }
+    if(!e) return null;
+    const xc=Math.min(e.max,Math.max(e.min,x));
+    return {f:Math.round((e.a*xc+e.b)/xc*100)/100, stufe};
+  }
+
   // Reines Bewertungsmodell: liefert Rechenschritte und Wert für eine Zustandsangabe
   function model(t,d,comp){
     const steps=[], K=costs(t,d,comp), on=compsOn();
@@ -642,17 +661,22 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
       abs('Alterswertminderung',-(hk*(1-rnd/GND)),on
         ? `Alter ${alter} J., ${pts} von 20 Modernisierungspunkten → Restnutzungsdauer ${Math.round(rnd)} von ${GND} Jahren (linear)`
         : `Alter ${alter} J., ohne Modernisierungen → Restnutzungsdauer ${Math.round(rnd)} von ${GND} Jahren. Modernisierungen mit kostenlosem Konto`);
-      const gsw=v;
-      abs('Außenanlagen',gsw*0.04,'4 % des Gebäudesachwerts für Wege, Zäune, Anschlüsse');
+      const gsw=v, M=(d.swfm==='auto'&&d.markt)?d.markt:null;
+      if(M){
+        abs('Außenanlagen',gsw*M.modell.aussenanlagen,`${num(M.modell.aussenanlagen*100)} % des Gebäudesachwerts (Modell des Gutachterausschusses)`);
+        abs('Hausanschlüsse',M.modell.hausanschluss*(d.bpi/100)*(rnd/GND),'Pauschal, indexiert und alterswertgemindert');
+      } else abs('Außenanlagen',gsw*0.04,'4 % des Gebäudesachwerts für Wege, Zäune, Anschlüsse');
       const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.haus[d.stp]);
       if(sp>0) abs('Garage / Stellplatz',sp,'Fester Betrag');
       abs('Bodenwert',bw,`${num(d.gr)} m² × ${num(d.brw)} €/m² Bodenrichtwert`);
       vorl=v;
       steps.push({kind:'sub',t:'Vorläufiger Sachwert',d:'Bodenwert + Gebäude + Außenanlagen',fx:eur(v),run:v});
-      if(d.swfm==='known') pct('Marktanpassung',d.swf-1,`Sachwertfaktor ${num(d.swf,2)} laut Gutachterausschuss. So viel zahlt der Markt im Verhältnis zum Sachwert`);
+      const mf=M?marktFaktor(M,d,v):null;
+      if(mf) pct('Marktanpassung',mf.f-1,`Sachwertfaktor ${num(mf.f,2)} aus dem Grundstücksmarktbericht (Bodenrichtwertstufe ${mf.stufe})`);
+      else if(d.swfm==='known') pct('Marktanpassung',d.swf-1,`Sachwertfaktor ${num(d.swf,2)} laut Gutachterausschuss. So viel zahlt der Markt im Verhältnis zum Sachwert`);
       else { pct('Marktanpassung',SWF_UNK[1]-1,`Sachwertfaktor unbekannt: Schätzwert mit ${num(SWF_UNK[1],2)}, die Spanne deckt ${num(SWF_UNK[0],2)} bis ${num(SWF_UNK[2],2)} ab`); extra=SWF_UNK; }
       if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bauteile, voll abgezogen');
-      unc=extra?0.06:0.12;
+      unc=mf?0.10:extra?0.06:0.12;
     } else {
       v=d.irw*d.wf;
       steps.push({kind:'base',t:'Ausgangswert',d:`${num(d.irw)} €/m² Immobilienrichtwert × ${d.wf} m² Wohnfläche`,fx:eur(v),run:v});
@@ -718,7 +742,7 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
     }
 
     // Öffentliche Darstellung: nur zusammengefasste Wertbestandteile, keine Faktoren oder Formeln
-    const GROUP={'Herstellungskosten Gebäude':'Gebäude','Alterswertminderung':'Gebäude','Außenanlagen':'Gebäude',
+    const GROUP={'Herstellungskosten Gebäude':'Gebäude','Alterswertminderung':'Gebäude','Außenanlagen':'Gebäude','Hausanschlüsse':'Gebäude',
       'Garage / Stellplatz':'Garage / Stellplatz','Stellplatz':'Garage / Stellplatz','Bodenwert':'Grundstück',
       'Marktanpassung':'Marktlage in der Region','Ausgangswert':'Lage und Markt',
       'Baujahr':'Objektmerkmale','Wohnfläche':'Objektmerkmale','Lage im Gebäude':'Objektmerkmale','Ausstattung':'Objektmerkmale',
@@ -766,6 +790,29 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
   });
 
 
+  // ---- Ort zur PLZ automatisch ergänzen ----
+  let ortAuto=false, plzLast='';
+  function plzInfo(t,cls){ $('plzInfo').hidden=!t; $('plzInfo').textContent=t||''; $('plzInfo').className='hint'+(cls?' '+cls:''); }
+  $('ort').addEventListener('input',()=>{ ortAuto=false; marktVerwerfen(); });
+  function marktVerwerfen(){ const H=state.data.haus; if(!H.markt) return; delete H.markt; if(H.swfm==='auto'){ H.swfm='unknown'; $('swfUnknown').checked=true; } calc(); }
+  $('plz').addEventListener('input',async()=>{
+    const plz=$('plz').value.replace(/\D/g,'');
+    marktVerwerfen();
+    if(plz.length<5){ plzInfo(''); return; }
+    if(!API_URL||plz===plzLast) return;
+    plzLast=plz;
+    try{
+      const r=await fetch(API_URL.replace(/\/$/,'')+'/ort?plz='+plz);
+      const j=await r.json();
+      if($('plz').value.replace(/\D/g,'')!==plz) return; // inzwischen geändert
+      if(!j.ok){ plzInfo(j.fehler||'Zu dieser PLZ wurde kein Ort gefunden.','err'); return; }
+      $('ortListe').innerHTML=j.orte.map(o=>`<option value="${esc(o)}"></option>`).join('');
+      if(!$('ort').value.trim()||ortAuto||!j.orte.includes($('ort').value.trim())){ $('ort').value=j.orte[0]; ortAuto=true; read(); }
+      if(!j.nrw) plzInfo('Diese PLZ liegt nicht in Nordrhein-Westfalen. Der Wertcheck unterstützt derzeit nur NRW.','err');
+      else plzInfo(j.orte.length>1?`Mehrere Orte zu dieser PLZ. Bitte im Feld „Ort“ prüfen.`:'');
+    }catch(e){ plzLast=''; }
+  });
+
   // ---- Bodenrichtwert automatisch abrufen (nur NRW) ----
   function brwInfo(t,cls){ $('brwInfo').textContent=t; $('brwInfo').className='hint'+(cls?' '+cls:''); }
   $('brwBtn').addEventListener('click',async()=>{
@@ -777,6 +824,9 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
       const j=await r.json();
       if(!j.ok){ brwInfo(j.fehler||'Kein Bodenrichtwert gefunden. Bitte von Hand eintragen.','err'); return; }
       $('brw').value=j.brw; state.data.haus.brw=j.brw;
+      const H=state.data.haus;
+      if(j.markt){ H.markt=j.markt; H.markt_gemeinde=j.gemeinde; H.swfm='auto'; H.rf=j.markt.modell.regionalfaktor; $('rf').value=H.rf; $('swfAuto').checked=true; }
+      else { delete H.markt; if(H.swfm==='auto'){ H.swfm='unknown'; $('swfUnknown').checked=true; } }
       const tag=j.stichtag?new Date(j.stichtag).toLocaleDateString('de-DE'):'';
       brwInfo(`${num(j.brw)} €/m² übernommen · ${[j.gemeinde,j.ortsteil].filter(Boolean).join('-')}${tag?' · Stichtag '+tag:''} · Quelle: BORIS-NRW`,'ok');
       calc();
