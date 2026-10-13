@@ -94,6 +94,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .tri button::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--c);opacity:.35}
 .tri button[aria-pressed="true"]{color:var(--ink);border-color:var(--c);font-weight:600}
 .tri button[aria-pressed="true"]::before{opacity:1}
+@media (max-width:560px){ .row.sel{grid-template-columns:minmax(0,1fr)} }
 /* Ampel auf dem Handy: Bauteil oben, drei gleich breite Knöpfe darunter */
 @media (max-width:560px){
   .comps{gap:12px}
@@ -309,6 +310,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
                 <label><span class="lbl">Baupreisindex <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Entwicklung der Baupreise seit 2010 (= 100), vom Statistischen Bundesamt. Wird automatisch aktuell gehalten.</span></span><input type="number" id="bpi" min="100" step="0.1"></label>
               </div>
               <p class="hint haus-only" id="bpiInfo"></p>
+              <label class="haus-only"><span class="lbl">Bruttogrundfläche (m²) <span class="opt">(falls bekannt)</span> <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Summe aller Geschossflächen inklusive Keller und Dachgeschoss, gemessen an den Außenmaßen. Steht in der Bauakte. Ohne Angabe schätzt der Wertcheck sie aus Wohnfläche, Geschossen, Dach und Keller.</span></span><input type="number" id="bgf" min="30" step="1"></label>
               <div class="radio haus-only" role="radiogroup" aria-label="Sachwertfaktor">
                 <span class="lbl rlbl">Sachwertfaktor <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Verhältnis von Kaufpreisen zum rechnerischen Sachwert in der Region. Kommt bei unterstützten Regionen automatisch aus dem Grundstücksmarktbericht.</span></span>
                 <label id="swfAutoWrap" hidden><input type="radio" name="swfm" value="auto" id="swfAuto">Automatisch aus dem Grundstücksmarktbericht</label>
@@ -347,16 +349,30 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
               <option value="gehoben">Gehoben (Standardstufe 4)</option>
               <option value="stark">Stark gehoben (Standardstufe 5)</option>
             </select></label>
+          <div class="row sel haus-only">
+            <label><span class="lbl">Vollgeschosse <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Geschosse mit voller Raumhöhe, ohne Keller und Dachgeschoss. Bungalow oder Haus mit Erdgeschoss und ausgebautem Dach: 1. Erd- und Obergeschoss: 2.</span></span>
+              <select id="geschosse">
+                <option value="1">1 (Erdgeschoss)</option>
+                <option value="2">2 (Erd- und Obergeschoss)</option>
+              </select></label>
+            <label><span class="lbl">Dach <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Ausgebaut: Wohnräume unter dem Dach. Nicht ausgebaut: begehbarer Dachboden, z. B. zum Abstellen. Flachdach: auch flach geneigte Dächer ohne nutzbaren Dachraum.</span></span>
+              <select id="dach">
+                <option value="ausgebaut">Dachgeschoss ausgebaut</option>
+                <option value="nicht">Dachboden nicht ausgebaut</option>
+                <option value="flach">Flachdach</option>
+              </select></label>
+          </div>
           <label class="check haus-only"><input type="checkbox" id="keller">Unterkellert</label>
           <label class="check etw-only" hidden><input type="checkbox" id="balkon">Balkon, Loggia oder Terrasse</label>
           <label class="check etw-only" hidden><input type="checkbox" id="vermietet">Vermietet verkauft</label>
           <label class="check"><input type="checkbox" id="denkmal">Steht unter Denkmalschutz (Einzeldenkmal oder Denkmalbereich)</label>
-          <div class="row">
+          <div class="row sel">
             <label>Garage / Stellplatz
               <select id="stp">
                 <option value="0">Keiner</option>
                 <option value="aussen">Außenstellplatz</option>
                 <option value="garage">Garage / Tiefgarage</option>
+                <option value="doppel">Doppelgarage / zwei Stellplätze</option>
               </select></label>
             <label><span class="lbl">Wert (€) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Wird pauschal vorgeschlagen und kann angepasst werden.</span></span><input type="number" id="stpw" min="0" step="500"></label>
           </div>
@@ -398,14 +414,14 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
     <section class="panel" id="ergebnis" aria-live="polite">
       <div class="result-head">
-        <div class="label">Geschätzter Marktwert</div>
+        <div class="label">Angemessener Kaufpreis</div>
         <div class="range" id="range">–</div>
         <div class="scale" aria-hidden="true"><i id="mark"></i></div>
         <div class="meta">
           <span>Schätzwert <b id="mid">–</b></span>
           <span>je m² <b id="sqm">–</b></span>
-          <span>Unsicherheit <b id="unc">–</b></span>
         </div>
+        <p class="hint" id="rangeHint" hidden>In diesem Bereich ist ein Kaufpreis je nach Situation vor Ort angemessen, etwa Lage in der Straße, Grundriss, Eindruck bei der Besichtigung und Nachfrage. Liegt ein Angebot deutlich darüber, lohnt sich ein genauer Blick oder eine Verhandlung.</p>
         <div class="empty" id="emptyHint" hidden>
           <p id="emptyTxt"></p>
           <button type="button" class="btn ghost small" data-sample="1">Beispiel ansehen</button>
@@ -528,7 +544,41 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const API_URL = 'https://wertcheck-api.wntkmds45j.workers.dev';
 
   // NHK 2010, Gebäudeart 1.01 (KG, EG, ausgebautes DG), €/m² BGF je Standardstufe 1–5
-  const NHK = {frei:[655,725,835,1005,1260], dhh:[615,685,785,945,1180], rmh:[575,640,735,885,1105]};
+  // NHK 2010 (Anlage 4 ImmoWertV), €/m² BGF für Standardstufe 1–5.
+  // Schlüssel: Keller + Vollgeschosse (k1 = Keller, EG | k2 = Keller, EG, OG | o1 = EG ohne Keller | o2 = EG, OG ohne Keller) und Dach.
+  const NHK = {
+    frei:{ k1:{ausgebaut:[655,725,835,1005,1260],nicht:[545,605,695,840,1050],flach:[705,785,900,1085,1360]},
+           k2:{ausgebaut:[655,725,835,1005,1260],nicht:[570,635,730,880,1100],flach:[665,740,850,1025,1285]},
+           o1:{ausgebaut:[790,875,1005,1215,1515],nicht:[585,650,745,900,1125],flach:[920,1025,1180,1420,1775]},
+           o2:{ausgebaut:[720,800,920,1105,1385],nicht:[620,690,790,955,1190],flach:[785,870,1000,1205,1510]} },
+    dhh:{  k1:{ausgebaut:[615,685,785,945,1180],nicht:[515,570,655,790,985],flach:[665,735,845,1020,1275]},
+           k2:{ausgebaut:[615,685,785,945,1180],nicht:[535,595,685,825,1035],flach:[625,695,800,965,1205]},
+           o1:{ausgebaut:[740,825,945,1140,1425],nicht:[550,610,700,845,1055],flach:[865,965,1105,1335,1670]},
+           o2:{ausgebaut:[675,750,865,1040,1300],nicht:[580,645,745,895,1120],flach:[735,820,940,1135,1415]} },
+    rmh:{  k1:{ausgebaut:[575,640,735,885,1105],nicht:[480,535,615,740,925],flach:[620,690,795,955,1195]},
+           k2:{ausgebaut:[575,640,735,885,1105],nicht:[505,560,640,775,965],flach:[585,650,750,905,1130]},
+           o1:{ausgebaut:[695,770,885,1065,1335],nicht:[515,570,655,790,990],flach:[810,900,1035,1250,1560]},
+           o2:{ausgebaut:[635,705,810,975,1215],nicht:[545,605,695,840,1050],flach:[690,765,880,1060,1325]} }
+  };
+  // Bruttogrundfläche aus Wohnfläche: je Vollgeschoss rund 80 % Wohnfläche, ausgebautes Dachgeschoss rund 65 % (Schrägen),
+  // Keller und nicht ausgebauter Dachboden zählen zur BGF, aber nicht zur Wohnfläche.
+  function bgfSchaetzen(d){
+    const g=+d.geschosse||1, dach=d.dach||'ausgebaut';
+    const ebenen=g+(d.keller?1:0)+(dach!=='flach'?1:0);
+    const wohn=g*0.80+(dach==='ausgebaut'?0.65:0);
+    return Math.round(d.wf*ebenen/wohn);
+  }
+  // Umrechnung des Bodenrichtwerts auf die Grundstücksgröße, wenn der Gutachterausschuss eine Tabelle veröffentlicht
+  function flaechenFaktor(d){
+    const M=d.markt; if(!M||!M.flaeche||!(d.gr>0)) return null;
+    const g=(d.markt_gemeinde||'').toLowerCase();
+    const grp=M.flaeche.find(x=>x.orte.some(o=>g.startsWith(o.toLowerCase())));
+    if(!grp) return null;
+    const t=grp.t, x=Math.min(t[t.length-1][0],Math.max(t[0][0],d.gr));
+    let i=t.findIndex(r=>r[0]>=x); if(i<=0) return {f:t[0][1],norm:grp.norm};
+    const [x0,y0]=t[i-1],[x1,y1]=t[i];
+    return {f:Math.round((y0+(y1-y0)*(x-x0)/(x1-x0))*1000)/1000,norm:grp.norm};
+  }
   const STUFE = {einfach:2, mittel:3, gehoben:4, stark:5};
   const GND = 80, SWF_UNK = [0.85,1.0,1.20];
 
@@ -564,10 +614,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     geschoss:{eg:[-0.02,'Erdgeschoss'],og:[0,'Obergeschoss'],dg:[0.02,'Dachgeschoss'],ph:[0.06,'Penthouse']},
     balkon:-0.03, vermietet:-0.05
   };
-  const STP = {haus:{aussen:5000,garage:12000}, etw:{aussen:6000,garage:15000}};
+  const STP = {haus:{aussen:5000,garage:12000,doppel:20000}, etw:{aussen:6000,garage:15000,doppel:28000}};
 
   const SAMPLE = {
-    haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:200.1,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
+    haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:200.1,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
           comp:{dach:'y',fassade:'r',fenster:'g',heizung:'r',leitung:'y',bad:'g',innen:'y'}},
     etw:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',irw:2900,nbj:1990,nwf:75,wf:82,bj:1978,geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'garage',stpw:15000,
          comp:{bad:'r',innen:'y',leitung:'y',fenster:'g'}}
@@ -575,14 +625,14 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const clone = o => JSON.parse(JSON.stringify(o));
   // Leeres Formular als Start; das Beispiel lädt man bewusst über „Beispiel ansehen“
   const BLANK = {
-    haus:{str:'',plz:'',ort:'',swfm:'unknown',bpi:200.1,rf:1.0,hausart:'frei',ausst:'mittel',keller:true,stp:'0',stpw:0,denkmal:false,
+    haus:{str:'',plz:'',ort:'',swfm:'unknown',bpi:200.1,rf:1.0,hausart:'frei',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'0',stpw:0,denkmal:false,
           comp:{dach:'y',fassade:'y',fenster:'y',heizung:'y',leitung:'y',bad:'y',innen:'y'}},
     etw:{str:'',plz:'',ort:'',geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'0',stpw:0,denkmal:false,
          comp:{bad:'y',innen:'y',leitung:'y',fenster:'y'}}
   };
   const state = {type:'haus', data:{haus:clone(BLANK.haus), etw:clone(BLANK.etw)}};
   let isSample = false;
-  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal'];
+  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf'];
   let last = null;
 
   // ---- Konto & Tarif (simuliert) ----
@@ -678,7 +728,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   }
   function fill(){
     const d=state.data[state.type];
-    fields.forEach(k=>{ const el=$(k); if(!el) return; if(el.type==='checkbox') el.checked=!!d[k]; else el.value=(d[k]??''); });
+    fields.forEach(k=>{ const el=$(k); if(!el) return; if(el.type==='checkbox') el.checked=!!d[k]; else if(el.tagName==='SELECT'&&(d[k]===undefined||d[k]==='')) el.selectedIndex=0; else el.value=(d[k]??''); });
     if(state.type==='haus'){ if(d.swfm==='auto'&&!d.markt) d.swfm='unknown'; $('swfAuto').checked=d.swfm==='auto'; $('swfKnown').checked=d.swfm==='known'; $('swfUnknown').checked=d.swfm==='unknown'; }
     renderComps(); syncUI();
   }
@@ -714,7 +764,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
   function fail(msg,empty){
     last=null; $('range').className='range err'; $('range').textContent=empty?'Noch kein Ergebnis':msg;
-    ['mid','sqm','unc'].forEach(i=>$(i).textContent='–'); $('steps').innerHTML=''; $('save').disabled=true;
+    ['mid','sqm'].forEach(i=>$(i).textContent='–'); $('rangeHint').hidden=true; $('steps').innerHTML=''; $('save').disabled=true;
     $('pB').style.width='0'; $('pG').style.width='0';
     $('emptyHint').hidden=!empty; if(empty) $('emptyTxt').textContent=msg;
     $('plaus').hidden=true; $('cta').hidden=true; mbarUpdate();
@@ -740,9 +790,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     const pct=(title,p,desc)=>{ const b=v; v=v*(1+p); if(Math.abs(p)>=0.05) bigCount++; steps.push({t:title,d:desc,eur:v-b,fx:pctf(p),run:v}); };
     const abs=(title,a,desc)=>{ v+=a; steps.push({t:title,d:desc,eur:a,fx:signE(a),run:v}); };
     if(t==='haus'){
-      bw=d.brw*d.gr;
-      const stufe=STUFE[d.ausst], nhk=NHK[d.hausart][stufe-1];
-      const bgf=Math.round(d.wf/(d.keller?0.70:0.80));
+      const ff=flaechenFaktor(d);
+      bw=d.brw*d.gr*(ff?ff.f:1);
+      const stufe=STUFE[d.ausst], ga=(d.keller?'k':'o')+(+d.geschosse===2?2:1);
+      const nhk=NHK[d.hausart][ga][d.dach||'ausgebaut'][stufe-1];
+      const bgf=d.bgf>0?Math.round(d.bgf):bgfSchaetzen(d);
       const hk=nhk*bgf*(d.bpi/100)*d.rf;
       v=hk;
       steps.push({kind:'base',t:'Herstellungskosten Gebäude',d:`${nhk} €/m² BGF (NHK 2010, ${OBJ[d.hausart].nm}, Standardstufe ${stufe}) × ${bgf} m² Bruttogrundfläche × Baupreisindex ${num(d.bpi/100,3)}${d.rf!==1?` × Regionalfaktor ${num(d.rf,2)}`:''}`,fx:eur(hk),run:v});
@@ -760,7 +812,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       } else abs('Außenanlagen',gsw*0.04,'4 % des Gebäudesachwerts für Wege, Zäune, Anschlüsse');
       const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.haus[d.stp]);
       if(sp>0) abs('Garage / Stellplatz',sp,'Fester Betrag');
-      abs('Bodenwert',bw,`${num(d.gr)} m² × ${num(d.brw)} €/m² Bodenrichtwert`);
+      abs('Bodenwert',bw,`${num(d.gr)} m² × ${num(d.brw)} €/m² Bodenrichtwert${ff&&ff.f!==1?` × ${num(ff.f,2)} Umrechnung auf die Grundstücksgröße (Richtwertgrundstück ${ff.norm} m²)`:''}`);
       vorl=v;
       steps.push({kind:'sub',t:'Vorläufiger Sachwert',d:'Bodenwert + Gebäude + Außenanlagen',fx:eur(v),run:v});
       const mf=M?marktFaktor(M,d,v):null;
@@ -819,7 +871,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('range').className='range';
     $('range').innerHTML=`${eur(lo)} <span>bis</span> ${eur(hi)}`;
     $('mid').textContent=eur(mid); $('sqm').textContent=eur(mid/d.wf)+'/m²';
-    $('unc').textContent=extra?`− ${Math.round((mid-lo)/mid*100)} / + ${Math.round((hi-mid)/mid*100)} %`:'± '+Math.round(unc*100)+' %';
+    $('rangeHint').hidden=false;
     $('mark').style.left=`calc(${((mid-lo)/((hi-lo)||1))*100}% - 1.5px)`;
     $('cnow').textContent=eur(Math.round(K.now/500)*500); $('cmid').textContent=eur(Math.round(K.mid/500)*500);
     $('state').innerHTML=K.items.map(x=>`<div class="chip" style="--c:var(${ST[x.s][1]})"><i></i><span>${x.c.nm}<small>${ST[x.s][0]}${x.s!=='g'?' · ca. '+eur(Math.round(x.k/500)*500):''}</small></span></div>`).join('');
@@ -948,7 +1000,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     autoKey=adrKey();
     const btn=$('brwBtn'); btn.disabled=true; brwInfo('Wird abgerufen …'); $('brwAuto').classList.remove('done');
     try{
-      const r=await fetch(API_URL.replace(/\/$/,'')+'/brw?adresse='+encodeURIComponent([str,plz+' '+ort].filter(Boolean).join(', ')));
+      const r=await fetch(API_URL.replace(/\/$/,'')+'/brw?art=haus&adresse='+encodeURIComponent([str,plz+' '+ort].filter(Boolean).join(', ')));
       const j=await r.json();
       if(!j.ok){ brwInfo(j.fehler||'Kein Bodenrichtwert gefunden. Bitte von Hand eintragen.','err'); return; }
       $('brw').value=j.brw; state.data.haus.brw=j.brw;
@@ -956,7 +1008,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       if(j.markt){ H.markt=j.markt; H.markt_gemeinde=j.gemeinde; H.swfm='auto'; H.rf=j.markt.modell.regionalfaktor; $('rf').value=H.rf; $('swfAuto').checked=true; }
       else { delete H.markt; if(H.swfm==='auto'){ H.swfm='unknown'; $('swfUnknown').checked=true; } }
       const tag=j.stichtag?new Date(j.stichtag).toLocaleDateString('de-DE'):'';
-      brwInfo(`✓ Bodenrichtwert ${num(j.brw)} €/m² übernommen${j.markt?' · Sachwertfaktor aus dem Grundstücksmarktbericht':''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${tag?' · Stichtag '+tag:''}`,'ok');
+      brwInfo(`✓ Bodenrichtwert ${num(j.brw)} €/m² übernommen${j.markt?' · Sachwertfaktor aus dem Grundstücksmarktbericht':''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${tag?' · Stichtag '+tag:''}${j.abstand?` · Zone für Ein- und Zweifamilienhäuser in rund ${j.abstand} m Entfernung, da die Adresse selbst in einer Zone für Geschossbauten liegt`:''}`,'ok');
       $('brwAuto').classList.add('done'); $('brwBtnTxt').textContent='Erneut abrufen';
       calc();
     }catch(e){ brwInfo('Abruf gerade nicht möglich. Bitte Bodenrichtwert von Hand eintragen.','err'); }
