@@ -1,0 +1,17 @@
+Wertcheck – Projektdateien
+
+index.html        Die Web-App. Kommt auf GitHub (Projekt "Immoapp").
+worker/worker.js  Datendienst für den automatischen Abruf des Bodenrichtwerts (nur NRW).
+                  Kommt NICHT auf GitHub, sondern in einen Cloudflare Worker.
+
+Stand: Stufe 1 – Bodenrichtwert automatisch aus BORIS-NRW.
+Der Knopf "Bodenrichtwert automatisch abrufen" erscheint erst, wenn in index.html
+die Adresse des Workers eingetragen ist (Zeile: const API_URL = '…'), aktuell eingetragen: https://wertcheck-api.wntkmds45j.workers.dev.
+
+Datenquellen:
+- Bodenrichtwerte: BORIS-NRW, Datenlizenz Deutschland – Zero – Version 2.0
+- Adresssuche: OpenStreetMap Nominatim (nur für Tests und geringe Nutzung)
+
+Sachwertfaktoren (im Worker, Tabelle MARKT):
+- 30100 Städteregion Aachen inkl. Stadt Aachen: Grundstücksmarktbericht 2026, Kap. 5.1.4 und 8.4
+  (Datenlizenz Deutschland – Zero – Version 2.0). Freistehende EFH, DHH/REH, RMH je Bodenrichtwertstufe.
