@@ -349,6 +349,12 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
               <option value="gehoben">Gehoben (Standardstufe 4)</option>
               <option value="stark">Stark gehoben (Standardstufe 5)</option>
             </select></label>
+          <label class="haus-only"><span class="lbl">Wohneinheiten <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Einliegerwohnung: kleine zweite Wohnung im Haus, meist im Keller oder Dachgeschoss, untergeordnet zur Hauptwohnung. Zweifamilienhaus: zwei etwa gleichwertige Wohnungen. Der Markt bewertet beides anders als ein reines Einfamilienhaus.</span></span>
+            <select id="we">
+              <option value="1">1 Wohnung (Einfamilienhaus)</option>
+              <option value="elw">1 Wohnung mit Einliegerwohnung</option>
+              <option value="2">2 Wohnungen (Zweifamilienhaus)</option>
+            </select></label>
           <div class="row sel haus-only">
             <label><span class="lbl">Vollgeschosse <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Geschosse mit voller Raumhöhe, ohne Keller und Dachgeschoss. Bungalow oder Haus mit Erdgeschoss und ausgebautem Dach: 1. Erd- und Obergeschoss: 2.</span></span>
               <select id="geschosse">
@@ -617,7 +623,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const STP = {haus:{aussen:5000,garage:12000,doppel:20000}, etw:{aussen:6000,garage:15000,doppel:28000}};
 
   const SAMPLE = {
-    haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:200.1,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
+    haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:200.1,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',we:'1',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
           comp:{dach:'y',fassade:'r',fenster:'g',heizung:'r',leitung:'y',bad:'g',innen:'y'}},
     etw:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',irw:2900,nbj:1990,nwf:75,wf:82,bj:1978,geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'garage',stpw:15000,
          comp:{bad:'r',innen:'y',leitung:'y',fenster:'g'}}
@@ -625,14 +631,14 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const clone = o => JSON.parse(JSON.stringify(o));
   // Leeres Formular als Start; das Beispiel lädt man bewusst über „Beispiel ansehen“
   const BLANK = {
-    haus:{str:'',plz:'',ort:'',swfm:'unknown',bpi:200.1,rf:1.0,hausart:'frei',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'0',stpw:0,denkmal:false,
+    haus:{str:'',plz:'',ort:'',swfm:'unknown',bpi:200.1,rf:1.0,hausart:'frei',we:'1',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'0',stpw:0,denkmal:false,
           comp:{dach:'y',fassade:'y',fenster:'y',heizung:'y',leitung:'y',bad:'y',innen:'y'}},
     etw:{str:'',plz:'',ort:'',geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'0',stpw:0,denkmal:false,
          comp:{bad:'y',innen:'y',leitung:'y',fenster:'y'}}
   };
   const state = {type:'haus', data:{haus:clone(BLANK.haus), etw:clone(BLANK.etw)}};
   let isSample = false;
-  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf'];
+  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf','we'];
   let last = null;
 
   // ---- Konto & Tarif (simuliert) ----
@@ -775,9 +781,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   function marktFaktor(M,d,x){
     let stufe=M.stufen.findIndex(g=>d.brw<=g)+1; if(stufe===0) stufe=M.stufen.length;
     const inStadt=(d.markt_gemeinde||'')===M.stadt;
-    const list=(M.f[d.hausart]||[]).filter(e=>e.s.includes(stufe)&&(!e.stadt||(e.stadt==='nur')===inStadt));
+    const fkey=(d.we==='2'||d.we==='elw')&&M.f.zfh?'zfh':d.hausart;
+    const list=(M.f[fkey]||[]).filter(e=>e.s.includes(stufe)&&(!e.stadt||(e.stadt==='nur')===inStadt));
     let e=list[0];
-    if(!e){ const all=M.f[d.hausart]||[]; e=all.reduce((best,c)=>{ const dd=Math.min(...c.s.map(z=>Math.abs(z-stufe))); return !best||dd<best.dd?{...c,dd}:best; },null); }
+    if(!e){ const all=M.f[fkey]||[]; e=all.reduce((best,c)=>{ const dd=Math.min(...c.s.map(z=>Math.abs(z-stufe))); return !best||dd<best.dd?{...c,dd}:best; },null); }
     if(!e) return null;
     const xc=Math.min(e.max,Math.max(e.min,x));
     return {f:Math.round((e.a*xc+e.b)/xc*100)/100, stufe};
@@ -793,7 +800,9 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       const ff=flaechenFaktor(d);
       bw=d.brw*d.gr*(ff?ff.f:1);
       const stufe=STUFE[d.ausst], ga=(d.keller?'k':'o')+(+d.geschosse===2?2:1);
-      const nhk=NHK[d.hausart][ga][d.dach||'ausgebaut'][stufe-1];
+      // Korrekturfaktor 1,05 nur für freistehende Zweifamilienhäuser (NHK 2010), nicht bei Einliegerwohnung
+      const zfh=d.hausart==='frei'&&d.we==='2'?1.05:1;
+      const nhk=Math.round(NHK[d.hausart][ga][d.dach||'ausgebaut'][stufe-1]*zfh);
       const bgf=d.bgf>0?Math.round(d.bgf):bgfSchaetzen(d);
       const hk=nhk*bgf*(d.bpi/100)*d.rf;
       v=hk;
