@@ -85,7 +85,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .btn.small{padding:4px 10px;font-size:13px}
 .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--surface)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-/* Bauteil-Ampel */
+/* Modernisierungsampel */
 .comps{display:flex;flex-direction:column;gap:8px}
 .comp{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .comp .nm{font-size:14px;min-width:0}
@@ -95,7 +95,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .tri button[aria-pressed="true"]{color:var(--ink);border-color:var(--c);font-weight:600}
 .tri button[aria-pressed="true"]::before{opacity:1}
 @media (max-width:560px){ .row.sel{grid-template-columns:minmax(0,1fr)} }
-/* Ampel auf dem Handy: Bauteil oben, drei gleich breite Knöpfe darunter */
+/* Ampel auf dem Handy: Bereich oben, drei gleich breite Knöpfe darunter */
 @media (max-width:560px){
   .comps{gap:12px}
   .comp{flex-direction:column;align-items:stretch;gap:6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
@@ -236,6 +236,16 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .lock{border:1px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
 .lock.pro{border-color:var(--gold);background:var(--gold-soft)}
 .lock p{margin:0;color:var(--ink)}
+/* Ausstattung Bereich für Bereich */
+.arow{display:flex;flex-direction:column;gap:6px;padding:10px 0 0;border-top:1px solid var(--line)}
+.arow:first-child{border-top:0;padding-top:0}
+.arow b{font-size:14px;color:var(--ink)}
+.arow p{margin:0;font-size:13px;color:var(--muted);min-height:2.6em}
+.seg5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg5 button{font:500 12px var(--body);color:var(--ink);background:var(--bg);border:0;border-left:1px solid var(--line);padding:6px 2px;cursor:pointer;min-height:40px;line-height:1.15;overflow-wrap:anywhere}
+.seg5 button:first-child{border-left:0}
+.seg5 button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.ausst-res{font-size:14px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:0}
 /* Premium: Anzeige übernehmen */
 .imp{gap:0;padding:14px 16px;border-color:var(--gold)}
 .imp>details{border-top:0;padding-top:0}
@@ -264,13 +274,32 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .pcv.good{--c:var(--g)} .pcv.mid{--c:var(--y)} .pcv.bad{--c:var(--r)}
 .pcv b{color:var(--c);font-size:15px}
 .pcv p{margin:0}
-.pcbar{position:relative;height:26px}
-.pcbar .band{position:absolute;top:8px;height:10px;border-radius:5px;background:var(--accent-soft);border:1px solid var(--accent)}
-.pcbar .m{position:absolute;top:3px;width:2px;height:20px;background:var(--accent);margin-left:-1px}
-.pcbar .ap{position:absolute;top:6px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--c,var(--gold));border:2px solid var(--surface)}
+.pcbar{position:relative;height:64px;margin-top:2px}
+.pcbar .seg{position:absolute;top:24px;height:14px;background:var(--c)}
+.pcbar .seg::after{content:"";position:absolute;inset:0;background:var(--surface);opacity:.55}
+.pcbar .seg.on::after{opacity:0}
+.pcbar .seg:first-of-type{border-radius:7px 0 0 7px}
+.pcbar .seg.last{border-radius:0 7px 7px 0}
+.pcbar .seg span{position:absolute;top:20px;left:0;right:0;text-align:center;font-size:11px;font-style:normal;color:var(--muted);white-space:nowrap}
+.pcbar .seg.on span{color:var(--ink);font-weight:600}
+.pcbar .m{position:absolute;top:19px;width:2px;height:24px;background:var(--ink);margin-left:-1px;border-radius:1px}
+.pcbar .ap{position:absolute;top:22px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--ink);border:3px solid var(--surface);box-shadow:0 0 0 1px var(--ink)}
+.pcbar .apl{position:absolute;top:0;font-size:12px;font-weight:600;color:var(--ink);white-space:nowrap;transform:translateX(-50%)}
+.pcbar .apl.l{transform:none}.pcbar .apl.r{transform:translateX(-100%)}
 .pcleg{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
 .pcleg b{color:var(--ink)}
 .costs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+/* Preis-Ampel (kostenloses Konto) */
+.pamp{display:flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.pamp .lights{display:flex;gap:6px;background:var(--ink);border-radius:999px;padding:6px 8px;flex:none}
+.pamp .lights i{width:18px;height:18px;border-radius:50%;background:var(--c);opacity:.22}
+.pamp .lights i.on{opacity:1;box-shadow:0 0 8px var(--c)}
+.pamp b{display:block;font-size:16px}
+.pamp p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.pteaser{border:1px dashed var(--gold);background:var(--gold-soft);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.pteaser .tz{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid var(--line);padding-bottom:6px}
+.pteaser .tz b{filter:blur(6px);user-select:none;-webkit-user-select:none;font-family:var(--display)}
+.pteaser p{margin:0}
 .costs.three .v{font-size:19px}
 @media (max-width:560px){.costs.three{grid-template-columns:minmax(0,1fr)}}
 .szen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
@@ -412,13 +441,22 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
               <option value="dg">Dachgeschoss</option>
               <option value="ph">Penthouse</option>
             </select></label>
-          <label><span class="lbl">Ausstattungsstandard <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Einfach: Grundausstattung, alte Bäder. Mittel: übliche Ausstattung. Gehoben: hochwertige Böden, Bäder, Fenster. Stark gehoben: Architektenhaus, Naturstein, Smart Home.</span></span>
+          <label><span class="lbl">Ausstattungsstandard <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Gemeint ist die Bauweise und Qualität, nicht die Abnutzung. Faustregel: Einfach heißt gebaut oder zuletzt modernisiert bis ca. 1995. Mittel heißt zeitgemäß, gebaut oder modernisiert ab ca. 1995. Gehoben heißt überdurchschnittlich, ab ca. 2005. Unsicher? Darunter Bereich für Bereich bestimmen.</span></span>
             <select id="ausst">
-              <option value="einfach">Einfach (Standardstufe 2)</option>
-              <option value="mittel">Mittel (Standardstufe 3)</option>
-              <option value="gehoben">Gehoben (Standardstufe 4)</option>
-              <option value="stark">Stark gehoben (Standardstufe 5)</option>
+              <option value="veraltet">Sehr einfach, veraltet (bis ca. 1980)</option>
+              <option value="einfach">Einfach (Stand bis ca. 1995)</option>
+              <option value="mittel">Mittel, zeitgemäß (ab ca. 1995)</option>
+              <option value="gehoben">Gehoben (ab ca. 2005)</option>
+              <option value="stark">Stark gehoben, hochwertig</option>
             </select></label>
+          <details class="expert" id="ausstHelp">
+            <summary>Unsicher? Ausstattung genauer bestimmen <span class="sub">Bereich für Bereich, mit Beispielen</span></summary>
+            <div class="expert-in">
+              <p class="hint">Tippen Sie je Bereich auf die Stufe, die am ehesten passt. Darunter steht, was typisch dazugehört. Es geht um Bauweise und Qualität, nicht um Abnutzung, den Zustand fragen wir in Schritt 3 ab. Wenn Sie etwas nicht wissen, lassen Sie es auf „Mittel“.</p>
+              <div id="ausstRows"></div>
+              <p class="ausst-res" id="ausstRes"></p>
+            </div>
+          </details>
           <label class="haus-only"><span class="lbl">Wohneinheiten <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Einliegerwohnung: kleine zweite Wohneinheit im Haus, meist im Keller oder Dachgeschoss, untergeordnet zur Hauptwohneinheit. Zweifamilienhaus: zwei etwa gleichwertige Wohneinheiten. Der Markt bewertet beides anders als ein reines Einfamilienhaus.</span></span>
             <select id="we">
               <option value="1">1 Wohneinheit (Einfamilienhaus)</option>
@@ -462,22 +500,22 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <legend>3 · Zustand & Modernisierung <span class="tag">Konto</span></legend>
           <div class="lock" id="compsLock" hidden>
             <b>Modernisierungen mit kostenlosem Konto</b>
-            <p>Bewerten Sie Dach, Fassade, Heizung, Bad und weitere Bauteile. Modernisierte Teile erhöhen den Wert, ein Sanierungsstau wird abgezogen. Ohne Anmeldung rechnen wir mit durchschnittlichem Zustand.</p>
+            <p>Bewerten Sie Dach, Fassade, Heizung, Bad und weitere Bereiche. Modernisierte Teile erhöhen den Wert, ein Sanierungsstau wird abgezogen. Ohne Anmeldung rechnen wir mit durchschnittlichem Zustand.</p>
             <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button><button type="button" class="btn ghost small" data-open="in">Anmelden</button></div>
           </div>
           <div class="legend-tri compsOn"><span style="--c:var(--g)">Modernisiert (ca. 15 J.)</span><span style="--c:var(--y)">Älter, intakt</span><span style="--c:var(--r)">Sanierung nötig</span></div>
           <div class="comps compsOn" id="comps"></div>
           <details class="amp compsOn" id="ampHelp">
             <summary>So funktioniert die Modernisierungsampel</summary>
-            <p>Wählen Sie für jedes Bauteil, in welchem Zustand es heute ist. Die Farbe bestimmt, wie das Bauteil in den Wert eingeht.</p>
+            <p>Wählen Sie für jeden Bereich, in welchem Zustand er heute ist. Die Farbe bestimmt, wie der Bereich in den Wert eingeht.</p>
             <ul>
-              <li style="--c:var(--g)"><b>Grün · Neu:</b> in den letzten rund 15 Jahren erneuert, z. B. neue Heizung, gedämmtes Dach, neues Bad. Modernisierte Bauteile erhöhen den Wert, große Bauteile wie Dach und Fassade stärker als kleine.</li>
+              <li style="--c:var(--g)"><b>Grün · Neu:</b> in den letzten rund 15 Jahren erneuert, z. B. neue Heizung, gedämmtes Dach, neues Bad. Modernisierte Bereiche erhöhen den Wert, große Bereiche wie Dach und Fassade stärker als kleine.</li>
               <li style="--c:var(--y)"><b>Gelb · Mittel:</b> älter, aber funktionsfähig. Kein Zu- oder Abschlag. Die Kosten erscheinen unter „In 5–10 Jahren“, nur zur Planung.</li>
               <li style="--c:var(--r)"><b>Rot · Schlecht:</b> defekt oder am Ende der Lebensdauer, z. B. undichtes Dach, Heizung über 30 Jahre. Die geschätzten Sanierungskosten werden voll vom Wert abgezogen, so wie ein Käufer sie einpreisen würde.</li>
             </ul>
             <p>Wenn Sie unsicher sind, wählen Sie Gelb.</p>
           </details>
-          <p class="hint etw-only" hidden>Dach, Fassade und Heizung gehören meist zum Gemeinschaftseigentum und laufen über Rücklage oder Sonderumlage. Hier nur die Bauteile der Wohnung.</p>
+          <p class="hint etw-only" hidden>Dach, Fassade und Heizung gehören meist zum Gemeinschaftseigentum und laufen über Rücklage oder Sonderumlage. Hier nur die Bereiche der Wohnung.</p>
         </fieldset>
         <div class="stepnav" id="stepNav" hidden>
           <button type="button" class="btn ghost" id="stepBack">Zurück</button>
@@ -523,15 +561,15 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       <div class="saved" id="saved"></div>
 
       <div class="blk" id="pcBlk">
-        <h2>Preis-Check <span class="tag pro">Premium</span></h2>
-        <div class="lock pro" id="pcLock">
-          <p>Premium vergleicht den Angebotspreis einer Anzeige mit dem angemessenen Kaufpreis, zeigt den Verhandlungsspielraum und rechnet die Kaufnebenkosten für NRW dazu.</p>
-          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+        <h2>Preis-Check <span class="tag" id="pcTag">Konto</span></h2>
+        <div class="lock" id="pcLock">
+          <p>Passt der Angebotspreis aus der Anzeige? Mit einem kostenlosen Konto zeigt die Preis-Ampel, ob der Preis passt, etwas hoch oder zu teuer ist.</p>
+          <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button></div>
         </div>
         <div class="pc" id="pcOn" hidden>
           <div class="row">
             <label>Angebotspreis (€)<input type="number" id="ap" min="0" step="1000" inputmode="numeric"></label>
-            <label><span class="lbl">Provision (%) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Anteil, den Sie als Käufer zahlen, steht in der Anzeige. Bei Einfamilienhäusern und Wohnungen teilen sich Käufer und Verkäufer die Provision meist, üblich sind 3,57 % je Seite. Leer lassen, wenn provisionsfrei.</span></span><input type="number" id="prov" min="0" max="10" step="0.01"></label>
+            <label id="provWrap"><span class="lbl">Provision (%) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Anteil, den Sie als Käufer zahlen, steht in der Anzeige. Bei Einfamilienhäusern und Wohnungen teilen sich Käufer und Verkäufer die Provision meist, üblich sind 3,57 % je Seite. Leer lassen, wenn provisionsfrei.</span></span><input type="number" id="prov" min="0" max="10" step="0.01"></label>
           </div>
           <div id="pcOut"></div>
         </div>
@@ -539,7 +577,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
       <div class="lock" id="resLock" hidden>
         <b>Zustand und Sanierungskosten sehen</b>
-        <p>Mit einem kostenlosen Konto zeigt der Wertcheck, welche Bauteile jetzt und in 5–10 Jahren Geld kosten, und rechnet Modernisierungen in den Wert ein.</p>
+        <p>Mit einem kostenlosen Konto zeigt der Wertcheck, welche Bereiche jetzt und in 5–10 Jahren Geld kosten, und rechnet Modernisierungen in den Wert ein.</p>
         <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button></div>
       </div>
 
@@ -551,13 +589,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       <div class="blk resOn">
         <h2>Lohnt sich die Sanierung? <span class="tag pro">Premium</span></h2>
         <div class="lock pro" id="szLock">
-          <p>Premium rechnet aus, was Ihre Immobilie nach der Sanierung der rot markierten Bauteile wert wäre, und stellt den Wertzuwachs den Kosten gegenüber.</p>
+          <p>Premium rechnet aus, was Ihre Immobilie nach der Sanierung der rot markierten Bereiche wert wäre, und stellt den Wertzuwachs den Kosten gegenüber.</p>
           <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
         </div>
         <p class="hint" id="szDenkmal" hidden>Bei Baudenkmälern lassen sich Sanierungskosten oft erhöht steuerlich absetzen (§ 7i EStG für Vermieter, § 10f EStG für Selbstnutzer), wenn die Denkmalbehörde die Maßnahme vorher bescheinigt. Das ist im Ergebnis nicht eingerechnet, Details bitte mit der Steuerberatung klären.</p>
         <div class="szen" id="szen" hidden>
           <div class="cost"><span class="label">Wert nach Sanierung</span><span class="v" id="szV">–</span><p id="szD"></p></div>
-          <div class="cost"><span class="label">Kosten</span><span class="v" id="szK">–</span><p>Rote Bauteile</p></div>
+          <div class="cost"><span class="label">Kosten</span><span class="v" id="szK">–</span><p>Rote Bereiche</p></div>
           <div class="cost" id="szNbox"><span class="label">Ergebnis</span><span class="v" id="szN">–</span><p id="szT"></p></div>
         </div>
       </div>
@@ -565,10 +603,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       <div class="blk resOn">
         <h2>Sanierungskosten</h2>
         <div class="costs">
-          <div class="cost now"><span class="label">Jetzt nötig</span><span class="v" id="cnow">–</span><p>Rote Bauteile, im Wert abgezogen</p></div>
-          <div class="cost mid"><span class="label">In 5–10 Jahren</span><span class="v" id="cmid">–</span><p>Gelbe Bauteile, nur zur Planung</p></div>
+          <div class="cost now"><span class="label">Jetzt nötig</span><span class="v" id="cnow">–</span><p>Rote Bereiche, im Wert abgezogen</p></div>
+          <div class="cost mid"><span class="label">In 5–10 Jahren</span><span class="v" id="cmid">–</span><p>Gelbe Bereiche, nur zur Planung</p></div>
         </div>
-        <p class="hint" id="kostenHint">Richtwerte für eine typische Ausführung, angepasst an die aktuellen Baupreise. Die tatsächlichen Kosten hängen von Region, Handwerkerauslastung, Material und Zustand der Bausubstanz ab. „In 5–10 Jahren“ zeigt, was anfällt, wenn alle gelb markierten Bauteile erneuert werden. Für die Planung lohnen sich Angebote von Fachbetrieben vor Ort.</p>
+        <p class="hint" id="kostenHint">Richtwerte für eine typische Ausführung, angepasst an die aktuellen Baupreise. Die tatsächlichen Kosten hängen von Region, Handwerkerauslastung, Material und Zustand der Bausubstanz ab. „In 5–10 Jahren“ zeigt, was anfällt, wenn alle gelb markierten Bereiche erneuert werden. Für die Planung lohnen sich Angebote von Fachbetrieben vor Ort.</p>
       </div>
 
       <div class="blk" style="gap:4px">
@@ -674,7 +712,24 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     const [x0,y0]=t[i-1],[x1,y1]=t[i];
     return {f:Math.round((y0+(y1-y0)*(x-x0)/(x1-x0))*1000)/1000,norm:grp.norm};
   }
-  const STUFE = {einfach:2, mittel:3, gehoben:4, stark:5};
+  const STUFE = {veraltet:1, einfach:2, mittel:3, gehoben:4, stark:5};
+  // Ausstattung je Bereich nach den Standardmerkmalen der NHK 2010 (Anlage 4 ImmoWertV), in Alltagssprache
+  const AUSST = [
+    {id:'wand',nm:'Außenwände & Fassade',w:23,t:['Fachwerk oder Ziegel, Putz oder einfache Verkleidung, kaum Wärmedämmung (vor ca. 1980)','Verputztes Mauerwerk, z. B. aus Hohlblock- oder Gitterziegeln, Dämmung nicht mehr zeitgemäß (vor ca. 1995)','Mauerwerk aus Leichtziegel, Kalksandstein oder Porenbeton mit Dämmputz oder Wärmedämmung außen (ab ca. 1995)','Klinker- oder Verblendmauerwerk, hinterlüftete Fassade z. B. mit Schiefer, gute Dämmung (ab ca. 2005)','Aufwendige Fassade mit Naturstein, Sichtbeton oder großen Glasflächen, Dämmung auf Passivhaus-Niveau']},
+    {id:'dach',nm:'Dach',w:15,t:['Dachpappe oder einfache Eindeckung, kaum Dämmung (vor ca. 1980)','Einfache Betondachsteine oder Tonziegel, Dämmung nicht mehr zeitgemäß (vor ca. 1995)','Beschichtete Dachsteine oder Tonziegel, Dachrinnen aus Zink, gedämmt (ab ca. 1995)','Glasierte Ziegel, besondere Dachform wie Walm- oder Mansarddach, Dämmung über den Sparren (ab ca. 2005)','Schiefer- oder Kupferdach, Dachbegrünung oder Dachterrasse, Dämmung auf Passivhaus-Niveau']},
+    {id:'fenster',nm:'Fenster & Haustür',w:11,etw:1,t:['Einfachverglasung, alte Haustür','Zweifachverglasung von vor ca. 1995, Haustür ohne zeitgemäße Dämmung','Zweifachverglasung ab ca. 1995, Rollläden von Hand, gedämmte Haustür','Dreifachverglasung, elektrische Rollläden, hochwertige Haustür z. B. mit Seitenteil oder Einbruchschutz','Große feststehende Glasflächen, Spezialglas für Schall- und Sonnenschutz, Haustür aus hochwertigem Material']},
+    {id:'innen',nm:'Innenwände & Türen',w:11,etw:1,t:['Fachwerkwände, einfacher Putz, alte Füllungstüren','Leichte Trennwände z. B. aus Gipskarton, leichte Türen mit Stahlzargen','Massive oder gedämmte Innenwände, schwere Türen mit Holzzargen','Sichtmauerwerk oder Holzvertäfelung, Massivholz-, Glas- oder Schiebetüren','Aufwendig gestaltete Wände, Vertäfelung aus Edelholz oder Metall, raumhohe Türen']},
+    {id:'decke',nm:'Decken & Treppe',w:11,t:['Holzbalkendecken ohne Füllung, einfache Holztreppe','Holzbalkendecken mit Füllung, einfache Stahl- oder Hartholztreppe','Betondecken oder Holzbalkendecken mit Schallschutz, gerade Beton- oder Stahltreppe','Deckenverkleidung aus Holzpaneelen, gewendelte Treppe oder hochwertige Hartholztreppe','Große, gegliederte Decken, breite Treppe mit hochwertigem Geländer']},
+    {id:'boden',nm:'Bodenbeläge',w:5,etw:1,t:['Ohne Belag oder sehr alte Beläge','Einfaches Laminat, Teppich, PVC oder Linoleum','Bessere Beläge, Fliesen','Parkett, Naturstein, großformatige oder hochwertige Fliesen','Hochwertiges Parkett, Edelholz oder hochwertiger Naturstein']},
+    {id:'bad',nm:'Bad & Sanitär',w:9,etw:1,t:['Einfaches Bad, Stand-WC, kaum gefliest','Ein Bad mit WC und Dusche oder Wanne, teilweise gefliest','Ein Bad mit Dusche und Wanne, raumhoch gefliest, Gäste-WC','Ein bis zwei hochwertige Bäder, z. B. bodengleiche Dusche, zwei Waschbecken, Gäste-WC','Mehrere großzügige Bäder mit hochwertigen Fliesen oder Naturstein']},
+    {id:'heiz',nm:'Heizung',w:9,etw:1,t:['Einzelöfen, Schwerkraftheizung','Zentral- oder Fernheizung von vor ca. 1995, Nachtspeicher, Gasthermen in einzelnen Räumen','Moderne Zentralheizung, Brennwert- oder Niedertemperaturkessel','Fußbodenheizung, Solaranlage für Warmwasser, zusätzlicher Kamin','Wärmepumpe, Blockheizkraftwerk, Solaranlage auch für die Heizung']},
+    {id:'technik',nm:'Elektrik & Technik',w:6,etw:1,t:['Wenige Steckdosen, Leitungen auf Putz, kein FI-Schalter','Wenige Steckdosen und Schalter','Zeitgemäße Anzahl Steckdosen und Lampenanschlüsse, Zählerschrank mit Sicherungsautomaten','Viele Steckdosen, hochwertige Schalter, Lüftung mit Wärmerückgewinnung, mehrere Netzwerk- und TV-Anschlüsse','Alarmanlage, Klimaanlage, zentrale Lüftung, Smart Home']}
+  ];
+  const ALVL = ['Veraltet','Einfach','Mittel','Gehoben','Hoch­wertig'];
+  const ausstTeile = t => AUSST.filter(a=>t==='haus'||a.etw);
+  function ausstD(d,t){ if(d.ausst==='indiv'&&d.ausstD) return d.ausstD; const s=STUFE[d.ausst]||3, o={}; AUSST.forEach(a=>o[a.id]=s); return o; }
+  function ausstMittel(d,t){ const D=ausstD(d,t), L=ausstTeile(t), W=L.reduce((x,a)=>x+a.w,0); return L.reduce((x,a)=>x+a.w*(D[a.id]||3),0)/W; }
+  const ausstWort = s => s<1.5?'sehr einfach':s<2.25?'einfach':s<2.75?'zwischen einfach und mittel':s<3.25?'mittel':s<3.75?'zwischen mittel und gehoben':s<4.5?'gehoben':'stark gehoben';
   const GND = 80, SWF_UNK = [0.85,1.0,1.20];
 
   const OBJ = {
@@ -705,7 +760,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
   const ETWF = {
     bjJahr:0.005, bjCap:0.25, flExp:0.12,
-    ausst:{einfach:-0.05,mittel:0,gehoben:0.06,stark:0.12},
+    ausst:{veraltet:-0.10,einfach:-0.05,mittel:0,gehoben:0.06,stark:0.12}, ausstS:[-0.10,-0.05,0,0.06,0.12],
     geschoss:{eg:[-0.02,'Erdgeschoss'],og:[0,'Obergeschoss'],dg:[0.02,'Dachgeschoss'],ph:[0.06,'Penthouse']},
     balkon:-0.03, vermietet:-0.05
   };
@@ -735,8 +790,8 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   let plan=ls.get(AKEY,'guest');
   const TIERS=[
     {id:'guest',nm:'Ohne Anmeldung',price:'0 €',per:'',items:['Wertcheck für Haus und Wohnung in NRW','Übersicht der Wertbestandteile','Zustand pauschal als durchschnittlich','Mit Werbung']},
-    {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Bauteil-Ampel','Sanierungskosten jetzt und in 5–10 Jahren','3 Bewertungen speichern','Mit Werbung']},
-    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check: Angebotspreis gegen angemessenen Kaufpreis','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
+    {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Modernisierungsampel','Sanierungskosten jetzt und in 5–10 Jahren','Preis-Ampel: Passt der Angebotspreis?','3 Bewertungen speichern','Mit Werbung']},
+    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check ausführlich: Verhandlungsspielraum, Nebenkosten, Gesamtkosten','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
     {id:'single',nm:'Einzelbericht',price:'19 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Ohne Abo, ohne Anmeldung']}
   ];
   function renderAcct(){
@@ -822,11 +877,22 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       ? 'Verfahren: <b>Sachwertverfahren</b> (Bodenwert + Gebäudewert, an den Markt angepasst)'
       : 'Verfahren: <b>Vergleichswertverfahren</b> über den Immobilienrichtwert';
   }
+  function ausstOpt(d){
+    const sel=$('ausst'); let o=sel.querySelector('option[value="indiv"]');
+    if(d.ausst==='indiv'){ if(!o){ o=document.createElement('option'); o.value='indiv'; sel.appendChild(o); } o.textContent=`Bereich für Bereich: ${ausstWort(ausstMittel(d,state.type))}`; }
+    else if(o) o.remove();
+  }
+  function renderAusst(){
+    const t=state.type, d=state.data[t], D=ausstD(d,t);
+    $('ausstRows').innerHTML=ausstTeile(t).map(a=>`<div class="arow"><b>${a.nm}</b><div class="seg5" role="group" aria-label="${a.nm}">${ALVL.map((l,i)=>`<button type="button" data-a="${a.id}" data-s="${i+1}" aria-pressed="${(D[a.id]||3)===i+1}">${l}</button>`).join('')}</div><p>${a.t[(D[a.id]||3)-1]}</p></div>`).join('');
+    const s=ausstMittel(d,t);
+    $('ausstRes').innerHTML=`Ergebnis: <b>${ausstWort(s)}</b> (Standardstufe ${num(s,1)})`;
+  }
   function fill(){
-    const d=state.data[state.type];
+    const d=state.data[state.type]; ausstOpt(d);
     fields.forEach(k=>{ const el=$(k); if(!el) return; if(el.type==='checkbox') el.checked=!!d[k]; else if(el.tagName==='SELECT'&&(d[k]===undefined||d[k]==='')) el.selectedIndex=0; else el.value=(d[k]??''); });
     if(state.type==='haus'){ if(d.swfm==='auto'&&!d.markt) d.swfm='unknown'; $('swfAuto').checked=d.swfm==='auto'; $('swfKnown').checked=d.swfm==='known'; $('swfUnknown').checked=d.swfm==='unknown'; }
-    renderComps(); syncUI();
+    renderComps(); renderAusst(); syncUI();
   }
   function read(){
     const d=state.data[state.type];
@@ -842,11 +908,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     fill(); calc(); if(!$('lageSum').hidden&&!lageKomplett()) lageAuf(); else if(!$('lageSum').hidden) lageZu();
   }
 
-  // Gäste rechnen mit durchschnittlichem Zustand (alle Bauteile „Älter, intakt“)
+  // Gäste rechnen mit durchschnittlichem Zustand (alle Bereiche „Älter, intakt“)
   const compsOn = () => plan!=='guest';
   function effComp(d){ if(compsOn()) return d.comp; const o={}; COMPS[state.type].forEach(c=>o[c.id]='y'); return o; }
 
-  // Baupreisindex: Die Kostenansätze je Bauteil gelten zum Stand REF. Steigt der Index, steigen die Sanierungskosten mit.
+  // Baupreisindex: Die Kostenansätze je Bereich gelten zum Stand REF. Steigt der Index, steigen die Sanierungskosten mit.
   const BPI = {ref:200.1, akt:200.1, stand:'August 2026', quelle:'Statistisches Bundesamt'};
   let bpiAuto = true;
   const DENKMAL_KOSTEN = 1.3; // Mehrkosten für denkmalgerechte Ausführung
@@ -889,10 +955,12 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(t==='haus'){
       const ff=flaechenFaktor(d);
       bw=d.brw*d.gr*(ff?ff.f:1);
-      const stufe=STUFE[d.ausst], ga=(d.keller?'k':'o')+(+d.geschosse===2?2:1);
+      const stufe=num(ausstMittel(d,'haus'),1).replace(',0',''), aD=ausstD(d,'haus'), ga=(d.keller?'k':'o')+(+d.geschosse===2?2:1);
       // Korrekturfaktor 1,05 nur für freistehende Zweifamilienhäuser (NHK 2010), nicht bei Einliegerwohnung
       const zfh=d.hausart==='frei'&&d.we==='2'?1.05:1;
-      const nhk=Math.round(NHK[d.hausart][ga][d.dach||'ausgebaut'][stufe-1]*zfh);
+      const nhkR=NHK[d.hausart][ga][d.dach||'ausgebaut'];
+      // Kostenkennwert je Bereich gewichtet (Wägungsanteile der NHK 2010)
+      const nhk=Math.round(AUSST.reduce((x,a)=>x+a.w*nhkR[(aD[a.id]||3)-1],0)/100*zfh);
       const bgf=d.bgf>0?Math.round(d.bgf):bgfSchaetzen(d);
       const hk=nhk*bgf*(d.bpi/100)*d.rf;
       v=hk;
@@ -918,7 +986,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       if(mf) pct('Marktanpassung',mf.f-1,`Sachwertfaktor ${num(mf.f,2)} aus dem Grundstücksmarktbericht (Bodenrichtwertstufe ${mf.stufe})`);
       else if(d.swfm==='known') pct('Marktanpassung',d.swf-1,`Sachwertfaktor ${num(d.swf,2)} laut Gutachterausschuss. So viel zahlt der Markt im Verhältnis zum Sachwert`);
       else { pct('Marktanpassung',SWF_UNK[1]-1,`Sachwertfaktor unbekannt: Schätzwert mit ${num(SWF_UNK[1],2)}, die Spanne deckt ${num(SWF_UNK[0],2)} bis ${num(SWF_UNK[2],2)} ab`); extra=SWF_UNK; }
-      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bauteile, voll abgezogen');
+      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bereiche, voll abgezogen');
       unc=mf?0.10:extra?0.06:0.12;
     } else {
       v=d.irw*d.wf;
@@ -927,13 +995,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       pct('Baujahr',pb,diff===0?'Entspricht dem Normobjekt':`${Math.abs(diff)} Jahre ${diff<0?'älter':'jünger'} als das Normobjekt (${d.nbj}), 0,5 % je Jahr`);
       pct('Wohnfläche',Math.pow(d.nwf/d.wf,ETWF.flExp)-1,`${d.wf} m² statt ${d.nwf} m². Größere Einheiten kosten je m² etwas weniger`);
       const g=ETWF.geschoss[d.geschoss]; pct('Lage im Gebäude',g[0],g[1]);
-      pct('Ausstattung',ETWF.ausst[d.ausst],'Ausstattungsstandard gegenüber mittlerem Standard');
-      if(on) pct('Modernisierte Bauteile',K.pctUp,K.pctUp?'Grün markierte Bauteile der Wohnung':'Keine Bauteile als modernisiert markiert');
+      { const D=ausstD(d,'etw'), L=ausstTeile('etw'), W=L.reduce((x,a)=>x+a.w,0); pct('Ausstattung',L.reduce((x,a)=>x+a.w*ETWF.ausstS[(D[a.id]||3)-1],0)/W,'Ausstattungsstandard gegenüber mittlerem Standard'); }
+      if(on) pct('Modernisierte Bereiche',K.pctUp,K.pctUp?'Grün markierte Bereiche der Wohnung':'Keine Bereiche als modernisiert markiert');
       pct('Balkon / Terrasse',d.balkon?0:ETWF.balkon,d.balkon?'Vorhanden':'Fehlt, Abschlag');
       if(d.vermietet) pct('Vermietung',ETWF.vermietet,'Vermietet verkauft, für Selbstnutzer weniger attraktiv');
       const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.etw[d.stp]);
       if(sp>0) abs('Stellplatz',sp,'Fester Betrag');
-      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bauteile, voll abgezogen');
+      if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bereiche, voll abgezogen');
       unc=0.08+(Math.abs(diff)>30?0.03:0);
     }
     if(!on) unc+=0.04; // Zustand unbekannt
@@ -975,13 +1043,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('cnow').textContent=eur(Math.round(K.now/500)*500); $('cmid').textContent=eur(Math.round(K.mid/500)*500);
     $('state').innerHTML=K.items.map(x=>`<div class="chip" style="--c:var(${ST[x.s][1]})"><i></i><span>${x.c.nm}<small>${ST[x.s][0]}${x.s!=='g'?' · ca. '+eur(Math.round(x.k/500)*500):''}</small></span></div>`).join('');
 
-    // Premium: Wert nach Sanierung der roten Bauteile
+    // Premium: Wert nach Sanierung der roten Bereiche
     const pro=plan==='premium';
     $('szLock').hidden=pro; $('szen').hidden=!pro;
     $('denkmalHint').hidden=!d.denkmal; $('szDenkmal').hidden=!(pro&&d.denkmal);
     if(pro){
       const reds=K.items.filter(x=>x.s==='r');
-      if(!reds.length){ $('szV').textContent=eur(mid); $('szD').textContent='Keine Bauteile rot markiert'; $('szK').textContent=eur(0); $('szN').textContent='–'; $('szT').textContent='Kein Sanierungsstau'; $('szNbox').className='cost'; }
+      if(!reds.length){ $('szV').textContent=eur(mid); $('szD').textContent='Keine Bereiche rot markiert'; $('szK').textContent=eur(0); $('szN').textContent='–'; $('szT').textContent='Kein Sanierungsstau'; $('szNbox').className='cost'; }
       else {
         const c2={...d.comp}; reds.forEach(x=>c2[x.c.id]='g');
         const after=Math.round(model(t,d,c2).v/1000)*1000, gain=after-mid, net=gain-K.now;
@@ -998,10 +1066,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       'Garage / Stellplatz':'Garage / Stellplatz','Stellplatz':'Garage / Stellplatz','Bodenwert':'Grundstück',
       'Marktanpassung':'Marktlage in der Region','Ausgangswert':'Lage und Markt',
       'Baujahr':'Objektmerkmale','Wohnfläche':'Objektmerkmale','Lage im Gebäude':'Objektmerkmale','Ausstattung':'Objektmerkmale',
-      'Balkon / Terrasse':'Objektmerkmale','Vermietung':'Objektmerkmale','Modernisierte Bauteile':'Modernisierungen','Sanierungsstau':'Sanierungsbedarf'};
+      'Balkon / Terrasse':'Objektmerkmale','Vermietung':'Objektmerkmale','Modernisierte Bereiche':'Modernisierungen','Sanierungsstau':'Sanierungsbedarf'};
     const DESC={'Gebäude':'Heutiger Wert der Bausubstanz','Grundstück':'Nach Lage und Grundstücksgröße','Garage / Stellplatz':'Pauschaler Wert',
       'Marktlage in der Region':'Was Käufer in Ihrer Region zahlen','Lage und Markt':'Aus amtlichen Vergleichsdaten',
-      'Objektmerkmale':'Baujahr, Größe, Lage im Haus und Ausstattung','Modernisierungen':'Grün markierte Bauteile','Sanierungsbedarf':'Rot markierte Bauteile'};
+      'Objektmerkmale':'Baujahr, Größe, Lage im Haus und Ausstattung','Modernisierungen':'Grün markierte Bereiche','Sanierungsbedarf':'Rot markierte Bereiche'};
     const parts=[];
     steps.forEach(s=>{ const g=GROUP[s.t]; if(!g) return; const e=s.kind==='base'?s.run:s.eur; if(e===undefined) return;
       let p=parts.find(x=>x.g===g); if(!p){ p={g,eur:0}; parts.push(p); } p.eur+=e; });
@@ -1046,32 +1114,54 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   // ---- Premium: Preis-Check (Angebotspreis gegen angemessenen Kaufpreis) ----
   const GREST=0.065, NOTAR=0.02; // Grunderwerbsteuer NRW, Notar und Grundbuch rund 2 %
   function preisCheck(d){
-    const pro=plan==='premium'; $('pcLock').hidden=pro; $('pcOn').hidden=!pro;
-    if(!pro) return;
+    const pro=plan==='premium', free=plan==='free';
+    $('pcLock').hidden=pro||free; $('pcOn').hidden=!(pro||free); $('provWrap').hidden=!pro;
+    $('pcTag').textContent=pro?'Premium':'Konto'; $('pcTag').className='tag'+(pro?' pro':'');
+    if(!pro&&!free) return;
     const o=$('pcOut'), ap=d.ap;
     if(!(ap>0)){ o.innerHTML='<p class="hint">Tragen Sie den Angebotspreis aus der Anzeige ein oder übernehmen Sie die Anzeige oben. Der Wertcheck zeigt dann, ob der Preis angemessen ist und wo Verhandlungsspielraum besteht.</p>'; return; }
     if(!last){ o.innerHTML='<p class="hint">Der Preis-Check erscheint, sobald der angemessene Kaufpreis berechnet ist.</p>'; return; }
     const {lo,mid,hi}=last, p=x=>num(Math.abs(x*100),0)+' %';
-    let cls,tit,txt;
-    if(ap>hi){ cls='bad'; tit='Über dem angemessenen Bereich'; txt=`Der Angebotspreis liegt ${p((ap-hi)/hi)} über der Obergrenze und ${p((ap-mid)/mid)} über dem Schätzwert. Ohne besondere Gründe, etwa Modernisierungen, die in der Anzeige fehlen, ist er zu hoch.`; }
-    else if(ap>mid*1.005){ cls='mid'; tit='Angemessen, aber im oberen Bereich'; txt=`Der Angebotspreis liegt ${p((ap-mid)/mid)} über dem Schätzwert. Vertretbar, eine Verhandlung lohnt sich trotzdem.`; }
-    else if(ap>=lo){ cls='good'; tit='Angemessen'; txt=ap<mid*0.995?`Der Angebotspreis liegt ${p((mid-ap)/mid)} unter dem Schätzwert.`:'Der Angebotspreis entspricht dem Schätzwert.'; }
-    else { cls='good'; tit='Unter dem angemessenen Bereich'; txt=`Der Angebotspreis liegt ${p((lo-ap)/lo)} unter der Untergrenze. Das wirkt günstig. Prüfen Sie, woran es liegt: Zustand, Lage in der Straße oder Rechte im Grundbuch wie Wohnrecht oder Erbbaurecht.`; }
+    // Zonen relativ zum Schätzwert: Blau unter −10 %, Grün −10 bis +5 %, Gelb +5 bis +15 %, Rot darüber.
+    // Rot beginnt nie innerhalb des angemessenen Kaufpreisbereichs.
+    const dev=(ap-mid)/mid, rot=Math.max(0.15,(hi-mid)/mid);
+    const Z=[{k:'low',nm:'Günstig',c:'--accent',von:-0.20,bis:-0.10},{k:'good',nm:'Passt',c:'--g',von:-0.10,bis:0.05},{k:'mid',nm:'Verhandeln',c:'--y',von:0.05,bis:rot},{k:'bad',nm:'Zu teuer',c:'--r',von:rot,bis:Math.max(0.30,rot+0.10)}];
+    const z=dev<-0.10?Z[0]:dev<=0.05?Z[1]:dev<=rot?Z[2]:Z[3];
+    const cls=z.k; let tit,txt;
+    if(free){
+      // Kostenloses Konto: nur die Ampel, Details machen neugierig auf Premium
+      const A={low:['g','Auffällig günstig','Deutlich unter dem Schätzwert. Prüfen Sie, woran das liegt.'],good:['g','Preis passt','Der Angebotspreis passt zum Schätzwert.'],mid:['y','Etwas hoch','Hier kann sich eine Verhandlung lohnen.'],bad:['r','Zu teuer','Der Angebotspreis liegt deutlich über dem Schätzwert.']}[cls];
+      o.innerHTML=`<div class="pamp"><span class="lights" aria-hidden="true">${['g','y','r'].map(c=>`<i style="--c:var(--${c})" class="${c===A[0]?'on':''}"></i>`).join('')}</span><span><b>${A[1]}</b><p>${A[2]}</p></span></div>
+        <div class="pteaser">
+          <div class="tz"><span>Verhandlungsspielraum</span><b aria-hidden="true">18.000 €</b></div>
+          <div class="tz"><span>Kaufnebenkosten NRW</span><b aria-hidden="true">31.500 €</b></div>
+          <div class="tz"><span>Gesamtkosten mit Sanierung</span><b aria-hidden="true">342.000 €</b></div>
+          <p><b>Wie viel können Sie verhandeln?</b> Premium zeigt, um wie viel Euro das Angebot vom Schätzwert abweicht, rechnet Nebenkosten und Gesamtkosten aus und übernimmt Anzeigen direkt aus Text oder Screenshots.</p>
+          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+        </div>`;
+      return;
+    }
+    if(cls==='low'){ tit='Auffällig günstig'; txt=`Der Angebotspreis liegt ${p(dev)} unter dem Schätzwert. Das kann ein guter Kauf sein. Prüfen Sie aber, woran es liegt: Zustand, Lage in der Straße oder Rechte im Grundbuch wie Wohnrecht oder Erbbaurecht.`; }
+    else if(cls==='good'){ tit='Preis passt'; txt=Math.abs(dev)<0.005?'Der Angebotspreis entspricht dem Schätzwert.':dev>0?`Der Angebotspreis liegt ${p(dev)} über dem Schätzwert, im üblichen Rahmen für eine Anzeige.`:`Der Angebotspreis liegt ${p(dev)} unter dem Schätzwert.`; }
+    else if(cls==='mid'){ tit='Etwas hoch, verhandeln'; txt=`Der Angebotspreis liegt ${p(dev)} über dem Schätzwert. Noch vertretbar, aber hier lohnt sich eine Verhandlung.`; }
+    else { tit='Zu teuer'; txt=`Der Angebotspreis liegt ${p(dev)} über dem Schätzwert. Ohne besondere Gründe, etwa Modernisierungen, die in der Anzeige fehlen, ist der Preis zu hoch.`; }
     const sp=Math.max(0,ap-mid);
     const prov=Number.isFinite(d.prov)&&d.prov>0?d.prov:0;
     const nk=ap*(GREST+NOTAR+prov/100);
     const san=costs(state.type,d,effComp(d)).now;
     const ges=ap+nk+san;
-    const a=Math.min(lo,ap)*0.97, b=Math.max(hi,ap)*1.03, X=v=>(v-a)/(b-a)*100;
-    o.innerHTML=`<div class="pcv ${cls}"><b>${tit}</b><p>${txt}</p></div>
-      <div class="pcbar ${cls}" aria-hidden="true" style="--c:var(--${cls==='bad'?'r':cls==='mid'?'y':'g'})"><i class="band" style="left:${X(lo)}%;width:${X(hi)-X(lo)}%"></i><i class="m" style="left:${X(mid)}%"></i><i class="ap" style="left:${X(ap)}%"></i></div>
-      <div class="pcleg"><span>Angemessen <b>${eur(lo)} bis ${eur(hi)}</b></span><span>Angebot <b>${eur(ap)}</b></span></div>
+    const A=Z[0].von, B=Z[3].bis, X=v=>(v-A)/(B-A)*100, apx=Math.min(98.5,Math.max(1.5,X(dev)));
+    const segs=Z.map((q,i)=>`<i class="seg${q===z?' on':''}${i===3?' last':''}" style="--c:var(${q.c});left:${X(q.von)}%;width:${X(q.bis)-X(q.von)}%"><span>${q.nm}</span></i>`).join('');
+    o.innerHTML=`<div class="pcv ${cls==='low'?'':cls}"><b>${tit}</b><p>${txt}</p></div>
+      <div class="pcbar" aria-hidden="true">${segs}<i class="m" style="left:${X(0)}%"></i><i class="ap" style="left:${apx}%"></i><span class="apl${apx<15?' l':apx>85?' r':''}" style="left:${apx<15?0:apx>85?100:apx}%">Angebot ${eur(ap)}</span></div>
+      <div class="pcleg"><span>▏Schätzwert <b>${eur(mid)}</b></span><span>Angemessen <b>${eur(lo)} bis ${eur(hi)}</b></span></div>
+      <p class="hint">Grün: bis 10 % unter oder 5 % über dem Schätzwert. Gelb: ${rot>0.15?`5 % bis ${num(rot*100,0)} % darüber (Obergrenze des angemessenen Bereichs)`:'5 bis 15 % darüber'}. Rot: mehr. Blau: mehr als 10 % darunter, Ursache prüfen.</p>
       <div class="costs three">
         <div class="cost"><span class="label">${cls==='bad'?'Über dem Schätzwert':'Verhandlungsspielraum'}</span><span class="v">${sp>0?eur(Math.round(sp/1000)*1000):'–'}</span><p>${sp>0?`${cls==='bad'?'Differenz':'Bis'} zum Schätzwert von ${eur(mid)}`:'Angebot liegt am oder unter dem Schätzwert'}</p></div>
         <div class="cost"><span class="label">Kaufnebenkosten</span><span class="v">${eur(Math.round(nk/500)*500)}</span><p>Grunderwerbsteuer 6,5 %, Notar und Grundbuch ca. 2 %${prov?`, Makler ${num(prov,2)} %`:', ohne Makler'}</p></div>
         <div class="cost"><span class="label">Gesamtkosten</span><span class="v">${eur(Math.round(ges/1000)*1000)}</span><p>Kaufpreis, Nebenkosten${san>0?` und Sanierung jetzt (${eur(Math.round(san/500)*500)})`:''}</p></div>
       </div>
-      <p class="hint">Angebotspreise sind Verhandlungsbasis, tatsächliche Kaufpreise liegen oft darunter. Der Vergleich gilt für die Angaben im Formular, vor allem den Zustand der Bauteile.</p>`;
+      <p class="hint">Angebotspreise sind Verhandlungsbasis, tatsächliche Kaufpreise liegen oft darunter. Der Vergleich gilt für die Angaben im Formular, vor allem den Zustand der Bereiche.</p>`;
   }
   ['ap','prov'].forEach(id=>$(id).addEventListener('input',calc));
 
@@ -1147,16 +1237,33 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(/denkmalgesch[üu]tzt|Denkmalschutz|Baudenkmal|Einzeldenkmal/i.test(t)) set('denkmal',true,'Denkmalschutz');
     // Heizung: Alter → Vorschlag für die Ampel
     if((m=t.match(/(?:heizung|kessel|brenner|therme)[^\n.]{0,30}?(?:aus|von|Bj\.?|Baujahr|ca\.)?\s*(19[5-9]\d|20[0-2]\d)/i))){
-      const alter=2026-(+m[1]); const s=alter>=25?'r':alter>=10?'y':'g';
+      const alter=2026-(+m[1]); const s=alter>=25?'r':alter>=10?'y':'g'; var heizJahr=+m[1];
       f.compHeizung=s; gef.push(`Heizung von ${m[1]} → ${s==='r'?'Sanierung nötig':s==='y'?'älter, intakt':'modernisiert'}`);
       if(alter>=30&&/\b(?:Öl|Gas)|[öÖ]lzentral|[öÖ]lheiz|Gasheiz|Gaszentral|kessel|Brenner/i.test(t)) hinweise.push(`Heizkessel von ${m[1]}: Nach dem Gebäudeenergiegesetz müssen Öl- und Gaskessel nach 30 Jahren in der Regel ausgetauscht werden, nach einem Kauf innerhalb von zwei Jahren. Ausgenommen sind Niedertemperatur- und Brennwertkessel. Die Heizung ist deshalb als „Sanierung nötig“ vorgeschlagen.`);
     }
     // Fenster: Alter → Vorschlag für die Ampel
     if((m=t.match(/Fenster[^\n.]{0,50}?(?:aus|von|Bj\.?|ca\.)?\s*(?:den\s*)?(19[5-9]\d|20[0-2]\d|[5-9]0er|(?:19)?[5-9]0er)/i))){
-      let j=m[1]; if(/er$/.test(j)) j=(j.length===4?1900+ +j.slice(0,2):+j.slice(0,4))+5;
+      let j=m[1]; if(/er$/.test(j)) j=(j.length===4?1900+ +j.slice(0,2):+j.slice(0,4))+5; var fensterJahr=+j;
       const alter=2026-(+j); const s=alter>=35?'r':alter>=15?'y':'g';
       f.compFenster=s; gef.push(`Fenster von ca. ${j} → ${s==='r'?'Sanierung nötig':s==='y'?'älter, intakt':'modernisiert'}`);
     }
+    // Ausstattung je Bereich, soweit die Anzeige konkrete Hinweise enthält
+    const aH={}, aT=[];
+    const ah=(id,st,txt)=>{ aH[id]=st; aT.push(txt); };
+    if(/W[äa]rmepumpe|Blockheizkraftwerk|\bBHKW\b|Solar\S* (?:zur |für die )?Heizungsunterst/i.test(t)) ah('heiz',5,'Heizung hochwertig (z. B. Wärmepumpe)');
+    else if(/Fu[ßs]bodenheizung/i.test(t)) ah('heiz',4,'Heizung gehoben (Fußbodenheizung)');
+    else if(/Brennwert|Niedertemperatur/i.test(t)) ah('heiz',3,'Heizung mittel (Brennwert)');
+    else if(/Einzel[öo]fen|Kohleofen|Ofenheizung/i.test(t)) ah('heiz',1,'Heizung veraltet (Einzelöfen)');
+    else if(/Nachtspeicher/i.test(t)) ah('heiz',2,'Heizung einfach (Nachtspeicher)');
+    else if(typeof heizJahr==='number') ah('heiz',heizJahr<1995?2:3,`Heizung ${heizJahr<1995?'einfach':'mittel'} (von ${heizJahr})`);
+    if(/Dreifach|3-fach-?verglas|dreifach verglast/i.test(t)) ah('fenster',4,'Fenster gehoben (Dreifachverglasung)');
+    else if(/Einfachverglas|einfach verglast/i.test(t)) ah('fenster',1,'Fenster veraltet (Einfachverglasung)');
+    else if(typeof fensterJahr==='number') ah('fenster',fensterJahr<1995?2:3,`Fenster ${fensterJahr<1995?'einfach':'mittel'} (ca. ${fensterJahr})`);
+    if(/Parkett|Naturstein|Marmor/i.test(t)) ah('boden',4,'Böden gehoben (Parkett oder Naturstein)');
+    if(/boden(?:gleich|tief|eben)\S* Dusche|zwei B[äa]der|2 B[äa]der|Badezimmer:\s*[2-9]/i.test(t)) ah('bad',4,'Bad gehoben (z. B. bodengleiche Dusche, zwei Bäder)');
+    if(/Smart ?Home|Alarmanlage|Klimaanlage|\bKNX\b|Bussystem/i.test(t)) ah('technik',5,'Technik hochwertig (z. B. Smart Home)');
+    else if(/L[üu]ftungsanlage|W[äa]rmer[üu]ckgewinnung/i.test(t)) ah('technik',4,'Technik gehoben (Lüftungsanlage)');
+    if(aT.length){ f.ausstD=aH; gef.push('Ausstattung: '+aT.join(', ')); }
     // Ausstattungsqualität laut Portal
     if((m=t.match(/(?:Qualit[äa]t der Ausstattung|Ausstattungsqualit[äa]t|Ausstattung):\s*(Einfach|Normal|Gehoben|Luxus|Hochwertig)/i))){
       const a={einfach:'einfach',normal:'mittel',gehoben:'gehoben',hochwertig:'gehoben',luxus:'stark'}[m[1].toLowerCase()]; set('ausst',a,`Ausstattung ${m[1]}`); }
@@ -1205,6 +1312,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(f.provision!==undefined) d.prov=f.provision;
     if(f.compHeizung&&d.comp.heizung) d.comp.heizung=f.compHeizung;
     if(f.compFenster&&d.comp.fenster) d.comp.fenster=f.compFenster;
+    if(f.ausstD){ const b=STUFE[d.ausst]||3, o={}; AUSST.forEach(a=>o[a.id]=b); d.ausstD={...o,...f.ausstD}; d.ausst='indiv'; }
     state.type=t; state.data[t]=d;
     const o=state.data[t==='haus'?'etw':'haus']; ['str','plz','ort'].forEach(k=>o[k]=d[k]||'');
     isSample=false; eigene=true; sampleUI();
@@ -1222,7 +1330,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     impZeigen(`<p><b>Übernommen</b></p><div class="chips">${gef.map(g=>`<span>${esc(g)}</span>`).join('')}</div>`
       +(mehr.length?`<p class="hint">Außerdem in der Anzeige: ${esc(mehr.join(', '))}.</p>`:'')
       +(notes.length?`<div class="plaus"><b>Bitte prüfen</b><ul>${notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:'')
-      +'<p class="hint">Prüfen Sie alle Angaben im Formular, besonders den Zustand der Bauteile in Schritt 3. Anzeigen beschreiben Immobilien oft freundlicher, als sie sind.</p>');
+      +'<p class="hint">Prüfen Sie alle Angaben im Formular, besonders den Zustand der Bereiche in Schritt 3. Anzeigen beschreiben Immobilien oft freundlicher, als sie sind.</p>');
   }
   $('impGo').addEventListener('click',()=>{ const t=$('impTxt').value.trim(); if(!t){ impZeigen('<p class="hint">Bitte zuerst den Anzeigentext einfügen oder Screenshots wählen.</p>'); $('impTxt').focus(); return; } anzeigeAnwenden(t); });
   $('impFile').addEventListener('change',async e=>{
@@ -1400,6 +1508,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   $('types').addEventListener('click',e=>{ const b=e.target.closest('.type'); if(b) setObj(b.dataset.o); });
   $('comps').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return;
     state.data[state.type].comp[b.dataset.c]=b.dataset.s; renderComps(); calc(); });
+  $('ausstRows').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-a]'); if(!b) return;
+    read(); const t=state.type, d=state.data[t];
+    d.ausstD={...ausstD(d,t),[b.dataset.a]:+b.dataset.s}; d.ausst='indiv';
+    ausstOpt(d); $('ausst').value='indiv'; renderAusst(); calc();
+  });
+  $('ausst').addEventListener('change',()=>{ const d=state.data[state.type]; d.ausst=$('ausst').value; if(d.ausst!=='indiv') delete d.ausstD; ausstOpt(d); renderAusst(); });
   $('stp').addEventListener('change',()=>{ const k=$('stp').value; $('stpw').value=k==='0'?0:STP[state.type][k]; });
   $('f').addEventListener('input',()=>{ if(!isSample&&!eigene){ eigene=true; sampleUI(); } calc(); });
   $('f').addEventListener('change',calc);
