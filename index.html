@@ -236,6 +236,43 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .lock{border:1px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
 .lock.pro{border-color:var(--gold);background:var(--gold-soft)}
 .lock p{margin:0;color:var(--ink)}
+/* Premium: Anzeige übernehmen */
+.imp{gap:0;padding:14px 16px;border-color:var(--gold)}
+.imp>details{border-top:0;padding-top:0}
+.imp>details>summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:15px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;list-style:none}
+.imp>details>summary::-webkit-details-marker{display:none}
+.imp>details>summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg);margin:0 8px 0 2px;transition:transform .15s}
+.imp>details[open]>summary::before{transform:rotate(45deg)}
+.imp>details>summary .sub{font:400 12px var(--body);color:var(--muted);flex-basis:100%;margin-left:20px}
+.pc .row{align-items:end}
+.imp-in{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+.imp textarea{font:400 14px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%;min-height:110px;resize:vertical}
+.imp .acts{display:flex;gap:8px;flex-wrap:wrap}
+.imp .acts .btn{flex:1 1 160px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.filebtn{position:relative;overflow:hidden}
+.filebtn input{position:absolute;inset:0;opacity:0;cursor:pointer;font-size:0}
+.prog{height:6px;border-radius:3px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--gold);transition:width .2s}
+.impres{display:flex;flex-direction:column;gap:8px;font-size:14px}
+.impres p{margin:0}
+.impres ul{margin:0;padding-left:18px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 9px;background:var(--bg);color:var(--ink)}
+/* Premium: Preis-Check */
+.pc{display:flex;flex-direction:column;gap:12px}
+.pcv{--c:var(--accent);border-left:4px solid var(--c);background:var(--bg);border-radius:0 8px 8px 0;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
+.pcv.good{--c:var(--g)} .pcv.mid{--c:var(--y)} .pcv.bad{--c:var(--r)}
+.pcv b{color:var(--c);font-size:15px}
+.pcv p{margin:0}
+.pcbar{position:relative;height:26px}
+.pcbar .band{position:absolute;top:8px;height:10px;border-radius:5px;background:var(--accent-soft);border:1px solid var(--accent)}
+.pcbar .m{position:absolute;top:3px;width:2px;height:20px;background:var(--accent);margin-left:-1px}
+.pcbar .ap{position:absolute;top:6px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--c,var(--gold));border:2px solid var(--surface)}
+.pcleg{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted)}
+.pcleg b{color:var(--ink)}
+.costs.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.costs.three .v{font-size:19px}
+@media (max-width:560px){.costs.three{grid-template-columns:minmax(0,1fr)}}
 .szen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .szen .v{font-size:19px}
 #szNbox.good{border-color:var(--g)} #szNbox.good .v{color:var(--g)}
@@ -288,6 +325,28 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
   <div class="grid">
     <div class="col">
+      <div class="panel imp" id="imp">
+        <details id="impD">
+          <summary>Anzeige übernehmen <span class="tag pro">Premium</span><span class="sub">Eckdaten aus Immobilienportalen einlesen, per Text oder Screenshot</span></summary>
+          <div class="imp-in">
+            <div class="lock pro" id="impLock">
+              <p>Mit Premium übernehmen Sie eine Immobilienanzeige mit wenigen Fingertipps: Anzeigentext kopieren oder Screenshots hochladen. Der Wertcheck füllt das Formular aus und vergleicht den Angebotspreis mit dem angemessenen Kaufpreis.</p>
+              <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+            </div>
+            <div class="imp-in" id="impOn" hidden style="margin-top:0">
+              <p class="hint">Öffnen Sie die Anzeige im Portal oder in der App. Entweder den Text markieren, kopieren und hier einfügen, oder Screenshots der Anzeige machen und hochladen. Die Screenshots werden direkt auf Ihrem Gerät gelesen und nicht hochgeladen.</p>
+              <label>Anzeigentext<textarea id="impTxt" placeholder="Text der Anzeige hier einfügen, zum Beispiel Kaufpreis, Wohnfläche, Baujahr und Beschreibung …"></textarea></label>
+              <div class="acts">
+                <button type="button" class="btn" id="impGo">Text übernehmen</button>
+                <span class="btn ghost filebtn" role="button">Screenshots wählen<input type="file" id="impFile" accept="image/*" multiple aria-label="Screenshots der Anzeige wählen"></span>
+              </div>
+              <div id="impSt" class="impres" role="status" hidden><p id="impStT"></p><div class="prog" id="impBar"><i id="impBarI"></i></div></div>
+              <div id="impRes" class="impres" hidden></div>
+            </div>
+          </div>
+        </details>
+      </div>
+
       <form class="panel" id="f" autocomplete="off" novalidate>
         <div class="sample" id="sampleBar"><span id="sampleTxt">Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.</span><span class="actions"><button type="button" class="btn small" id="reset">Beispiel ansehen</button><button type="button" class="btn small" id="clear" hidden>Leeren</button></span></div>
 
@@ -462,6 +521,21 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       </div>
       <div class="cta" id="cta" hidden></div>
       <div class="saved" id="saved"></div>
+
+      <div class="blk" id="pcBlk">
+        <h2>Preis-Check <span class="tag pro">Premium</span></h2>
+        <div class="lock pro" id="pcLock">
+          <p>Premium vergleicht den Angebotspreis einer Anzeige mit dem angemessenen Kaufpreis, zeigt den Verhandlungsspielraum und rechnet die Kaufnebenkosten für NRW dazu.</p>
+          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+        </div>
+        <div class="pc" id="pcOn" hidden>
+          <div class="row">
+            <label>Angebotspreis (€)<input type="number" id="ap" min="0" step="1000" inputmode="numeric"></label>
+            <label><span class="lbl">Provision (%) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Anteil, den Sie als Käufer zahlen, steht in der Anzeige. Bei Einfamilienhäusern und Wohnungen teilen sich Käufer und Verkäufer die Provision meist, üblich sind 3,57 % je Seite. Leer lassen, wenn provisionsfrei.</span></span><input type="number" id="prov" min="0" max="10" step="0.01"></label>
+          </div>
+          <div id="pcOut"></div>
+        </div>
+      </div>
 
       <div class="lock" id="resLock" hidden>
         <b>Zustand und Sanierungskosten sehen</b>
@@ -653,7 +727,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   };
   const state = {type:'haus', data:{haus:clone(BLANK.haus), etw:clone(BLANK.etw)}};
   let isSample = false;
-  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf','we'];
+  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf','we','ap','prov'];
   let last = null;
 
   // ---- Konto & Tarif (simuliert) ----
@@ -662,7 +736,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const TIERS=[
     {id:'guest',nm:'Ohne Anmeldung',price:'0 €',per:'',items:['Wertcheck für Haus und Wohnung in NRW','Übersicht der Wertbestandteile','Zustand pauschal als durchschnittlich','Mit Werbung']},
     {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Bauteil-Ampel','Sanierungskosten jetzt und in 5–10 Jahren','3 Bewertungen speichern','Mit Werbung']},
-    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
+    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check: Angebotspreis gegen angemessenen Kaufpreis','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
     {id:'single',nm:'Einzelbericht',price:'19 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Ohne Abo, ohne Anmeldung']}
   ];
   function renderAcct(){
@@ -740,6 +814,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       $('swfAutoInfo').hidden=!(hasM&&d.swfm==='auto');
       if(hasM) $('swfAutoInfo').textContent=`Marktanpassung nach ${state.data.haus.markt.quelle.replace(/, Kap.*$/,'')}, Stichtag ${new Date(state.data.haus.markt.stichtag).toLocaleDateString('de-DE')}.`; }
     $('brwAuto').hidden = !(API_URL && t==='haus');
+    $('impLock').hidden=plan==='premium'; $('impOn').hidden=plan!=='premium';
     const on=plan!=='guest';
     $('compsLock').hidden=on; $('resLock').hidden=on;
     document.querySelectorAll('.compsOn,.resOn').forEach(e=>e.hidden=!on);
@@ -788,7 +863,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     ['mid','sqm'].forEach(i=>$(i).textContent='–'); $('rangeHint').hidden=true; $('steps').innerHTML=''; $('save').disabled=true;
     $('pB').style.width='0'; $('pG').style.width='0';
     $('emptyHint').hidden=!empty; if(empty) $('emptyTxt').textContent=msg;
-    $('plaus').hidden=true; $('cta').hidden=true; mbarUpdate();
+    $('plaus').hidden=true; $('cta').hidden=true; mbarUpdate(); preisCheck(state.data[state.type]);
   }
 
   // Sachwertfaktor aus der Funktion des Gutachterausschusses: y = a·x + b, Faktor = y / x.
@@ -891,7 +966,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(t==='haus'){ const pb=bw/vorl*100;
       $('pB').style.width=pb+'%'; $('pG').style.width=(100-pb)+'%';
       $('kB').textContent=`Boden ${num(pb)} % · ${eur(bw)}`; $('kG').textContent=`Gebäude ${num(100-pb)} %`; }
-    $('save').disabled=false; plausibel(t,d); ctaUpdate(); mbarUpdate(mid);
+    $('save').disabled=false; plausibel(t,d); ctaUpdate(); mbarUpdate(mid); preisCheck(d);
     $('range').className='range';
     $('range').innerHTML=`${eur(lo)} <span>bis</span> ${eur(hi)}`;
     $('mid').textContent=eur(mid); $('sqm').textContent=eur(mid/d.wf)+'/m²';
@@ -966,6 +1041,197 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(b.dataset.del!==undefined){ a.splice(+b.dataset.del,1); ls.set(SKEY,a); renderSaved(); }
   });
 
+
+
+  // ---- Premium: Preis-Check (Angebotspreis gegen angemessenen Kaufpreis) ----
+  const GREST=0.065, NOTAR=0.02; // Grunderwerbsteuer NRW, Notar und Grundbuch rund 2 %
+  function preisCheck(d){
+    const pro=plan==='premium'; $('pcLock').hidden=pro; $('pcOn').hidden=!pro;
+    if(!pro) return;
+    const o=$('pcOut'), ap=d.ap;
+    if(!(ap>0)){ o.innerHTML='<p class="hint">Tragen Sie den Angebotspreis aus der Anzeige ein oder übernehmen Sie die Anzeige oben. Der Wertcheck zeigt dann, ob der Preis angemessen ist und wo Verhandlungsspielraum besteht.</p>'; return; }
+    if(!last){ o.innerHTML='<p class="hint">Der Preis-Check erscheint, sobald der angemessene Kaufpreis berechnet ist.</p>'; return; }
+    const {lo,mid,hi}=last, p=x=>num(Math.abs(x*100),0)+' %';
+    let cls,tit,txt;
+    if(ap>hi){ cls='bad'; tit='Über dem angemessenen Bereich'; txt=`Der Angebotspreis liegt ${p((ap-hi)/hi)} über der Obergrenze und ${p((ap-mid)/mid)} über dem Schätzwert. Ohne besondere Gründe, etwa Modernisierungen, die in der Anzeige fehlen, ist er zu hoch.`; }
+    else if(ap>mid*1.005){ cls='mid'; tit='Angemessen, aber im oberen Bereich'; txt=`Der Angebotspreis liegt ${p((ap-mid)/mid)} über dem Schätzwert. Vertretbar, eine Verhandlung lohnt sich trotzdem.`; }
+    else if(ap>=lo){ cls='good'; tit='Angemessen'; txt=ap<mid*0.995?`Der Angebotspreis liegt ${p((mid-ap)/mid)} unter dem Schätzwert.`:'Der Angebotspreis entspricht dem Schätzwert.'; }
+    else { cls='good'; tit='Unter dem angemessenen Bereich'; txt=`Der Angebotspreis liegt ${p((lo-ap)/lo)} unter der Untergrenze. Das wirkt günstig. Prüfen Sie, woran es liegt: Zustand, Lage in der Straße oder Rechte im Grundbuch wie Wohnrecht oder Erbbaurecht.`; }
+    const sp=Math.max(0,ap-mid);
+    const prov=Number.isFinite(d.prov)&&d.prov>0?d.prov:0;
+    const nk=ap*(GREST+NOTAR+prov/100);
+    const san=costs(state.type,d,effComp(d)).now;
+    const ges=ap+nk+san;
+    const a=Math.min(lo,ap)*0.97, b=Math.max(hi,ap)*1.03, X=v=>(v-a)/(b-a)*100;
+    o.innerHTML=`<div class="pcv ${cls}"><b>${tit}</b><p>${txt}</p></div>
+      <div class="pcbar ${cls}" aria-hidden="true" style="--c:var(--${cls==='bad'?'r':cls==='mid'?'y':'g'})"><i class="band" style="left:${X(lo)}%;width:${X(hi)-X(lo)}%"></i><i class="m" style="left:${X(mid)}%"></i><i class="ap" style="left:${X(ap)}%"></i></div>
+      <div class="pcleg"><span>Angemessen <b>${eur(lo)} bis ${eur(hi)}</b></span><span>Angebot <b>${eur(ap)}</b></span></div>
+      <div class="costs three">
+        <div class="cost"><span class="label">${cls==='bad'?'Über dem Schätzwert':'Verhandlungsspielraum'}</span><span class="v">${sp>0?eur(Math.round(sp/1000)*1000):'–'}</span><p>${sp>0?`${cls==='bad'?'Differenz':'Bis'} zum Schätzwert von ${eur(mid)}`:'Angebot liegt am oder unter dem Schätzwert'}</p></div>
+        <div class="cost"><span class="label">Kaufnebenkosten</span><span class="v">${eur(Math.round(nk/500)*500)}</span><p>Grunderwerbsteuer 6,5 %, Notar und Grundbuch ca. 2 %${prov?`, Makler ${num(prov,2)} %`:', ohne Makler'}</p></div>
+        <div class="cost"><span class="label">Gesamtkosten</span><span class="v">${eur(Math.round(ges/1000)*1000)}</span><p>Kaufpreis, Nebenkosten${san>0?` und Sanierung jetzt (${eur(Math.round(san/500)*500)})`:''}</p></div>
+      </div>
+      <p class="hint">Angebotspreise sind Verhandlungsbasis, tatsächliche Kaufpreise liegen oft darunter. Der Vergleich gilt für die Angaben im Formular, vor allem den Zustand der Bauteile.</p>`;
+  }
+  ['ap','prov'].forEach(id=>$(id).addEventListener('input',calc));
+
+  // ---- Premium: Anzeige übernehmen (Text oder Screenshots) ----
+  // ---- Anzeige auslesen: erkennt Eckdaten in kopiertem Text oder Texterkennung von Screenshots ----
+  function anzeigeLesen(roh){
+    const t=String(roh)
+      .replace(/\r/g,'')
+      .replace(/m\s?[²2*”“"'’?](?=[\s.,;:)/]|$)/gim,'m²')     // m², m2, m* … vereinheitlichen
+      .replace(/[ \t]+/g,' ');
+    const z=s=>Number(String(s).replace(/\./g,'').replace(',','.'));
+    const f={}, gef=[], hinweise=[];
+    const set=(k,v,txt)=>{ if(v===undefined||v===null||Number.isNaN(v)) return; f[k]=v; gef.push(txt); };
+    let m;
+    // Kaufpreis
+    const preise=[...t.matchAll(/(?:Kaufpreis[:\s]*)?(\d{2,3}\.\d{3}(?:\.\d{3})?)\s*€(?!\s*\/)/gi)].map(x=>({v:z(x[1]),s:x[1],kp:/Kaufpreis/i.test(x[0])})).filter(x=>x.v>=20000);
+    const pr=preise.find(x=>x.kp)||preise[0];
+    if(pr) set('preis',pr.v,`Kaufpreis ${pr.s} €`);
+    // Wohnfläche
+    if((m=t.match(/Wohnfl[äa]che[^\d\n]{0,20}(\d{2,4}(?:,\d{1,2})?)\s*m/i))||(m=t.match(/(\d{2,4}(?:,\d{1,2})?)\s*m²?\s*Wohnfl[äa]che/i))) set('wf',Math.round(z(m[1])),`Wohnfläche ${m[1]} m²`);
+    // Grundstück
+    if((m=t.match(/Grundst[üu]ck(?:sfl[äa]che|sgr[öo]ße)?[^\d\n]{0,20}(\d{2,5}(?:\.\d{3})?)\s*m/i))||(m=t.match(/(\d{2,5}(?:\.\d{3})?)\s*m²?\s*Grundst[üu]ck/i))) set('gr',z(m[1]),`Grundstück ${m[1]} m²`);
+    // Kopfzeile „115 m² 200 m² / Wohnfläche Grundstück“
+    if((!f.wf||!f.gr)&&(m=t.match(/(\d{2,4})\s*m\S?\s+(\d{2,5})\s*m\S?\s*\n\s*Wohnfl\S*\s+Grundst/i))){ if(!f.wf) set('wf',+m[1],`Wohnfläche ${m[1]} m²`); if(!f.gr) set('gr',+m[2],`Grundstück ${m[2]} m²`); }
+    // Baujahr
+    if((m=t.match(/Baujahr[^\d\n]{0,25}(1[789]\d{2}|20[0-2]\d)/i))||(m=t.match(/(?:haus|Bauweise|errichtet|erbaut)[^.\n]{0,40}?(?:aus|im Jahr|von)\s*(1[789]\d{2}|20[0-2]\d)/i))) set('bj',+m[1],`Baujahr ${m[1]}`);
+    // PLZ und Ort
+    if((m=t.match(/\b(\d{5}),?\s+([A-ZÄÖÜ][a-zäöüß]+(?:[- ][A-ZÄÖÜ][a-zäöüß]+)?)/))){ set('plz',m[1],`PLZ ${m[1]}`); set('ort',m[2],`Ort ${m[2]}`); }
+    // Straße: Kandidaten sammeln, Gattungsbegriffe (Spielplatz, Seitenstraße …) ausschließen
+    const stop=/(?:spiel|stell|park|abstell|sport|bolz|seiten|neben|wohn|anlieger|durchgangs|verkehrs|einkaufs|fuß|rad|geh|zufahrts|schul|arbeits|spazier|wander|rund|garagen|autobahn)(?:platz|plätze|straße|strasse|weg|ring|pfad|gasse)$/i;
+    let best=null;
+    for(const x of t.matchAll(/(?:\b(Die|der|in der|an der|Adresse:?)\s+)?\b([A-ZÄÖÜ][a-zäöüß-]{2,}(?:straße|strasse|str\.|weg|allee|platz|gasse|ring|damm|pfad|chaussee))(?:\s+(\d{1,4}\s?[a-z]?)\b)?/g)){
+      if(stop.test(x[2])) continue;
+      const sc=(x[3]?2:0)+(x[1]?1:0)+(/^(?:Die|Adresse)/.test(x[1]||'')?1:0);
+      if(!best||sc>best.sc) best={sc,n:x[2]+(x[3]?' '+x[3]:'')};
+    }
+    if(best) set('str',best.n,`Straße ${best.n}`);
+    // Haustyp: konkrete Bauweise im Text schlägt die Portal-Kategorie
+    const typ={
+      rmh:/reihenmittelhaus|einfamilienreihenhaus|\bEFRH\b|\breihenhaus/i.test(t)&&!/reihenendhaus/i.test(t),
+      dhh:/doppelhaush[äa]lfte|\bDHH\b|reihenendhaus|\bREH\b|doppelhaus|einseitig angebaut|halbes Doppelhaus/i.test(t),
+      frei:/freistehend/i.test(t),
+      etw:/eigentumswohnung|etagenwohnung|\bETW\b|penthouse|maisonette/i.test(t)
+    };
+    const typName={frei:'freistehend',dhh:'Doppelhaushälfte/Reihenendhaus',rmh:'Reihenmittelhaus',etw:'Eigentumswohnung'};
+    const typWahl=typ.etw?'etw':typ.rmh?'rmh':typ.dhh?'dhh':typ.frei?'frei':null;
+    if(typWahl) set('typ',typWahl,`Haustyp ${typName[typWahl]}`);
+    if(typ.frei&&(typ.rmh||typ.dhh)) hinweise.push(`Die Anzeige ist widersprüchlich: Als Kategorie steht „freistehend“, in der Beschreibung aber ${typ.rmh?'„Reihenhaus“':'„einseitig angebaut“ bzw. „Doppelhaushälfte“'}. Übernommen: ${typName[typWahl]}. Bitte anhand der Fotos prüfen.`);
+    // Wohneinheiten
+    if(/zweifamilienhaus|\bZFH\b|(?:2|zwei) Wohneinheiten/i.test(t)) set('we','2','2 Wohneinheiten');
+    else if(/einliegerwohnung/i.test(t)) set('we','elw','Einliegerwohnung');
+    // Keller
+    if(/nicht unterkellert|ohne Keller|kein Keller/i.test(t)) set('keller',false,'nicht unterkellert');
+    else if(/unterkellert|Unterkellerung|Kellerr[äa]um|Keller(?:geschoss)?\b/i.test(t)) set('keller',true,'unterkellert');
+    // Geschosse und Dach
+    if(/Obergeschoss|\bOG\b|zweigeschossig|2-geschossig|Etage(?:n)? oben/i.test(t)) set('geschosse','2','Erd- und Obergeschoss');
+    else if(/bungalow|eingeschossig/i.test(t)) set('geschosse','1','eingeschossig');
+    if(/Flachdach/i.test(t)) set('dach','flach','Flachdach');
+    else if(/Dachgeschoss|\bDG\b|Mansarde|Dachstudio|ausgebaute[ns]? Dach/i.test(t)&&!/Dachgeschoss (?:ist )?nicht ausgebaut/i.test(t)) set('dach','ausgebaut','Dachgeschoss ausgebaut');
+    else if(/Spitzboden|Dachboden|nicht ausgebaut/i.test(t)) set('dach','nicht','Dachboden nicht ausgebaut');
+    // Garage / Stellplatz: Portal-Feld und Beschreibung getrennt auswerten
+    const feld=(t.match(/Garage\/Stellplatz:\s*([A-Za-zÄÖÜäöüß-]+)/)||[])[1]||'';
+    const tx=t.replace(/(?:Anzahl )?Garage\/Stellplatz:[^\n]*/g,'');
+    let stp=null;
+    if(/keine Garage|ohne Garage|kein Stellplatz|keine Stellpl/i.test(tx)) stp='0';
+    else if(/Doppelgarage|zwei Garagen|2 Garagen|Doppelcarport/i.test(tx)) stp='doppel';
+    else if(/Garage|Tiefgaragen/i.test(tx)) stp='garage';
+    else if(/Garage|Tiefgarage/i.test(feld)) stp='garage';
+    else if(/Carport|Stellplatz|Stellpl[äa]tze/i.test(tx+' '+feld)) stp='aussen';
+    if(stp) set('stp',stp,{'0':'keine Garage',doppel:'Doppelgarage',garage:'Garage',aussen:'Stellplatz/Carport'}[stp]);
+    if(stp==='garage'&&/Außenstellplatz|Stellplatz|Carport/i.test(feld)) hinweise.push(`Laut Portal-Angabe „${feld}“, laut Beschreibung gibt es eine Garage. Übernommen: Garage.`);
+    // Denkmalschutz
+    if(/denkmalgesch[üu]tzt|Denkmalschutz|Baudenkmal|Einzeldenkmal/i.test(t)) set('denkmal',true,'Denkmalschutz');
+    // Heizung: Alter → Vorschlag für die Ampel
+    if((m=t.match(/(?:heizung|kessel|brenner|therme)[^\n.]{0,30}?(?:aus|von|Bj\.?|Baujahr|ca\.)?\s*(19[5-9]\d|20[0-2]\d)/i))){
+      const alter=2026-(+m[1]); const s=alter>=25?'r':alter>=10?'y':'g';
+      f.compHeizung=s; gef.push(`Heizung von ${m[1]} → ${s==='r'?'Sanierung nötig':s==='y'?'älter, intakt':'modernisiert'}`);
+      if(alter>=30&&/\b(?:Öl|Gas)|[öÖ]lzentral|[öÖ]lheiz|Gasheiz|Gaszentral|kessel|Brenner/i.test(t)) hinweise.push(`Heizkessel von ${m[1]}: Nach dem Gebäudeenergiegesetz müssen Öl- und Gaskessel nach 30 Jahren in der Regel ausgetauscht werden, nach einem Kauf innerhalb von zwei Jahren. Ausgenommen sind Niedertemperatur- und Brennwertkessel. Die Heizung ist deshalb als „Sanierung nötig“ vorgeschlagen.`);
+    }
+    // Fenster: Alter → Vorschlag für die Ampel
+    if((m=t.match(/Fenster[^\n.]{0,50}?(?:aus|von|Bj\.?|ca\.)?\s*(?:den\s*)?(19[5-9]\d|20[0-2]\d|[5-9]0er|(?:19)?[5-9]0er)/i))){
+      let j=m[1]; if(/er$/.test(j)) j=(j.length===4?1900+ +j.slice(0,2):+j.slice(0,4))+5;
+      const alter=2026-(+j); const s=alter>=35?'r':alter>=15?'y':'g';
+      f.compFenster=s; gef.push(`Fenster von ca. ${j} → ${s==='r'?'Sanierung nötig':s==='y'?'älter, intakt':'modernisiert'}`);
+    }
+    // Ausstattungsqualität laut Portal
+    if((m=t.match(/(?:Qualit[äa]t der Ausstattung|Ausstattungsqualit[äa]t|Ausstattung):\s*(Einfach|Normal|Gehoben|Luxus|Hochwertig)/i))){
+      const a={einfach:'einfach',normal:'mittel',gehoben:'gehoben',hochwertig:'gehoben',luxus:'stark'}[m[1].toLowerCase()]; set('ausst',a,`Ausstattung ${m[1]}`); }
+    // Energieausweis
+    if((m=t.match(/Energieeffizienzklasse[:\s]*([A-H])\+?/i))){ f.energie=m[1].toUpperCase(); gef.push(`Energieklasse ${f.energie}`);
+      if('FGH'.includes(f.energie)) hinweise.push(`Energieklasse ${f.energie}: Dach, Fassade oder Fenster sind vermutlich kaum gedämmt. Prüfen Sie die Modernisierungsampel, hier entstehen oft hohe Kosten.`); }
+    if((m=t.match(/(\d{1,4}(?:[.,]\d)?)\s*kWh/i))) f.kwh=z(m[1].replace('.',','));
+    // Zimmerzahl: Portal-Kopfzeile „249.000 € 6 / Kaufpreis … Zimmer“, sonst „Zimmer: 5“ oder „5 Zimmer“
+    if((m=t.match(/\d{2,3}\.\d{3}\s*€\s+(\d{1,2}(?:,5)?)\s*\n[^\n]*\bZimmer\b/))||(m=t.match(/(?:^|\n|\s)Zimmer(?:anzahl)?:?\s+(\d{1,2}(?:,5)?)\b/))||(m=t.match(/(?<![A-Za-zäöü])(\d{1,2}(?:,5)?)\s*-?\s*Zimmer\b/))) f.zimmer=z(m[1]);
+    if((m=t.match(/Provision[^\n%]{0,40}?(\d{1,2}(?:,\d{1,2})?)\s*%/i))) f.provision=z(m[1]);
+    return {f,gef,hinweise};
+  }
+
+  let tessP=null;
+  function tessLaden(){
+    if(window.Tesseract) return Promise.resolve();
+    if(!tessP) tessP=new Promise((ok,no)=>{ const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js'; s.onload=ok; s.onerror=()=>{ tessP=null; no(new Error('Texterkennung konnte nicht geladen werden')); }; document.head.appendChild(s); });
+    return tessP;
+  }
+  function impSt(t,p){ $('impSt').hidden=!t; $('impStT').textContent=t||''; $('impBar').hidden=p==null; if(p!=null) $('impBarI').style.width=Math.round(p*100)+'%'; }
+  async function bilderLesen(files){
+    impSt('Texterkennung wird geladen …',0.02);
+    await tessLaden();
+    const n=files.length; let i=0, txt='';
+    const w=await Tesseract.createWorker('deu',1,{logger:m=>{ if(m.status==='recognizing text') impSt(`Screenshot ${i+1} von ${n} wird gelesen …`,(i+m.progress)/n); }});
+    try{ for(i=0;i<n;i++){ const r=await w.recognize(files[i]); txt+='\n'+r.data.text; } }
+    finally{ await w.terminate(); }
+    return txt.trim();
+  }
+  function impZeigen(html){ $('impRes').innerHTML=html; $('impRes').hidden=!html; }
+  function anzeigeAnwenden(txt){
+    impZeigen('');
+    if(/^\s*https?:\/\/\S+\s*$/.test(txt)){ impZeigen('<div class="plaus"><b>Ein Link reicht leider nicht</b><p>Die Portale erlauben kein automatisches Auslesen ihrer Seiten. Öffnen Sie die Anzeige, markieren und kopieren Sie den Text oder machen Sie Screenshots, und übernehmen Sie diese hier.</p></div>'); return; }
+    const {f,gef,hinweise}=anzeigeLesen(txt);
+    if(!f.wf&&!f.preis&&!f.bj){ impZeigen('<div class="plaus"><b>Keine Eckdaten erkannt</b><p>Im Text stehen weder Kaufpreis noch Wohnfläche oder Baujahr. Kopieren Sie den Abschnitt mit den Objektdaten mit, oder laden Sie Screenshots der Übersicht und der Beschreibung hoch.</p></div>'); return; }
+    read();
+    const typ=f.typ||(state.type==='etw'?'etw':state.data.haus.hausart), t=typ==='etw'?'etw':'haus';
+    const d=clone(BLANK[t]);
+    if(t==='haus'){ d.hausart=typ; d.bpi=BPI.akt; bpiAuto=true; bpiInfo(); }
+    ['str','plz','ort','wf','bj','we','geschosse','dach','ausst'].forEach(k=>{ if(f[k]!==undefined) d[k]=f[k]; });
+    if(t==='haus'&&f.gr) d.gr=f.gr;
+    if(f.keller!==undefined) d.keller=f.keller;
+    if(f.denkmal) d.denkmal=true;
+    if(f.stp){ d.stp=f.stp; d.stpw=f.stp==='0'?0:STP[t][f.stp]; }
+    if(f.preis) d.ap=f.preis;
+    if(f.provision!==undefined) d.prov=f.provision;
+    if(f.compHeizung&&d.comp.heizung) d.comp.heizung=f.compHeizung;
+    if(f.compFenster&&d.comp.fenster) d.comp.fenster=f.compFenster;
+    state.type=t; state.data[t]=d;
+    const o=state.data[t==='haus'?'etw':'haus']; ['str','plz','ort'].forEach(k=>o[k]=d[k]||'');
+    isSample=false; eigene=true; sampleUI();
+    autoKey=''; plzLast=''; lageAbgerufen=false; brwInfo(''); $('brwAuto').classList.remove('done'); $('brwBtnTxt').textContent='Marktdaten zur Adresse abrufen';
+    fill(); lageAuf(); calc();
+    if(t==='haus'&&API_URL&&d.plz&&d.ort) brwAbrufen();
+    // Rückmeldung
+    const fehlt=[['preis','Kaufpreis'],['wf','Wohnfläche'],['bj','Baujahr']].concat(t==='haus'?[['gr','Grundstück']]:[]).filter(([k])=>!f[k]).map(x=>x[1]);
+    const notes=[...hinweise];
+    if(!f.str) notes.push('Die Anzeige nennt keine Straße. Der Bodenrichtwert wurde für den Ort abgerufen und kann abweichen. Tragen Sie die Adresse ein, sobald Sie sie vom Anbieter haben.');
+    else if(!/\d/.test(f.str)) notes.push('Die Anzeige nennt keine Hausnummer. Der Bodenrichtwert wurde für die Straße abgerufen. Mit Hausnummer wird er genauer.');
+    if(fehlt.length) notes.push(`Nicht gefunden: ${fehlt.join(', ')}. Bitte im Formular ergänzen.`);
+    if(t==='etw') notes.push('Den Immobilienrichtwert für Wohnungen bitte auf boris.nrw.de ablesen und eintragen.');
+    const mehr=[f.zimmer?`${num(f.zimmer,f.zimmer%1?1:0)} Zimmer`:'',f.kwh?`Energiebedarf ${num(f.kwh)} kWh/m² im Jahr`:''].filter(Boolean);
+    impZeigen(`<p><b>Übernommen</b></p><div class="chips">${gef.map(g=>`<span>${esc(g)}</span>`).join('')}</div>`
+      +(mehr.length?`<p class="hint">Außerdem in der Anzeige: ${esc(mehr.join(', '))}.</p>`:'')
+      +(notes.length?`<div class="plaus"><b>Bitte prüfen</b><ul>${notes.map(n=>`<li>${esc(n)}</li>`).join('')}</ul></div>`:'')
+      +'<p class="hint">Prüfen Sie alle Angaben im Formular, besonders den Zustand der Bauteile in Schritt 3. Anzeigen beschreiben Immobilien oft freundlicher, als sie sind.</p>');
+  }
+  $('impGo').addEventListener('click',()=>{ const t=$('impTxt').value.trim(); if(!t){ impZeigen('<p class="hint">Bitte zuerst den Anzeigentext einfügen oder Screenshots wählen.</p>'); $('impTxt').focus(); return; } anzeigeAnwenden(t); });
+  $('impFile').addEventListener('change',async e=>{
+    const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
+    impZeigen(''); $('impGo').disabled=true;
+    try{ const txt=await bilderLesen(files); impSt(''); $('impTxt').value=($('impTxt').value.trim()+'\n'+txt).trim(); anzeigeAnwenden($('impTxt').value); }
+    catch(err){ impSt(''); impZeigen('<div class="plaus"><b>Screenshots konnten nicht gelesen werden</b><p>Bitte prüfen Sie die Internetverbindung, die Texterkennung wird beim ersten Mal geladen. Alternativ den Anzeigentext kopieren und einfügen.</p></div>'); }
+    finally{ $('impGo').disabled=false; }
+  });
 
   // ---- Baupreisindex automatisch aktualisieren ----
   function bpiInfo(){ $('bpiInfo').textContent = bpiAuto ? `Aktueller Wert, Stand ${BPI.stand} (${BPI.quelle}). Wird automatisch aktualisiert.` : `Eigener Wert. Aktuell veröffentlicht: ${num(BPI.akt,1)} (Stand ${BPI.stand}).`; }
