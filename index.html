@@ -35,7 +35,7 @@ img{max-width:100%}
   --bg:#F3F5F4; --surface:#FFFFFF; --ink:#18242B; --muted:#5B6A71; --line:#D5DCDA;
   --accent:#0E6B6A; --accent-ink:#FFFFFF; --accent-soft:#E1EFEE; --brand:#0E6B6A; --plus:#2F7A4E; --minus:#A8452F; --note:#8A6A12; --note-bg:#FBF4DF;
   --g:#2F8F57; --y:#C9921A; --r:#C2452D; --err:#A8452F;
-  --ad-bg:#ECEFEE; --ad-line:#B9C3C0; --gold:#9A6B12; --gold-soft:#F6EBD3; --scrim:rgba(17,26,31,.55);
+  --ad-bg:#ECEFEE; --ad-line:#B9C3C0; --gold:#9A6B12; --gold-soft:#F6EBD3; --gold-ink:#7A540E; --y-ink:#8A6410; --scrim:rgba(17,26,31,.55);
   --serif:"Fraunces",Georgia,"Times New Roman",serif;
   --display:"Source Sans 3","Segoe UI",system-ui,sans-serif;
   --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
@@ -45,12 +45,12 @@ img{max-width:100%}
   --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
   --accent:#6CC3BE; --accent-ink:#0B1C1C; --accent-soft:#163536; --brand:#6CC3BE; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
   --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
-  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}}
+  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --gold-ink:#E3BE6A; --y-ink:#E6B84A; --scrim:rgba(0,0,0,.65); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
   --accent:#6CC3BE; --accent-ink:#0B1C1C; --accent-soft:#163536; --brand:#6CC3BE; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
   --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
-  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}
+  --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --gold-ink:#E3BE6A; --y-ink:#E6B84A; --scrim:rgba(0,0,0,.65); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:0 16px;padding-block:18px 56px;display:flex;flex-direction:column;gap:22px}
@@ -62,8 +62,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16p
 .valoro-slogan{margin:2px 0 0;font-size:15px;color:var(--muted)}
 .acct{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .plan{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
-.plan.premium{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
-header{display:flex;flex-direction:column;gap:6px}
+.plan.premium{color:var(--gold-ink);border-color:var(--gold);background:var(--gold-soft)}
 h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,7vw,52px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
 .lead{color:var(--muted);max-width:60ch;margin:0;font-size:18px}
 button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
@@ -100,7 +99,8 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .sample .btn{border-color:var(--note);color:var(--note);background:transparent}
 .btn{font:600 14px var(--body);border-radius:8px;padding:9px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
 .btn.ghost{background:transparent;color:var(--accent)}
-.btn.small{padding:4px 10px;font-size:13px}
+.btn.small{padding:6px 12px;font-size:14px;min-height:36px}
+@media (pointer:coarse){.btn.small{min-height:40px}}
 .btn.gold{background:var(--gold);border-color:var(--gold);color:var(--surface)}
 .btn:disabled{opacity:.5;cursor:not-allowed}
 /* Modernisierungsampel */
@@ -129,6 +129,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .ad::before{content:"Anzeige";position:absolute;top:6px;left:10px;font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase}
 .ad b{display:block;font:500 12px var(--mono);color:var(--ink);margin-bottom:2px}
 .ad.banner{min-height:90px}
+@media (max-width:880px){.col>.ad.native{display:none}}
 .ad.native{place-items:start;text-align:left;gap:4px}
 .ad.native .nt{font-family:var(--display);font-weight:700;font-size:15px;color:var(--ink)}
 /* Ergebnis */
@@ -136,6 +137,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .label{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .range{font-family:var(--display);font-weight:800;font-size:clamp(26px,4.4vw,38px);line-height:1.1;font-variant-numeric:tabular-nums}
 .range span{color:var(--muted);font-weight:500}
+.range.soft{font-size:17px;color:var(--muted);font-family:var(--body);font-weight:600}
 .range.err{font-size:17px;color:var(--err);font-family:var(--body);font-weight:600}
 .meta{display:flex;gap:18px;flex-wrap:wrap;font-size:14px;color:var(--muted)}
 .meta b{font-family:var(--mono);color:var(--ink);font-weight:500}
@@ -155,7 +157,7 @@ h2{font-family:var(--serif);font-weight:600;font-size:19px;margin:0}
 .cost{border-radius:10px;padding:12px 14px;border:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
 .cost .v{font-family:var(--display);font-weight:800;font-size:22px;font-variant-numeric:tabular-nums}
 .cost.now{border-color:var(--r)} .cost.now .v{color:var(--r)}
-.cost.mid{border-color:var(--y)} .cost.mid .v{color:var(--y)}
+.cost.mid{border-color:var(--y)} .cost.mid .v{color:var(--y-ink)}
 .cost p{margin:0;font-size:12px;color:var(--muted)}
 ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
 .step{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:4px 12px;padding:12px 0;border-top:1px solid var(--line);align-items:start}
@@ -219,6 +221,7 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
 .expert summary .sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:6px}
 .expert-in{display:flex;flex-direction:column;gap:12px;margin-top:12px}
 /* Schritte auf dem Handy */
+.stepmsg{margin:0;font-size:15px;color:var(--err);font-weight:600;background:var(--surface);border-left:4px solid var(--err);border-radius:0 8px 8px 0;padding:8px 12px;box-shadow:0 0 0 1px var(--line) inset}
 .stepnav{display:flex;gap:10px;justify-content:space-between}
 .stepnav .btn{flex:1;min-height:48px;font-size:16px}
 .stepnav-top{display:flex;flex-direction:column;gap:6px}
@@ -259,6 +262,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .lockline svg{width:16px;height:16px;flex:none;stroke:var(--gold);fill:none;stroke-width:2}
 .lock p{margin:0;color:var(--ink)}
 /* Startbereich */
+main{display:flex;flex-direction:column;gap:22px;min-width:0}
 .hero{display:flex;flex-direction:column;gap:12px;padding:8px 0 4px}
 .trust{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--ink)}
 .trust li{display:flex;align-items:center;gap:7px}
@@ -293,7 +297,8 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .plan-c .btn{min-height:44px}
 .alt{display:flex;flex-direction:column;gap:8px}
 .alt>div{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;font-size:15px}
-.cmp summary{color:var(--accent);font-weight:600}
+.cmp summary{color:var(--accent);font-weight:600;padding:10px 0}
+.foot details summary{padding:10px 0}
 .cmp table{width:100%;min-width:0;border-collapse:collapse;margin-top:10px;font-size:14px;table-layout:fixed}
 .cmp th:first-child{width:46%}
 .cmp th{font-size:12px;letter-spacing:.02em;text-transform:none;font-weight:700;color:var(--ink)}
@@ -307,7 +312,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .foot .fb{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
 .foot .valoro-logo{font-size:26px}
 .foot nav{display:flex;flex-wrap:wrap;gap:6px 18px}
-.foot nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 0}
+.foot nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:10px 0;display:inline-block}
 .foot nav a:hover{text-decoration:underline}
 .foot details{border-top:0;padding-top:0}
 .foot details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
@@ -348,7 +353,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 /* Premium: Preis-Check */
 .pc{display:flex;flex-direction:column;gap:12px}
 .pcv{--c:var(--accent);border-left:4px solid var(--c);background:var(--bg);border-radius:0 8px 8px 0;padding:10px 12px;display:flex;flex-direction:column;gap:4px;font-size:14px}
-.pcv.good{--c:var(--g)} .pcv.mid{--c:var(--y)} .pcv.bad{--c:var(--r)}
+.pcv.good{--c:var(--g)} .pcv.mid{--c:var(--y-ink)} .pcv.bad{--c:var(--r)}
 .pcv b{color:var(--c);font-size:15px}
 .pcv p{margin:0}
 .pcbar{position:relative;height:64px;margin-top:2px}
@@ -413,16 +418,17 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 <body>
 
 <div class="wrap">
-  <div class="top">
+  <header class="top">
     <div class="brand">
       <a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 64" aria-hidden="true"><path d="M6 6 L31 58 L62 2" fill="none" stroke="#0E6B6A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a>
     </div>
     <div class="acct" id="acct"></div>
-  </div>
+  </header>
+<main id="main">
 
 
-  <header class="hero">
-    <h1>Was ist Ihr Haus wirklich wert?</h1>
+  <section class="hero" aria-labelledby="h1">
+    <h1 id="h1">Was ist Ihr Haus wirklich wert?</h1>
     <p class="lead">Kostenlose Wertschätzung aus amtlichen Daten, mit Sanierungskosten und Preis-Check für Immobilienanzeigen.</p>
     <ul class="trust">
       <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Amtliche Bodenrichtwerte (BORIS-NRW)</li>
@@ -430,7 +436,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Kostenlos, ohne Makler-Anruf</li>
     </ul>
     <div class="hero-row"><button type="button" class="btn big" id="heroGo">Jetzt Wert ermitteln</button><span class="region">Derzeit für Immobilien in Nordrhein-Westfalen</span></div>
-  </header>
+  </section>
 
   <div class="types" role="group" aria-label="Objektart" id="types"></div>
   <p class="method" id="method"></p>
@@ -442,6 +448,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         <div class="sample" id="sampleBar"><span id="sampleTxt">Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.</span><span class="actions"><button type="button" class="btn small" id="reset">Beispiel ansehen</button><button type="button" class="btn small" id="clear" hidden>Leeren</button></span></div>
 
         <div class="stepnav-top" id="stepTop" hidden></div>
+        <p class="stepmsg" id="stepMsg" role="alert" hidden></p>
 
         <fieldset data-step="1">
           <legend>1 · Lage</legend>
@@ -471,10 +478,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
             <button type="button" class="btn ghost small" id="lageEdit" aria-controls="lageBody" aria-expanded="false">Ändern</button>
           </div>
           <div class="lage-body" id="lageBody">
-          <label>Straße und Hausnummer<input type="text" id="str" autocomplete="street-address"></label>
+          <label>Straße und Hausnummer<input type="text" id="str" autocomplete="street-address" enterkeyhint="next"></label>
           <div class="row plz">
-            <label>PLZ<input type="text" id="plz" inputmode="numeric" maxlength="5"></label>
-            <label>Ort<input type="text" id="ort" list="ortListe"><datalist id="ortListe"></datalist></label>
+            <label>PLZ<input type="text" id="plz" inputmode="numeric" maxlength="5" autocomplete="postal-code" enterkeyhint="next"></label>
+            <label>Ort<input type="text" id="ort" list="ortListe" autocomplete="address-level2" enterkeyhint="next"><datalist id="ortListe"></datalist></label>
           </div>
           <p class="hint" id="plzInfo" role="status" hidden></p>
           <div class="auto" id="brwAuto" hidden>
@@ -482,14 +489,14 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
             <span class="sub" id="brwSub">Wird automatisch abgerufen, sobald die Adresse vollständig ist. Quelle: BORIS-NRW.</span>
             <p class="hint" id="brwInfo" role="status"></p>
           </div>
-          <label class="haus-only"><span class="lbl">Bodenrichtwert (€/m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Durchschnittlicher Grundstückspreis je m² in dieser Lage, festgelegt vom Gutachterausschuss. Kommt in NRW automatisch, sonst kostenlos auf boris.nrw.de ablesen.</span></span><input type="number" id="brw" min="0" step="5"></label>
-          <label class="etw-only" hidden><span class="lbl">Immobilienrichtwert (€/m² Wohnfläche) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Durchschnittlicher Kaufpreis je m² Wohnfläche für eine typische Wohnung in dieser Lage. Kostenlos auf boris.nrw.de unter „Immobilienrichtwerte“ ablesen.</span></span><input type="number" id="irw" min="0" step="10"></label>
+          <label class="haus-only"><span class="lbl">Bodenrichtwert (€/m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Durchschnittlicher Grundstückspreis je m² in dieser Lage, festgelegt vom Gutachterausschuss. Kommt in NRW automatisch, sonst kostenlos auf boris.nrw.de ablesen.</span></span><input type="number" id="brw" inputmode="numeric" enterkeyhint="next" min="0" step="5"></label>
+          <label class="etw-only" hidden><span class="lbl">Immobilienrichtwert (€/m² Wohnfläche) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Durchschnittlicher Kaufpreis je m² Wohnfläche für eine typische Wohnung in dieser Lage, festgelegt vom Gutachterausschuss. Kommt in NRW automatisch zur Adresse.</span></span><input type="number" id="irw" inputmode="numeric" enterkeyhint="next" min="0" step="10"></label>
           <details class="expert" id="expert">
             <summary>Expertenangaben <span class="sub">für Fachleute, sonst automatisch</span></summary>
             <div class="expert-in">
               <div class="row haus-only">
-                <label><span class="lbl">Regionalfaktor <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Passt die bundesweiten Baukosten an die Region an. Steht im Grundstücksmarktbericht, meist 1,0.</span></span><input type="number" id="rf" min="0.5" max="2" step="0.01"></label>
-                <label><span class="lbl">Baupreisindex <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Entwicklung der Baupreise seit 2010 (= 100), vom Statistischen Bundesamt. Wird automatisch aktuell gehalten.</span></span><input type="number" id="bpi" min="100" step="0.1"></label>
+                <label><span class="lbl">Regionalfaktor <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Passt die bundesweiten Baukosten an die Region an. Steht im Grundstücksmarktbericht, meist 1,0.</span></span><input type="number" id="rf" inputmode="decimal" min="0.5" max="2" step="0.01"></label>
+                <label><span class="lbl">Baupreisindex <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Entwicklung der Baupreise seit 2010 (= 100), vom Statistischen Bundesamt. Wird automatisch aktuell gehalten.</span></span><input type="number" id="bpi" inputmode="decimal" min="100" step="0.1"></label>
               </div>
               <p class="hint haus-only" id="bpiInfo"></p>
               <div class="radio haus-only" role="radiogroup" aria-label="Sachwertfaktor">
@@ -499,10 +506,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
                 <label><input type="radio" name="swfm" value="unknown" id="swfUnknown">Weiß ich nicht, typische Spanne nehmen</label>
               </div>
               <p class="hint haus-only" id="swfAutoInfo" hidden></p>
-              <label class="haus-only" id="swfWrap">Sachwertfaktor<input type="number" id="swf" min="0.3" max="3" step="0.01"></label>
+              <label class="haus-only" id="swfWrap">Sachwertfaktor<input type="number" id="swf" inputmode="decimal" min="0.3" max="3" step="0.01"></label>
               <div class="row etw-only" hidden>
-                <label><span class="lbl">Normobjekt Baujahr <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Das Baujahr der typischen Vergleichswohnung, auf die sich der Immobilienrichtwert bezieht. Steht bei BORIS-NRW direkt am Richtwert.</span></span><input type="number" id="nbj" min="1850" max="2030"></label>
-                <label><span class="lbl">Normobjekt Wfl. (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Die Wohnfläche der typischen Vergleichswohnung zum Immobilienrichtwert. Steht bei BORIS-NRW direkt am Richtwert.</span></span><input type="number" id="nwf" min="10" step="1"></label>
+                <label><span class="lbl">Baujahr Vergleichswohnung <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Das Baujahr der typischen Vergleichswohnung, auf die sich der Immobilienrichtwert bezieht. Wird automatisch übernommen. Ohne Angabe rechnet der Wertcheck ohne Baujahr-Anpassung.</span></span><input type="number" id="nbj" inputmode="numeric" enterkeyhint="next" min="1850" max="2030"></label>
+                <label><span class="lbl">Wohnfläche Vergleichswohnung (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Die Wohnfläche der typischen Vergleichswohnung zum Immobilienrichtwert. Wird automatisch übernommen. Ohne Angabe rechnet der Wertcheck ohne Größen-Anpassung.</span></span><input type="number" id="nwf" inputmode="numeric" enterkeyhint="next" min="10" step="1"></label>
               </div>
               <p class="hint haus-only">Sachwert- und Regionalfaktor stehen im Grundstücksmarktbericht des örtlichen Gutachterausschusses auf <a href="https://www.boris.nrw.de" target="_blank" rel="noopener">BORIS-NRW</a>.</p>
             </div>
@@ -513,10 +520,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         <fieldset data-step="2">
           <legend>2 · Objekt</legend>
           <div class="row">
-            <label><span class="lbl">Wohnfläche (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Ohne Keller, Dachboden und Garage. Steht im Kaufvertrag, Exposé oder in der Wohnflächenberechnung der Bauakte.</span></span><input type="number" id="wf" min="10" step="1"></label>
-            <label><span class="lbl">Baujahr <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Jahr der Fertigstellung. Spätere Modernisierungen geben Sie im Schritt „Zustand“ an.</span></span><input type="number" id="bj" min="1850" max="2030"></label>
+            <label><span class="lbl">Wohnfläche (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Ohne Keller, Dachboden und Garage. Steht im Kaufvertrag, Exposé oder in der Wohnflächenberechnung der Bauakte.</span></span><input type="number" id="wf" inputmode="numeric" enterkeyhint="next" min="10" step="1"></label>
+            <label><span class="lbl">Baujahr <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Jahr der Fertigstellung. Spätere Modernisierungen geben Sie im Schritt „Zustand“ an.</span></span><input type="number" id="bj" inputmode="numeric" enterkeyhint="next" min="1850" max="2030"></label>
           </div>
-          <label class="haus-only"><span class="lbl">Grundstück (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Fläche laut Grundbuch oder Liegenschaftskarte. Bei Doppel- und Reihenhäusern nur der eigene Anteil.</span></span><input type="number" id="gr" min="0" step="10"></label>
+          <label class="haus-only"><span class="lbl">Grundstück (m²) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Fläche laut Grundbuch oder Liegenschaftskarte. Bei Doppel- und Reihenhäusern nur der eigene Anteil.</span></span><input type="number" id="gr" inputmode="numeric" enterkeyhint="next" min="0" step="10"></label>
           <label class="etw-only" hidden>Lage im Gebäude
             <select id="geschoss">
               <option value="eg">Erdgeschoss</option>
@@ -562,6 +569,12 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <label class="check haus-only"><input type="checkbox" id="keller">Unterkellert</label>
           <label class="check etw-only" hidden><input type="checkbox" id="balkon">Balkon, Loggia oder Terrasse</label>
           <label class="check etw-only" hidden><input type="checkbox" id="vermietet">Vermietet verkauft</label>
+          <label class="etw-only" hidden><span class="lbl">Verkaufsart <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Weiterverkauf: Die Wohnung wurde schon einmal verkauft, der übliche Fall. Erstverkauf aus Umwandlung: Ein Miethaus wird erstmals in Eigentumswohnungen aufgeteilt und verkauft. Erstverkauf Neubau: Kauf vom Bauträger. Erstverkäufe sind meist teurer.</span></span>
+            <select id="verkauf">
+              <option value="weiter">Weiterverkauf</option>
+              <option value="umwandlung">Erstverkauf aus Umwandlung</option>
+              <option value="neubau">Erstverkauf Neubau</option>
+            </select></label>
           <label class="check"><input type="checkbox" id="denkmal">Steht unter Denkmalschutz (Einzeldenkmal oder Denkmalbereich)</label>
           <label><span class="lbl">Garage / Stellplatz <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Stellplatz oder Carport: offener oder überdachter Platz ohne Wände. Garage: Einzelgarage, auch Fertiggarage, oder ein Tiefgaragenplatz. Doppelgarage: Garage für zwei Autos, zwei Einzelgaragen oder zwei Tiefgaragenplätze. Ein Stellplatz in der Einfahrt ohne eigene Fläche zählt nicht extra.</span></span>
             <select id="stp">
@@ -573,8 +586,8 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <details class="expert" id="expert2">
             <summary>Expertenangaben zum Objekt <span class="sub">sonst automatisch</span></summary>
             <div class="expert-in">
-              <label><span class="lbl">Wert Garage / Stellplatz (€) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Pauschal angesetzt: beim Haus 5.000 € (Stellplatz/Carport), 12.000 € (Garage), 20.000 € (Doppelgarage). Bei Wohnungen 6.000 / 15.000 / 28.000 €. Hier anpassen, wenn Sie einen anderen Wert kennen.</span></span><input type="number" id="stpw" min="0" step="500"></label>
-              <label class="haus-only"><span class="lbl">Bruttogrundfläche (m²) <span class="opt">(falls bekannt)</span> <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Summe aller Geschossflächen inklusive Keller und Dachgeschoss, gemessen an den Außenmaßen. Steht in der Bauakte. Ohne Angabe schätzt der Wertcheck sie aus Wohnfläche, Geschossen, Dach und Keller.</span></span><input type="number" id="bgf" min="30" step="1"></label>
+              <label><span class="lbl">Wert Garage / Stellplatz (€) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Pauschal angesetzt: beim Haus 5.000 € (Stellplatz/Carport), 12.000 € (Garage), 20.000 € (Doppelgarage). Bei Wohnungen 6.000 / 15.000 / 28.000 €. Hier anpassen, wenn Sie einen anderen Wert kennen.</span></span><input type="number" id="stpw" inputmode="numeric" enterkeyhint="next" min="0" step="500"></label>
+              <label class="haus-only"><span class="lbl">Bruttogrundfläche (m²) <span class="opt">(falls bekannt)</span> <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Summe aller Geschossflächen inklusive Keller und Dachgeschoss, gemessen an den Außenmaßen. Steht in der Bauakte. Ohne Angabe schätzt der Wertcheck sie aus Wohnfläche, Geschossen, Dach und Keller.</span></span><input type="number" id="bgf" inputmode="numeric" enterkeyhint="next" min="30" step="1"></label>
             </div>
           </details>
         </fieldset>
@@ -649,7 +662,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         <div class="pc" id="pcOn" hidden>
           <div class="row">
             <label>Angebotspreis (€)<input type="number" id="ap" min="0" step="1000" inputmode="numeric"></label>
-            <label id="provWrap"><span class="lbl">Provision (%) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Anteil, den Sie als Käufer zahlen, steht in der Anzeige. Bei Einfamilienhäusern und Wohnungen teilen sich Käufer und Verkäufer die Provision meist, üblich sind 3,57 % je Seite. Leer lassen, wenn provisionsfrei.</span></span><input type="number" id="prov" min="0" max="10" step="0.01"></label>
+            <label id="provWrap"><span class="lbl">Provision (%) <button type="button" class="info" aria-label="Erklärung anzeigen" aria-expanded="false">i</button><span class="tip" hidden>Anteil, den Sie als Käufer zahlen, steht in der Anzeige. Bei Einfamilienhäusern und Wohnungen teilen sich Käufer und Verkäufer die Provision meist, üblich sind 3,57 % je Seite. Leer lassen, wenn provisionsfrei.</span></span><input type="number" id="prov" inputmode="decimal" min="0" max="10" step="0.01"></label>
           </div>
           <div id="pcOut"></div>
         </div>
@@ -712,14 +725,16 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     <p class="hint">Beispielpreise für den Prototyp. Anmeldung und Bezahlung sind hier nur simuliert, es werden keine Daten übertragen. <button type="button" class="btn ghost small" id="trialReset">Test zurücksetzen (Demo)</button></p>
   </section>
 
+</main>
   <footer class="foot">
     <div class="fb"><a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 64" aria-hidden="true"><path d="M6 6 L31 58 L62 2" fill="none" stroke="#0E6B6A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a><span>Was ist Ihr Haus wirklich wert?</span></div>
     <nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="impressum.html#kontakt">Kontakt</a></nav>
     <details>
       <summary>Datenquellen und Lizenzen</summary>
       <ul>
-        <li>Bodenrichtwerte: BORIS-NRW, Gutachterausschüsse in NRW, Datenlizenz Deutschland – Zero – Version 2.0</li>
+        <li>Boden- und Immobilienrichtwerte: BORIS-NRW, Gutachterausschüsse in NRW, Datenlizenz Deutschland – Zero – Version 2.0</li>
         <li>Sachwertfaktoren und Grundstücksgrößen: Grundstücksmarktbericht 2026 des Gutachterausschusses in der Städteregion Aachen, Datenlizenz Deutschland – Zero – Version 2.0</li>
+        <li>Umrechnung für Eigentumswohnungen: Örtliche Fachinformationen zu den Immobilienrichtwerten 2026, Gutachterausschuss in der Städteregion Aachen</li>
         <li>Baupreisindex: Statistisches Bundesamt (Destatis)</li>
         <li>Adresssuche: © OpenStreetMap-Mitwirkende, Nominatim (ODbL)</li>
         <li>Postleitzahlen: OpenPLZ API</li>
@@ -730,10 +745,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   </footer>
 </div>
 
-<div class="mbar" id="mbar" hidden>
+<aside class="mbar" id="mbar" aria-label="Kurzergebnis" hidden>
   <div class="mv"><span class="label">Geschätzter Marktwert</span><b id="mbarV">–</b></div>
   <button type="button" class="btn small" id="mbarBtn">Zum Ergebnis</button>
-</div>
+</aside>
 
 <div class="overlay" id="ov" hidden>
   <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT">
@@ -866,7 +881,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const SAMPLE = {
     haus:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',brw:320,swfm:'known',swf:1.15,bpi:200.1,rf:1.0,wf:135,bj:1972,gr:620,hausart:'dhh',we:'1',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'garage',stpw:12000,
           comp:{dach:'y',fassade:'r',fenster:'g',heizung:'r',leitung:'y',bad:'g',innen:'y'}},
-    etw:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',irw:2900,nbj:1990,nwf:75,wf:82,bj:1978,geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'garage',stpw:15000,
+    etw:{str:'Musterweg 12',plz:'12345',ort:'Musterstadt',irw:2900,nbj:1990,nwf:75,wf:82,bj:1978,geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,verkauf:'weiter',stp:'garage',stpw:15000,
          comp:{bad:'r',innen:'y',leitung:'y',fenster:'g'}}
   };
   const clone = o => JSON.parse(JSON.stringify(o));
@@ -874,12 +889,12 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const BLANK = {
     haus:{str:'',plz:'',ort:'',swfm:'unknown',bpi:200.1,rf:1.0,hausart:'frei',we:'1',geschosse:'1',dach:'ausgebaut',ausst:'mittel',keller:true,stp:'0',stpw:0,denkmal:false,
           comp:{dach:'y',fassade:'y',fenster:'y',heizung:'y',leitung:'y',bad:'y',innen:'y'}},
-    etw:{str:'',plz:'',ort:'',geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,stp:'0',stpw:0,denkmal:false,
+    etw:{str:'',plz:'',ort:'',geschoss:'og',ausst:'mittel',balkon:true,vermietet:false,verkauf:'weiter',stp:'0',stpw:0,denkmal:false,
          comp:{bad:'y',innen:'y',leitung:'y',fenster:'y'}}
   };
   const state = {type:'haus', data:{haus:clone(BLANK.haus), etw:clone(BLANK.etw)}};
   let isSample = false;
-  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf','we','ap','prov'];
+  const fields = ['str','plz','ort','brw','swf','bpi','rf','irw','nbj','nwf','wf','bj','gr','geschoss','ausst','keller','balkon','vermietet','stp','stpw','denkmal','geschosse','dach','bgf','we','ap','prov','verkauf'];
   let last = null;
 
   // ---- Konto & Tarif (simuliert) ----
@@ -993,7 +1008,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       const hasM=!!state.data.haus.markt; $('swfAutoWrap').hidden=!hasM;
       $('swfAutoInfo').hidden=!(hasM&&d.swfm==='auto');
       if(hasM) $('swfAutoInfo').textContent=`Marktanpassung nach ${state.data.haus.markt.quelle.replace(/, Kap.*$/,'')}, Stichtag ${new Date(state.data.haus.markt.stichtag).toLocaleDateString('de-DE')}.`; }
-    $('brwAuto').hidden = !(API_URL && t==='haus');
+    $('brwAuto').hidden = !API_URL;
     $('impLock').hidden=isPro(); $('impOn').hidden=!isPro();
     const on=plan!=='guest';
     $('compsLock').hidden=on; $('resLock').hidden=true;
@@ -1031,6 +1046,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     read();
     if(k==='etw') state.type='etw'; else { state.type='haus'; state.data.haus.hausart=k; }
     fill(); calc(); if(!$('lageSum').hidden&&!lageKomplett()) lageAuf(); else if(!$('lageSum').hidden) lageZu();
+    if(!lageKomplett()) autoAbruf();
   }
 
   // Gäste rechnen mit durchschnittlichem Zustand (alle Bereiche „Älter, intakt“)
@@ -1049,8 +1065,8 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     return {items,now,mid,pts,pctUp};
   }
 
-  function fail(msg,empty){
-    last=null; $('range').className='range err'; $('range').textContent=empty?'Noch kein Ergebnis':msg;
+  function fail(msg,empty,soft){
+    last=null; $('range').className='range '+(soft?'soft':'err'); $('range').textContent=empty?'Noch kein Ergebnis':msg;
     ['mid','sqm'].forEach(i=>$(i).textContent='–'); $('rangeHint').hidden=true; $('steps').innerHTML=''; $('save').disabled=true;
     $('pB').style.width='0'; $('pG').style.width='0';
     $('emptyHint').hidden=!empty; if(empty) $('emptyTxt').textContent=msg;
@@ -1117,18 +1133,35 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     } else {
       v=d.irw*d.wf;
       steps.push({kind:'base',t:'Ausgangswert',d:`${num(d.irw)} €/m² Immobilienrichtwert × ${d.wf} m² Wohnfläche`,fx:eur(v),run:v});
-      const diff=d.bj-d.nbj, pb=Math.max(-ETWF.bjCap,Math.min(ETWF.bjCap,diff*ETWF.bjJahr));
-      pct('Baujahr',pb,diff===0?'Entspricht dem Normobjekt':`${Math.abs(diff)} Jahre ${diff<0?'älter':'jünger'} als das Normobjekt (${d.nbj}), 0,5 % je Jahr`);
-      pct('Wohnfläche',Math.pow(d.nwf/d.wf,ETWF.flExp)-1,`${d.wf} m² statt ${d.nwf} m². Größere Einheiten kosten je m² etwas weniger`);
-      const g=ETWF.geschoss[d.geschoss]; pct('Lage im Gebäude',g[0],g[1]);
-      { const D=ausstD(d,'etw'), L=ausstTeile('etw'), W=L.reduce((x,a)=>x+a.w,0); pct('Ausstattung',L.reduce((x,a)=>x+a.w*ETWF.ausstS[(D[a.id]||3)-1],0)/W,'Ausstattungsstandard gegenüber mittlerem Standard'); }
+      const nbj=d.nbj>0?d.nbj:d.bj, nwf=d.nwf>0?d.nwf:d.wf, N=d.irwNorm||{};
+      const diff=d.bj-nbj, UK=d.irwKoeff;
+      // Klasse aus der Tabelle des Gutachterausschusses: [von, bis ausschließlich, Koeffizient]
+      const kl=(tab,x)=>{ const e=tab.find(r=>x>=r[0]&&x<r[1]); return e?e[2]:1; };
+      if(UK){
+        pct('Baujahr',kl(UK.baujahr,d.bj)/kl(UK.baujahr,nbj)-1,diff===0?'Entspricht der Vergleichswohnung':`Baujahr ${d.bj} statt ${N.bjText||nbj}, nach Umrechnung des Gutachterausschusses`);
+        pct('Wohnfläche',kl(UK.wohnflaeche,d.wf)/kl(UK.wohnflaeche,nwf)-1,`${d.wf} m² statt ${N.wfText||nwf} m², nach Umrechnung des Gutachterausschusses`);
+        const vU=UK.verkauf[d.verkauf||'weiter']||1, vN=UK.verkauf[N.verkauf||'weiter']||1;
+        if(vU!==vN) pct('Verkaufsart',vU/vN-1,{weiter:'Weiterverkauf',umwandlung:'Erstverkauf aus Umwandlung',neubau:'Erstverkauf Neubau'}[d.verkauf||'weiter']);
+      } else {
+        const pb=Math.max(-ETWF.bjCap,Math.min(ETWF.bjCap,diff*ETWF.bjJahr));
+        pct('Baujahr',pb,diff===0?'Entspricht der Vergleichswohnung':`${Math.abs(diff)} Jahre ${diff<0?'älter':'jünger'} als die Vergleichswohnung (${nbj}), 0,5 % je Jahr`);
+        pct('Wohnfläche',Math.pow(nwf/d.wf,ETWF.flExp)-1,`${d.wf} m² statt ${N.wfText||nwf} m². Größere Einheiten kosten je m² etwas weniger`);
+        const g=ETWF.geschoss[d.geschoss]; pct('Lage im Gebäude',g[0],g[1]);
+        const vk={weiter:0,umwandlung:0.10,neubau:0.13}[d.verkauf||'weiter']; if(vk) pct('Verkaufsart',vk,'Erstverkäufe erzielen meist höhere Preise');
+      }
+      { const D=ausstD(d,'etw'), L=ausstTeile('etw'), W=L.reduce((x,a)=>x+a.w,0), fU=L.reduce((x,a)=>x+a.w*ETWF.ausstS[(D[a.id]||3)-1],0)/W;
+        // Standard der Vergleichswohnung (BORIS: 1 sehr einfach … 10 Luxus) auf die Stufen 1–5 umrechnen
+        let fN=0; if(N.standard>0){ const st=1+(Math.min(10,N.standard)-1)*4/9, i=Math.min(3,Math.floor(st)-1), r=st-1-i; fN=ETWF.ausstS[i]+(ETWF.ausstS[i+1]-ETWF.ausstS[i])*r; }
+        pct('Ausstattung',(1+fU)/(1+fN)-1,N.standard>0?'Ausstattung gegenüber der Vergleichswohnung':'Ausstattungsstandard gegenüber mittlerem Standard'); }
       if(on) pct('Modernisierte Bereiche',K.pctUp,K.pctUp?'Grün markierte Bereiche der Wohnung':'Keine Bereiche als modernisiert markiert');
-      pct('Balkon / Terrasse',d.balkon?0:ETWF.balkon,d.balkon?'Vorhanden':'Fehlt, Abschlag');
-      if(d.vermietet) pct('Vermietung',ETWF.vermietet,'Vermietet verkauft, für Selbstnutzer weniger attraktiv');
+      if(!UK) pct('Balkon / Terrasse',d.balkon?0:ETWF.balkon,d.balkon?'Vorhanden':'Fehlt, Abschlag');
+      { const nv=N.miete===2; if(!!d.vermietet!==nv){
+          const f=UK?(UK.miete[d.vermietet?'2':'1']/UK.miete[nv?'2':'1']-1):(d.vermietet?ETWF.vermietet:1/(1+ETWF.vermietet)-1);
+          pct('Vermietung',f,d.vermietet?'Vermietet verkauft, für Selbstnutzer weniger attraktiv':'Bezugsfrei, die Vergleichswohnung ist vermietet'); } }
       const sp=d.stp==='0'?0:(Number.isFinite(d.stpw)?d.stpw:STP.etw[d.stp]);
       if(sp>0) abs('Stellplatz',sp,'Fester Betrag');
       if(K.now>0) abs('Sanierungsstau',-K.now,'Kosten der rot markierten Bereiche, voll abgezogen');
-      unc=0.08+(Math.abs(diff)>30?0.03:0);
+      unc=(UK?0.07:0.08)+(Math.abs(diff)>30?0.03:0);
     }
     if(!on) unc+=0.04; // Zustand unbekannt
     if(d.denkmal) unc+=0.05; // Denkmalschutz: Wert kann in beide Richtungen abweichen
@@ -1136,17 +1169,21 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     return {steps,v,unc,vorl,extra,K,bw};
   }
 
+  // Pflichtfelder erst rot markieren, wenn man sie verlassen hat oder weiter will
+  const beruehrt=new Set();
+  document.addEventListener('focusout',e=>{ const id=e.target&&e.target.id; if(id&&e.target.closest&&e.target.closest('#f')&&e.target.value==='') beruehrt.add(id); });
   function calc(){
     read(); syncUI();
     const t=state.type, d=state.data[t], on=compsOn();
     const ok=v=>Number.isFinite(v)&&v>0;
-    const needIds = t==='haus' ? ['wf','bj','gr','brw','bpi','rf'].concat(d.swfm==='known'?['swf']:[]) : ['wf','bj','irw','nbj','nwf'];
+    const needIds = t==='haus' ? ['wf','bj','gr','brw','bpi','rf'].concat(d.swfm==='known'?['swf']:[]) : ['wf','bj','irw'];
     const missing = needIds.filter(k=>!ok(d[k]));
     document.querySelectorAll('#f input[aria-invalid]').forEach(e=>e.removeAttribute('aria-invalid'));
     if(missing.length){
       const nothing = ['wf','bj','gr','brw','irw'].every(k=>!ok(d[k]));
-      if(!nothing) missing.forEach(k=>{ $(k).setAttribute('aria-invalid','true'); const dt=$(k).closest('details'); if(dt) dt.open=true; if($(k).closest('#lageBody')) lageAuf(); });
-      return fail(nothing ? 'Geben Sie Adresse, Wohnfläche und Baujahr ein. Das Ergebnis erscheint hier sofort.' : 'Es fehlen noch: '+missing.map(k=>LABEL[k]).join(', '), nothing);
+      const zeigen=missing.filter(k=>beruehrt.has(k));
+      if(!nothing) zeigen.forEach(k=>{ $(k).setAttribute('aria-invalid','true'); const dt=$(k).closest('details'); if(dt) dt.open=true; if($(k).closest('#lageBody')) lageAuf(); });
+      return fail(nothing ? 'Geben Sie Adresse, Wohnfläche und Baujahr ein. Das Ergebnis erscheint hier sofort.' : (zeigen.length?'Es fehlen noch: ':'Noch offen: ')+missing.map(k=>LABEL[k]).join(', '), nothing, !zeigen.length);
     }
     if(d.bj>YEAR){ $('bj').setAttribute('aria-invalid','true'); return fail(`Baujahr bitte bis ${YEAR} angeben`); }
     $('emptyHint').hidden=true; document.querySelector('.result-head').classList.remove('is-empty'); $('stepsBlk').hidden=false;
@@ -1192,7 +1229,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       'Garage / Stellplatz':'Garage / Stellplatz','Stellplatz':'Garage / Stellplatz','Bodenwert':'Grundstück',
       'Marktanpassung':'Marktlage in der Region','Ausgangswert':'Lage und Markt',
       'Baujahr':'Objektmerkmale','Wohnfläche':'Objektmerkmale','Lage im Gebäude':'Objektmerkmale','Ausstattung':'Objektmerkmale',
-      'Balkon / Terrasse':'Objektmerkmale','Vermietung':'Objektmerkmale','Modernisierte Bereiche':'Modernisierungen','Sanierungsstau':'Sanierungsbedarf'};
+      'Balkon / Terrasse':'Objektmerkmale','Vermietung':'Objektmerkmale','Verkaufsart':'Objektmerkmale','Modernisierte Bereiche':'Modernisierungen','Sanierungsstau':'Sanierungsbedarf'};
     const DESC={'Gebäude':'Heutiger Wert der Bausubstanz','Grundstück':'Nach Lage und Grundstücksgröße','Garage / Stellplatz':'Pauschaler Wert',
       'Marktlage in der Region':'Was Käufer in Ihrer Region zahlen','Lage und Markt':'Aus amtlichen Vergleichsdaten',
       'Objektmerkmale':'Baujahr, Größe, Lage im Haus und Ausstattung','Modernisierungen':'Grün markierte Bereiche','Sanierungsbedarf':'Rot markierte Bereiche'};
@@ -1359,6 +1396,8 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     else if(/Carport|Stellplatz|Stellpl[äa]tze/i.test(tx+' '+feld)) stp='aussen';
     if(stp) set('stp',stp,{'0':'keine Garage',doppel:'Doppelgarage',garage:'Garage',aussen:'Stellplatz/Carport'}[stp]);
     if(stp==='garage'&&/Außenstellplatz|Stellplatz|Carport/i.test(feld)) hinweise.push(`Laut Portal-Angabe „${feld}“, laut Beschreibung gibt es eine Garage. Übernommen: Garage.`);
+    // Verkaufsart (nur für Wohnungen genutzt)
+    if(/Erstbezug|Neubauwohnung|Neubauprojekt|vom Bauträger|provisionsfrei vom Bauträger/i.test(t)) set('verkauf','neubau','Erstverkauf Neubau');
     // Denkmalschutz
     if(/denkmalgesch[üu]tzt|Denkmalschutz|Baudenkmal|Einzeldenkmal/i.test(t)) set('denkmal',true,'Denkmalschutz');
     // Heizung: Alter → Vorschlag für die Ampel
@@ -1436,6 +1475,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     if(f.keller!==undefined) d.keller=f.keller;
     if(f.denkmal) d.denkmal=true;
     if(f.stp){ d.stp=f.stp; d.stpw=f.stp==='0'?0:STP[t][f.stp]; }
+    if(t==='etw'&&f.verkauf) d.verkauf=f.verkauf;
     if(f.preis) d.ap=f.preis;
     if(f.provision!==undefined) d.prov=f.provision;
     if(f.compHeizung&&d.comp.heizung) d.comp.heizung=f.compHeizung;
@@ -1446,14 +1486,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     isSample=false; eigene=true; sampleUI();
     autoKey=''; plzLast=''; lageAbgerufen=false; brwInfo(''); $('brwAuto').classList.remove('done'); $('brwBtnTxt').textContent='Marktdaten zur Adresse abrufen';
     fill(); lageAuf(); calc();
-    if(t==='haus'&&API_URL&&d.plz&&d.ort) brwAbrufen();
+    if(API_URL&&d.plz&&d.ort) brwAbrufen();
     // Rückmeldung
     const fehlt=[['preis','Kaufpreis'],['wf','Wohnfläche'],['bj','Baujahr']].concat(t==='haus'?[['gr','Grundstück']]:[]).filter(([k])=>!f[k]).map(x=>x[1]);
     const notes=[...hinweise];
     if(!f.str) notes.push('Die Anzeige nennt keine Straße. Der Bodenrichtwert wurde für den Ort abgerufen und kann abweichen. Tragen Sie die Adresse ein, sobald Sie sie vom Anbieter haben.');
     else if(!/\d/.test(f.str)) notes.push('Die Anzeige nennt keine Hausnummer. Der Bodenrichtwert wurde für die Straße abgerufen. Mit Hausnummer wird er genauer.');
     if(fehlt.length) notes.push(`Nicht gefunden: ${fehlt.join(', ')}. Bitte im Formular ergänzen.`);
-    if(t==='etw') notes.push('Den Immobilienrichtwert für Wohnungen bitte auf boris.nrw.de ablesen und eintragen.');
     const mehr=[f.zimmer?`${num(f.zimmer,f.zimmer%1?1:0)} Zimmer`:'',f.kwh?`Energiebedarf ${num(f.kwh)} kWh/m² im Jahr`:''].filter(Boolean);
     impZeigen(`<p><b>Übernommen</b></p><div class="chips">${gef.map(g=>`<span>${esc(g)}</span>`).join('')}</div>`
       +(mehr.length?`<p class="hint">Außerdem in der Anzeige: ${esc(mehr.join(', '))}.</p>`:'')
@@ -1511,10 +1550,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   // ---- Bodenrichtwert automatisch abrufen (nur NRW) ----
   function brwInfo(t,cls){ $('brwInfo').textContent=t; $('brwInfo').className='hint'+(cls?' '+cls:''); }
   let autoKey='', autoTimer=null;
-  const adrKey=()=>[$('str').value.trim(),$('plz').value.trim(),$('ort').value.trim()].join('|').toLowerCase();
+  const adrKey=()=>[state.type,$('str').value.trim(),$('plz').value.trim(),$('ort').value.trim()].join('|').toLowerCase();
   function autoAbruf(){
     clearTimeout(autoTimer);
-    if(!API_URL||state.type!=='haus') return;
+    if(!API_URL) return;
     const str=$('str').value.trim(), plz=$('plz').value.trim(), ort=$('ort').value.trim();
     if(!/\d/.test(str)||!/^\d{5}$/.test(plz)||!ort||adrKey()===autoKey) return;
     autoTimer=setTimeout(()=>{ if(adrKey()!==autoKey) brwAbrufen(); },1200);
@@ -1528,9 +1567,22 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     autoKey=adrKey();
     const btn=$('brwBtn'); btn.disabled=true; brwInfo('Wird abgerufen …'); $('brwAuto').classList.remove('done');
     try{
-      const r=await fetch(API_URL.replace(/\/$/,'')+'/brw?art=haus&adresse='+encodeURIComponent([str,plz+' '+ort].filter(Boolean).join(', ')));
+      const etw=state.type==='etw';
+      const r=await fetch(API_URL.replace(/\/$/,'')+'/brw?art='+(etw?'etw':'haus')+'&adresse='+encodeURIComponent([str,plz+' '+ort].filter(Boolean).join(', ')));
       const j=await r.json();
-      if(!j.ok){ brwInfo(j.fehler||'Kein Bodenrichtwert gefunden. Bitte von Hand eintragen.','err'); return; }
+      if(!j.ok){ brwInfo(j.fehler||(etw?'Kein Immobilienrichtwert gefunden. Bitte von Hand eintragen.':'Kein Bodenrichtwert gefunden. Bitte von Hand eintragen.'),'err'); return; }
+      if(etw){
+        const E=state.data.etw, n=j.norm||{};
+        E.irw=j.irw; $('irw').value=j.irw;
+        E.nbj=n.baujahr||''; $('nbj').value=E.nbj; E.nwf=n.wohnflaeche||''; $('nwf').value=E.nwf;
+        E.irwKoeff=j.koeff||null;
+        E.irwNorm={standard:n.standard||null,miete:n.miete||null,verkauf:n.verkauf||'weiter',bjText:n.baujahrText||'',wfText:(n.wohnflaecheText||'').replace('-','–'),lage:j.lage||'',quelle:j.quelle||''};
+        const vg=[n.baujahrText?'Baujahr '+n.baujahrText:'',n.wohnflaecheText?n.wohnflaecheText.replace('-','–')+' m²':''].filter(Boolean).join(', ');
+        brwInfo(`✓ Immobilienrichtwert ${num(j.irw)} €/m² übernommen${vg?' · Vergleichswohnung: '+vg:''} · ${[j.gemeinde,j.ortsteil].filter((x,i,arr)=>x&&arr.indexOf(x)===i).join('-')}${j.stichtag?' · Stichtag '+j.stichtag:''}${j.abstand?` · nächstgelegene Richtwertzone, rund ${j.abstand} m entfernt`:''}${j.koeff?' · Umrechnung nach den Tabellen des Gutachterausschusses':''}`,'ok');
+        $('brwAuto').classList.add('done'); $('brwBtnTxt').textContent='Erneut abrufen';
+        lageAbgerufen=true; if(!$('lageBody').contains(document.activeElement)||document.activeElement===$('brwBtn')) setTimeout(lageZu,600);
+        calc(); return;
+      }
       $('brw').value=j.brw; state.data.haus.brw=j.brw;
       const H=state.data.haus;
       if(j.markt){ H.markt=j.markt; H.markt_gemeinde=j.gemeinde; H.swfm='auto'; H.rf=j.markt.modell.regionalfaktor; $('rf').value=H.rf; $('swfAuto').checked=true; }
@@ -1540,7 +1592,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       $('brwAuto').classList.add('done'); $('brwBtnTxt').textContent='Erneut abrufen';
       lageAbgerufen=true; if(!$('lageBody').contains(document.activeElement)||document.activeElement===$('brwBtn')) setTimeout(lageZu,600);
       calc();
-    }catch(e){ brwInfo('Abruf gerade nicht möglich. Bitte Bodenrichtwert von Hand eintragen.','err'); }
+    }catch(e){ brwInfo('Abruf gerade nicht möglich. Bitte '+(state.type==='etw'?'Immobilienrichtwert':'Bodenrichtwert')+' von Hand eintragen.','err'); }
     finally{ btn.disabled=false; }
   }
 
@@ -1552,7 +1604,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('lageAdr').textContent=[$('str').value.trim(),$('plz').value.trim()+' '+$('ort').value.trim()].filter(x=>x.trim()).join(', ');
     $('lageInfo').textContent=state.type==='haus'
       ? `Bodenrichtwert ${num(d.brw)} €/m²${d.markt?' · Marktdaten aus dem Grundstücksmarktbericht':''}`
-      : `Immobilienrichtwert ${num(d.irw)} €/m²`;
+      : `Immobilienrichtwert ${num(d.irw)} €/m²${d.irwKoeff?' · mit Umrechnung des Gutachterausschusses':d.irwNorm?' · amtlich (BORIS-NRW)':''}`;
     $('lageBody').hidden=true; $('lageSum').hidden=false; $('lageEdit').setAttribute('aria-expanded','false');
   }
   function lageAuf(){ $('lageBody').hidden=false; $('lageSum').hidden=true; $('lageEdit').setAttribute('aria-expanded','true'); }
@@ -1631,8 +1683,24 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('stepNext').textContent=step===STEPS.length?'Zum Ergebnis':'Weiter: '+STEPS[step];
     if(scroll) $('f').scrollIntoView({behavior:'smooth',block:'start'});
   }
-  $('stepBack').addEventListener('click',()=>zeigeSchritt(step-1,true));
-  $('stepNext').addEventListener('click',()=>{ if(step===STEPS.length) $('ergebnis').scrollIntoView({behavior:'smooth',block:'start'}); else { if(step===1) lageZu(); zeigeSchritt(step+1,true); } });
+  $('f').addEventListener('input',()=>{ if(!$('stepMsg').hidden&&!schrittFehlt(step).length) $('stepMsg').hidden=true; });
+  $('stepBack').addEventListener('click',()=>{ $('stepMsg').hidden=true; zeigeSchritt(step-1,true); });
+  // Pflichtfelder des aktuellen Schritts prüfen, bevor es weitergeht
+  function schrittFehlt(n){
+    read(); const t=state.type, d=state.data[t], ok=v=>Number.isFinite(v)&&v>0;
+    if(n===1&&!(/^\d{5}$/.test($('plz').value.trim())&&$('ort').value.trim())) return ['plz'];
+    const req={1:t==='haus'?['brw']:['irw'],2:t==='haus'?['wf','bj','gr']:['wf','bj'],3:[]}[n]||[];
+    return req.filter(k=>!ok(d[k]));
+  }
+  $('stepNext').addEventListener('click',()=>{
+    const f=schrittFehlt(step);
+    if(f.length&&step<STEPS.length){
+      f.forEach(k=>beruehrt.add(k)); calc(); $('stepMsg').hidden=false;
+      $('stepMsg').textContent=f[0]==='plz'?'Bitte zuerst die Adresse mit Postleitzahl eingeben.':f[0]==='brw'&&$('brwBtn').disabled?'Der Bodenrichtwert wird gerade abgerufen, einen Moment bitte.':'Bitte noch ausfüllen: '+f.map(k=>LABEL[k]).join(', ')+'.';
+      if(step===1) lageAuf(); try{ $(f[0]==='plz'&&!$('str').value.trim()?'str':f[0]).focus(); }catch(e){} return; }
+    $('stepMsg').hidden=true;
+  });
+  $('stepNext').addEventListener('click',()=>{ if(!$('stepMsg').hidden) return; if(step===STEPS.length) $('ergebnis').scrollIntoView({behavior:'smooth',block:'start'}); else { if(step===1) lageZu(); zeigeSchritt(step+1,true); } });
 
   $('heroGo').addEventListener('click',()=>{
     if(narrow.matches) zeigeSchritt(1,false);
@@ -1656,7 +1724,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   $('f').addEventListener('change',calc);
   $('f').addEventListener('submit',e=>e.preventDefault());
   function beispiel(){ state.data[state.type]=clone(SAMPLE[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=true; sampleUI(); fill(); calc(); lageZu(); }
-  function leeren(){ state.data[state.type]=clone(BLANK[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=false; eigene=false; sampleUI(); lageAuf(); autoKey=''; brwInfo(''); $('brwAuto').classList.remove('done'); fill(); calc(); $('str').focus(); }
+  function leeren(){ beruehrt.clear(); $('stepMsg').hidden=true; state.data[state.type]=clone(BLANK[state.type]); if(state.type==='haus'){ state.data.haus.bpi=BPI.akt; bpiAuto=true; bpiInfo(); } isSample=false; eigene=false; sampleUI(); lageAuf(); autoKey=''; brwInfo(''); $('brwAuto').classList.remove('done'); fill(); calc(); $('str').focus(); }
   let eigene=false;
   function sampleUI(){ $('sampleBar').hidden=eigene&&!isSample; document.querySelectorAll('[data-sample]').forEach(b=>b.hidden=eigene||isSample); $('sampleTxt').textContent=isSample?'Beispielwerte, keine echte Immobilie.':'Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.'; $('reset').hidden=isSample; $('clear').hidden=!isSample; }
   $('reset').addEventListener('click',beispiel);
