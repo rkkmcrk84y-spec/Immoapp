@@ -12,15 +12,24 @@ body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;ba
 img{max-width:100%}
 [hidden]{display:none!important}
 </style>
-<title>Wertcheck</title>
+<title>Valoro – Wertcheck</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0E6B6A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Valoro">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Fraunces:opsz,wght@9..144,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: Kopfleiste mit Konto, Banner, Objektart-Kacheln, dann zweispaltig Eingabe | Ergebnis (Wert, Ampel, Kosten, Rechenweg, Speichern), einspaltig auf dem Handy, darunter Tarife */
 :root{
   --bg:#F3F5F4; --surface:#FFFFFF; --ink:#18242B; --muted:#5B6A71; --line:#D5DCDA;
-  --accent:#1F5C7A; --accent-ink:#FFFFFF; --accent-soft:#E2EDF2; --plus:#2F7A4E; --minus:#A8452F; --note:#8A6A12; --note-bg:#FBF4DF;
+  --accent:#0E6B6A; --accent-ink:#FFFFFF; --accent-soft:#E1EFEE; --brand:#0E6B6A; --plus:#2F7A4E; --minus:#A8452F; --note:#8A6A12; --note-bg:#FBF4DF;
   --g:#2F8F57; --y:#C9921A; --r:#C2452D; --err:#A8452F;
   --ad-bg:#ECEFEE; --ad-line:#B9C3C0; --gold:#9A6B12; --gold-soft:#F6EBD3; --scrim:rgba(17,26,31,.55);
   --display:"Archivo","Helvetica Neue",Arial,sans-serif;
@@ -29,19 +38,23 @@ img{max-width:100%}
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
-  --accent:#7FB8D4; --accent-ink:#0E1A20; --accent-soft:#1E3442; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
+  --accent:#6CC3BE; --accent-ink:#0B1C1C; --accent-soft:#163536; --brand:#6CC3BE; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
   --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
   --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
-  --accent:#7FB8D4; --accent-ink:#0E1A20; --accent-soft:#1E3442; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
+  --accent:#6CC3BE; --accent-ink:#0B1C1C; --accent-soft:#163536; --brand:#6CC3BE; --plus:#7CC79A; --minus:#E49A86; --note:#E3C46A; --note-bg:#2A2614;
   --g:#5DBE85; --y:#E6B84A; --r:#E7735B; --err:#E49A86;
   --ad-bg:#152026; --ad-line:#3A4A52; --gold:#E3BE6A; --gold-soft:#2B2414; --scrim:rgba(0,0,0,.65); color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:0 16px;padding-block:18px 56px;display:flex;flex-direction:column;gap:22px}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.brand{font-family:var(--display);font-weight:800;font-size:18px;color:var(--accent);letter-spacing:.01em}
+.brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+.valoro-logo{display:inline-flex;align-items:flex-end;gap:1px;text-decoration:none;color:var(--ink);font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(28px,6vw,34px);line-height:1;letter-spacing:-.5px}
+.valoro-logo svg{width:.78em;height:.83em}
+.valoro-logo path{stroke:var(--brand)}
+.valoro-slogan{margin:0;font-size:13px;color:var(--muted)}
 .acct{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .plan{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
 .plan.premium{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
@@ -308,12 +321,12 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 #szNbox.bad{border-color:var(--r)} #szNbox.bad .v{color:var(--r)}
 @media (max-width:520px){.szen{grid-template-columns:1fr}}
 /* Tarife */
-.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .tier{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .tier.hl{border-color:var(--gold);background:var(--gold-soft)}
 .tier h3{font-family:var(--display);font-size:17px;margin:0}
 .price{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
-.price small{font:400 13px var(--body);color:var(--muted)}
+.price small{font:400 13px var(--body);color:var(--muted);white-space:nowrap;display:inline-block}
 .tier ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px;flex:1}
 .tier .cur{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 /* Dialog */
@@ -337,7 +350,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
 <div class="wrap">
   <div class="top">
-    <div class="brand">ImmoApp</div>
+    <div class="brand">
+      <a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 70" aria-hidden="true"><path d="M6 30 L28 62 L60 8" fill="none" stroke="#0E6B6A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a>
+      <p class="valoro-slogan">Was ist dein Haus wirklich wert?</p>
+    </div>
     <div class="acct" id="acct"></div>
   </div>
 
@@ -360,7 +376,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <div class="imp-in">
             <div class="lock pro" id="impLock">
               <p>Mit Premium übernehmen Sie eine Immobilienanzeige mit wenigen Fingertipps: Anzeigentext kopieren oder Screenshots hochladen. Der Wertcheck füllt das Formular aus und vergleicht den Angebotspreis mit dem angemessenen Kaufpreis.</p>
-              <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+              <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
             </div>
             <div class="imp-in" id="impOn" hidden style="margin-top:0">
               <p class="hint">Öffnen Sie die Anzeige im Portal oder in der App. Entweder den Text markieren, kopieren und hier einfügen, oder Screenshots der Anzeige machen und hochladen. Die Screenshots werden direkt auf Ihrem Gerät gelesen und nicht hochgeladen.</p>
@@ -590,7 +606,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         <h2>Lohnt sich die Sanierung? <span class="tag pro">Premium</span></h2>
         <div class="lock pro" id="szLock">
           <p>Premium rechnet aus, was Ihre Immobilie nach der Sanierung der rot markierten Bereiche wert wäre, und stellt den Wertzuwachs den Kosten gegenüber.</p>
-          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
         </div>
         <p class="hint" id="szDenkmal" hidden>Bei Baudenkmälern lassen sich Sanierungskosten oft erhöht steuerlich absetzen (§ 7i EStG für Vermieter, § 10f EStG für Selbstnutzer), wenn die Denkmalbehörde die Maßnahme vorher bescheinigt. Das ist im Ergebnis nicht eingerechnet, Details bitte mit der Steuerberatung klären.</p>
         <div class="szen" id="szen" hidden>
@@ -629,7 +645,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   <section class="panel" id="tarife" aria-labelledby="ht">
     <h2 id="ht">Tarife</h2>
     <div class="tiers" id="tiers"></div>
-    <p class="hint">Beispielpreise für den Prototyp. Anmeldung und Bezahlung sind hier nur simuliert, es werden keine Daten übertragen.</p>
+    <p class="hint">Beispielpreise für den Prototyp. Anmeldung und Bezahlung sind hier nur simuliert, es werden keine Daten übertragen. <button type="button" class="btn ghost small" id="trialReset">Test zurücksetzen (Demo)</button></p>
   </section>
 </div>
 
@@ -788,27 +804,42 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   // ---- Konto & Tarif (simuliert) ----
   const AKEY='immoapp-demo-plan';
   let plan=ls.get(AKEY,'guest');
+  // Premium-Test: 7 Tage, nur einmal je Konto. Im Test: PDF mit Wasserzeichen, höchstens 3 Anzeigen übernehmen.
+  const TKEY='immoapp-demo-trial', TEST_TAGE=7, TEST_ANZEIGEN=3;
+  let trial=ls.get(TKEY,null);
+  // Kaufphasen-Pass: 3 Monate Premium, endet automatisch
+  const PKEY='immoapp-demo-pass', PASS_TAGE=91;
+  let passEnde=ls.get(PKEY,0);
+  if(plan==='pass'&&Date.now()>passEnde){ plan='free'; ls.set(AKEY,plan); }
+  const isPro=()=>plan==='premium'||plan==='trial'||plan==='pass';
+  const vollPro=()=>plan==='premium'||plan==='pass';
+  const testTage=()=>trial?Math.max(0,Math.ceil(TEST_TAGE-(Date.now()-trial.start)/864e5)):0;
+  if(plan==='trial'&&testTage()===0){ plan='premium'; ls.set(AKEY,plan); } // nach dem Test läuft das Abo weiter (Demo)
+  const upTxt=()=>plan==='trial'?'Premium jetzt kaufen':trial?'Premium freischalten':'Premium 7 Tage testen';
+  function upLabels(){ document.querySelectorAll('[data-up="premium"]').forEach(b=>b.textContent=upTxt()); }
   const TIERS=[
     {id:'guest',nm:'Ohne Anmeldung',price:'0 €',per:'',items:['Wertcheck für Haus und Wohnung in NRW','Übersicht der Wertbestandteile','Zustand pauschal als durchschnittlich','Mit Werbung']},
     {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Modernisierungsampel','Sanierungskosten jetzt und in 5–10 Jahren','Preis-Ampel: Passt der Angebotspreis?','3 Bewertungen speichern','Mit Werbung']},
-    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check ausführlich: Verhandlungsspielraum, Nebenkosten, Gesamtkosten','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
-    {id:'single',nm:'Einzelbericht',price:'19 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Ohne Abo, ohne Anmeldung']}
+    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Monatlich kündbar','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check ausführlich: Verhandlungsspielraum, Nebenkosten, Gesamtkosten','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
+    {id:'pass',nm:'Kaufphasen-Pass',price:'24,90 €',per:'für 3 Monate',items:['Alles aus Premium','Passend zur Suche nach einer Immobilie','Endet automatisch, kein Abo, nichts zu kündigen','Entspricht 8,30 € im Monat']},
+    {id:'single',nm:'Einzelbericht',price:'14,90 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Für Bank, Käufer oder Verkäufer','Ohne Abo']}
   ];
   function renderAcct(){
-    const lbl={guest:'Gast',free:'Kostenloses Konto',premium:'Premium'}[plan];
+    const lbl={guest:'Gast',free:'Kostenloses Konto',premium:'Premium',trial:`Premium-Test · noch ${testTage()} ${testTage()===1?'Tag':'Tage'}`,pass:`Kaufphasen-Pass · bis ${new Date(passEnde).toLocaleDateString('de-DE')}`}[plan];
     $('acct').innerHTML = plan==='guest'
       ? `<span class="plan">${lbl}</span><button type="button" class="btn ghost small" data-open="in">Anmelden</button><button type="button" class="btn small" data-open="up">Registrieren</button>`
-      : `<span class="plan${plan==='premium'?' premium':''}">${lbl}</span>${plan==='free'?'<button type="button" class="btn gold small" data-up="premium">Premium testen</button>':''}<button type="button" class="btn ghost small" id="logout">Abmelden</button>`;
+      : `<span class="plan${isPro()?' premium':''}">${lbl}</span>${plan==='free'||plan==='trial'?'<button type="button" class="btn gold small" data-up="premium"></button>':''}<button type="button" class="btn ghost small" id="logout">Abmelden</button>`;
     $('tiers').innerHTML=TIERS.map(t=>{
       let btn='';
       if(t.id==='free'&&plan==='guest') btn='<button type="button" class="btn" data-open="up">Kostenlos registrieren</button>';
-      if(t.id==='premium'&&plan!=='premium') btn='<button type="button" class="btn gold" data-up="premium">Premium testen</button>';
+      if(t.id==='pass'&&plan!=='pass') btn='<button type="button" class="btn" data-up="pass">Pass kaufen</button>';
+      if(t.id==='premium'&&plan!=='premium') btn=(!trial&&plan!=='trial'?'<p class="hint">7 Tage testen, danach 9,90 € im Monat, vorher jederzeit kündbar. Im Test: PDF-Bericht mit Wasserzeichen, 3 Anzeigen übernehmen, 3 Bewertungen speichern.</p>':'')+'<button type="button" class="btn gold" data-up="premium"></button>';
       if(t.id==='single') btn='<button type="button" class="btn ghost" data-up="single">Bericht kaufen</button>';
-      return `<div class="tier${t.hl?' hl':''}">${t.id===plan?'<span class="cur">Ihr aktueller Tarif</span>':''}<h3>${t.nm}</h3><div class="price">${t.price} <small>${t.per}</small></div><ul>${t.items.map(i=>`<li>${i}</li>`).join('')}</ul>${btn}</div>`;
+      return `<div class="tier${t.hl?' hl':''}">${t.id===plan||(t.id==='premium'&&plan==='trial')?`<span class="cur">${plan==='trial'?'Sie testen gerade':'Ihr aktueller Tarif'}</span>`:''}<h3>${t.nm}</h3><div class="price">${t.price} <small>${t.per}</small></div><ul>${t.items.map(i=>`<li>${i}</li>`).join('')}</ul>${btn}</div>`;
     }).join('');
-    document.querySelectorAll('[data-ad]').forEach(a=>a.hidden=(plan==='premium'));
-    $('pdf').textContent = plan==='premium'?'PDF-Bericht erstellen':'PDF-Bericht (Premium)';
-    renderSaved(); calc();
+    document.querySelectorAll('[data-ad]').forEach(a=>a.hidden=isPro());
+    $('pdf').textContent = vollPro()?'PDF-Bericht erstellen':plan==='trial'?'PDF-Bericht (Testversion)':'PDF-Bericht (Premium)';
+    renderSaved(); calc(); upLabels();
   }
   function setPlan(p){ plan=p; ls.set(AKEY,p); renderAcct(); }
 
@@ -825,10 +856,17 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   document.addEventListener('click',e=>{
     const o=e.target.closest('[data-open]'); if(o){ openDlg(o.dataset.open); return; }
     const u=e.target.closest('[data-up]'); if(u){
-      if(u.dataset.up==='premium'){ if(plan==='guest'){ openDlg('up','Für Premium brauchen Sie zuerst ein Konto.'); return; } setPlan('premium'); flash('Premium aktiviert (Demo, keine Zahlung)'); }
+      if(u.dataset.up==='premium'){
+        if(plan==='guest'){ openDlg('up','Für Premium brauchen Sie zuerst ein Konto.'); return; }
+        if(plan==='free'&&!trial){ trial={start:Date.now(),anzeigen:0}; ls.set(TKEY,trial); setPlan('trial'); flash('Premium-Test gestartet (Demo). In der echten App mit hinterlegtem Zahlungsmittel.'); return; }
+        setPlan('premium'); flash('Premium gekauft (Demo, keine Zahlung)'); }
+      else if(u.dataset.up==='pass'){
+        if(plan==='guest'){ openDlg('up','Für den Kaufphasen-Pass brauchen Sie zuerst ein Konto.'); return; }
+        passEnde=Date.now()+PASS_TAGE*864e5; ls.set(PKEY,passEnde); setPlan('pass'); flash(`Kaufphasen-Pass aktiv bis ${new Date(passEnde).toLocaleDateString('de-DE')} (Demo, keine Zahlung)`); }
       else flash('Kauf folgt in der echten App, z. B. über Stripe');
       return; }
     if(e.target.id==='logout') setPlan('guest');
+    if(e.target.id==='trialReset'){ trial=null; ls.set(TKEY,null); setPlan(plan==='guest'?'guest':'free'); flash('Test zurückgesetzt (nur Demo)'); }
   });
   $('close').addEventListener('click',closeDlg);
   $('ov').addEventListener('click',e=>{ if(e.target===$('ov')) closeDlg(); });
@@ -869,7 +907,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       $('swfAutoInfo').hidden=!(hasM&&d.swfm==='auto');
       if(hasM) $('swfAutoInfo').textContent=`Marktanpassung nach ${state.data.haus.markt.quelle.replace(/, Kap.*$/,'')}, Stichtag ${new Date(state.data.haus.markt.stichtag).toLocaleDateString('de-DE')}.`; }
     $('brwAuto').hidden = !(API_URL && t==='haus');
-    $('impLock').hidden=plan==='premium'; $('impOn').hidden=plan!=='premium';
+    $('impLock').hidden=isPro(); $('impOn').hidden=!isPro();
     const on=plan!=='guest';
     $('compsLock').hidden=on; $('resLock').hidden=on;
     document.querySelectorAll('.compsOn,.resOn').forEach(e=>e.hidden=!on);
@@ -1044,7 +1082,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('state').innerHTML=K.items.map(x=>`<div class="chip" style="--c:var(${ST[x.s][1]})"><i></i><span>${x.c.nm}<small>${ST[x.s][0]}${x.s!=='g'?' · ca. '+eur(Math.round(x.k/500)*500):''}</small></span></div>`).join('');
 
     // Premium: Wert nach Sanierung der roten Bereiche
-    const pro=plan==='premium';
+    const pro=isPro();
     $('szLock').hidden=pro; $('szen').hidden=!pro;
     $('denkmalHint').hidden=!d.denkmal; $('szDenkmal').hidden=!(pro&&d.denkmal);
     if(pro){
@@ -1084,11 +1122,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
   // ---- Speichern (nur mit Konto) ----
   const SKEY='immoapp-wertcheck-bewertungen';
-  const limit=()=>plan==='premium'?Infinity:3;
+  const limit=()=>vollPro()?Infinity:3;
   function renderSaved(){
     if(plan==='guest'){ $('saved').innerHTML=''; return; }
     const a=ls.get(SKEY,[]);
-    $('saved').innerHTML=a.length?`<div class="label">Meine Bewertungen (${plan==='premium'?a.length:a.length+' von '+limit()})</div>`+a.map((x,i)=>{
+    $('saved').innerHTML=a.length?`<div class="label">Meine Bewertungen (${vollPro()?a.length:a.length+' von '+limit()})</div>`+a.map((x,i)=>{
       const d=x.data, nm=x.type==='etw'?OBJ.etw.nm:OBJ[d.hausart].nm;
       return `<div class="sv"><span>${esc(d.ort||'Ohne Ort')}${d.str?', '+esc(d.str):''} · ${nm}<br><b>${eur(x.lo)} bis ${eur(x.hi)}</b></span><span class="a"><button type="button" class="btn ghost small" data-load="${i}">Öffnen</button><button type="button" class="btn ghost small" data-del="${i}">Entfernen</button></span></div>`;
     }).join(''):'';
@@ -1102,7 +1140,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     flash(ls.set(SKEY,a)?'Gespeichert':'Speichern in diesem Browser nicht möglich'); renderSaved();
   }
   $('save').addEventListener('click',()=>{ if(plan==='guest'){ pendingSave=true; openDlg('up','Melden Sie sich kostenlos an, um diese Bewertung zu speichern.'); return; } doSave(); });
-  $('pdf').addEventListener('click',()=>{ if(plan!=='premium'){ $('tarife').scrollIntoView({behavior:'smooth'}); flash('PDF-Bericht gibt es mit Premium oder als Einzelbericht'); return; } flash('PDF-Export folgt in der echten App'); });
+  $('pdf').addEventListener('click',()=>{ if(plan==='trial'){ flash('Im Test trägt der PDF-Bericht das Wasserzeichen „Testversion – nicht zur Vorlage“. PDF-Export folgt in der echten App.'); return; } if(!vollPro()){ $('tarife').scrollIntoView({behavior:'smooth'}); flash('PDF-Bericht gibt es mit Premium oder als Einzelbericht'); return; } flash('PDF-Export folgt in der echten App'); });
   $('saved').addEventListener('click',e=>{
     const b=e.target.closest('button'); if(!b) return; const a=ls.get(SKEY,[]);
     if(b.dataset.load!==undefined){ const x=a[+b.dataset.load]; if(!x) return; state.type=x.type; state.data[x.type]=clone(x.data); if(x.type==='haus'){ bpiAuto=x.data.bpi===BPI.akt; bpiInfo(); } fill(); calc(); }
@@ -1114,7 +1152,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   // ---- Premium: Preis-Check (Angebotspreis gegen angemessenen Kaufpreis) ----
   const GREST=0.065, NOTAR=0.02; // Grunderwerbsteuer NRW, Notar und Grundbuch rund 2 %
   function preisCheck(d){
-    const pro=plan==='premium', free=plan==='free';
+    const pro=isPro(), free=plan==='free';
     $('pcLock').hidden=pro||free; $('pcOn').hidden=!(pro||free); $('provWrap').hidden=!pro;
     $('pcTag').textContent=pro?'Premium':'Konto'; $('pcTag').className='tag'+(pro?' pro':'');
     if(!pro&&!free) return;
@@ -1137,7 +1175,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
           <div class="tz"><span>Kaufnebenkosten NRW</span><b aria-hidden="true">31.500 €</b></div>
           <div class="tz"><span>Gesamtkosten mit Sanierung</span><b aria-hidden="true">342.000 €</b></div>
           <p><b>Wie viel können Sie verhandeln?</b> Premium zeigt, um wie viel Euro das Angebot vom Schätzwert abweicht, rechnet Nebenkosten und Gesamtkosten aus und übernimmt Anzeigen direkt aus Text oder Screenshots.</p>
-          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium testen</button></div>
+          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
         </div>`;
       return;
     }
@@ -1297,8 +1335,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   function anzeigeAnwenden(txt){
     impZeigen('');
     if(/^\s*https?:\/\/\S+\s*$/.test(txt)){ impZeigen('<div class="plaus"><b>Ein Link reicht leider nicht</b><p>Die Portale erlauben kein automatisches Auslesen ihrer Seiten. Öffnen Sie die Anzeige, markieren und kopieren Sie den Text oder machen Sie Screenshots, und übernehmen Sie diese hier.</p></div>'); return; }
+    if(plan==='trial'&&trial&&trial.anzeigen>=TEST_ANZEIGEN){ impZeigen(`<div class="plaus"><b>Im Test sind ${TEST_ANZEIGEN} Anzeigen enthalten</b><p>Mit Premium übernehmen Sie beliebig viele Anzeigen.</p><div class="actions"><button type="button" class="btn gold small" data-up="premium">${upTxt()}</button></div></div>`); return; }
     const {f,gef,hinweise}=anzeigeLesen(txt);
     if(!f.wf&&!f.preis&&!f.bj){ impZeigen('<div class="plaus"><b>Keine Eckdaten erkannt</b><p>Im Text stehen weder Kaufpreis noch Wohnfläche oder Baujahr. Kopieren Sie den Abschnitt mit den Objektdaten mit, oder laden Sie Screenshots der Übersicht und der Beschreibung hoch.</p></div>'); return; }
+    if(plan==='trial'&&trial){ trial.anzeigen++; ls.set(TKEY,trial); ctaUpdate(); }
     read();
     const typ=f.typ||(state.type==='etw'?'etw':state.data.haus.hausart), t=typ==='etw'?'etw':'haus';
     const d=clone(BLANK[t]);
@@ -1335,6 +1375,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   $('impGo').addEventListener('click',()=>{ const t=$('impTxt').value.trim(); if(!t){ impZeigen('<p class="hint">Bitte zuerst den Anzeigentext einfügen oder Screenshots wählen.</p>'); $('impTxt').focus(); return; } anzeigeAnwenden(t); });
   $('impFile').addEventListener('change',async e=>{
     const files=[...e.target.files]; e.target.value=''; if(!files.length) return;
+    if(plan==='trial'&&trial&&trial.anzeigen>=TEST_ANZEIGEN){ anzeigeAnwenden('x'); return; }
     impZeigen(''); $('impGo').disabled=true;
     try{ const txt=await bilderLesen(files); impSt(''); $('impTxt').value=($('impTxt').value.trim()+'\n'+txt).trim(); anzeigeAnwenden($('impTxt').value); }
     catch(err){ impSt(''); impZeigen('<div class="plaus"><b>Screenshots konnten nicht gelesen werden</b><p>Bitte prüfen Sie die Internetverbindung, die Texterkennung wird beim ersten Mal geladen. Alternativ den Anzeigentext kopieren und einfügen.</p></div>'); }
@@ -1466,9 +1507,10 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   function ctaUpdate(){
     const c=$('cta');
     if(plan==='guest'){ c.className='cta'; c.innerHTML='<p><b>Ergebnis behalten?</b> Mit einem kostenlosen Konto speichern Sie bis zu 3 Bewertungen und bewerten Modernisierungen.</p><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button>'; }
-    else if(plan==='free'){ c.className='cta pro'; c.innerHTML='<p><b>Für Bank oder Käufer:</b> PDF-Bericht mit allen Werten, dazu „Lohnt sich die Sanierung?“. Mit Premium oder als Einzelbericht für 19 €.</p><button type="button" class="btn gold small" data-up="premium">Premium testen</button>'; }
+    else if(plan==='free'){ c.className='cta pro'; c.innerHTML='<p><b>Für Bank oder Käufer:</b> PDF-Bericht mit allen Werten, dazu „Lohnt sich die Sanierung?“. Mit Premium, dem Kaufphasen-Pass oder als Einzelbericht für 14,90 €.</p><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button>'; }
+    else if(plan==='trial'){ c.className='cta pro'; c.innerHTML=`<p><b>Premium-Test: noch ${testTage()} ${testTage()===1?'Tag':'Tage'}.</b> Im Test hat der PDF-Bericht ein Wasserzeichen. Anzeigen übernommen: ${Math.min(TEST_ANZEIGEN,trial?trial.anzeigen:0)} von ${TEST_ANZEIGEN}.</p><button type="button" class="btn gold small" data-up="premium"></button>`; }
     else { c.innerHTML=''; }
-    c.hidden=!c.innerHTML;
+    c.hidden=!c.innerHTML; upLabels();
   }
 
   // ---- Ergebnisleiste unten (nur Handy) ----
