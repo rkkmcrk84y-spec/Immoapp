@@ -22,19 +22,24 @@ img{max-width:100%}
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Valoro">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=Fraunces:opsz,wght@9..144,600&family=Source+Sans+3:wght@400;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="preload" href="sourcesans-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fraunces-600.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+/* Schriften liegen auf dem eigenen Server (keine Verbindung zu Google) */
+@font-face{font-family:"Fraunces";font-style:normal;font-weight:600;font-display:swap;src:url("fraunces-600.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:400;font-display:swap;src:url("sourcesans-400.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:600;font-display:swap;src:url("sourcesans-600.woff2") format("woff2")}
+@font-face{font-family:"Source Sans 3";font-style:normal;font-weight:700;font-display:swap;src:url("sourcesans-700.woff2") format("woff2")}
 /* Layout: Kopfleiste mit Konto, Banner, Objektart-Kacheln, dann zweispaltig Eingabe | Ergebnis (Wert, Ampel, Kosten, Rechenweg, Speichern), einspaltig auf dem Handy, darunter Tarife */
 :root{
   --bg:#F3F5F4; --surface:#FFFFFF; --ink:#18242B; --muted:#5B6A71; --line:#D5DCDA;
   --accent:#0E6B6A; --accent-ink:#FFFFFF; --accent-soft:#E1EFEE; --brand:#0E6B6A; --plus:#2F7A4E; --minus:#A8452F; --note:#8A6A12; --note-bg:#FBF4DF;
   --g:#2F8F57; --y:#C9921A; --r:#C2452D; --err:#A8452F;
   --ad-bg:#ECEFEE; --ad-line:#B9C3C0; --gold:#9A6B12; --gold-soft:#F6EBD3; --scrim:rgba(17,26,31,.55);
-  --display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --display:"Source Sans 3","Segoe UI",system-ui,sans-serif;
   --body:"Source Sans 3","Segoe UI",system-ui,sans-serif;
-  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --mono:"Source Sans 3","Segoe UI",system-ui,sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#111A1F; --surface:#18242B; --ink:#E6ECEE; --muted:#97A7AE; --line:#2C3B43;
@@ -49,18 +54,18 @@ img{max-width:100%}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
 .wrap{max-width:1140px;margin:0 auto;padding:0 16px;padding-block:18px 56px;display:flex;flex-direction:column;gap:22px}
-.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px 16px;flex-wrap:wrap}
 .brand{display:flex;flex-direction:column;gap:2px;min-width:0}
-.valoro-logo{display:inline-flex;align-items:flex-end;gap:1px;text-decoration:none;color:var(--ink);font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(28px,6vw,34px);line-height:1;letter-spacing:-.5px}
-.valoro-logo svg{width:.78em;height:.83em}
+.valoro-logo{display:inline-flex;align-items:baseline;text-decoration:none;color:var(--ink);font-family:'Fraunces',Georgia,serif;font-weight:600;font-size:clamp(42px,11vw,58px);line-height:1;letter-spacing:-.5px}
+.valoro-logo svg{height:.74em;width:auto;margin-right:.01em;overflow:visible}
 .valoro-logo path{stroke:var(--brand)}
-.valoro-slogan{margin:0;font-size:13px;color:var(--muted)}
+.valoro-slogan{margin:2px 0 0;font-size:15px;color:var(--muted)}
 .acct{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .plan{font:500 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:3px 9px}
 .plan.premium{color:var(--gold);border-color:var(--gold);background:var(--gold-soft)}
 header{display:flex;flex-direction:column;gap:6px}
-h1{font-family:var(--display);font-weight:800;font-size:clamp(28px,5vw,42px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
-.lead{color:var(--muted);max-width:64ch;margin:0}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,7vw,52px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lead{color:var(--muted);max-width:60ch;margin:0;font-size:18px}
 button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 /* Objektart-Kacheln */
 .types{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
@@ -77,7 +82,7 @@ button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{ou
 .col{display:flex;flex-direction:column;gap:16px;min-width:0}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;gap:20px;min-width:0}
 fieldset{border:0;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;min-width:0}
-legend{font-family:var(--display);font-weight:700;font-size:15px;margin-bottom:10px;padding:0}
+legend{font-family:var(--serif);font-weight:600;font-size:18px;margin-bottom:10px;padding:0}
 legend small{font:400 12px var(--mono);color:var(--muted);letter-spacing:.04em;margin-left:6px}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .row.plz{grid-template-columns:110px minmax(0,1fr)}
@@ -85,7 +90,7 @@ label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:600;
 label .opt{font-weight:400}
 label.check,.radio label{flex-direction:row;align-items:center;gap:8px;font-size:14px;color:var(--ink);font-weight:400}
 .radio{display:flex;flex-direction:column;gap:6px}
-input[type=number],input[type=text],input[type=email],input[type=password],select{font:500 15px var(--mono);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
+input[type=number],input[type=text],input[type=email],input[type=password],select{font:400 16px var(--body);font-variant-numeric:tabular-nums;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%}
 input[type=text],input[type=email],input[type=password],select{font-family:var(--body);font-weight:400}
 input[type=checkbox],input[type=radio]{width:18px;height:18px;accent-color:var(--accent);margin:0}
 input[aria-invalid="true"]{border-color:var(--err)}
@@ -140,7 +145,7 @@ input[aria-invalid="true"]{border-color:var(--err)}
 .split i{display:block;height:100%}
 .keys{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted)}
 .keys span::before{content:"";display:inline-block;width:9px;height:9px;border-radius:2px;background:var(--c);margin-right:6px}
-h2{font-family:var(--display);font-size:17px;margin:0}
+h2{font-family:var(--serif);font-weight:600;font-size:19px;margin:0}
 .blk{display:flex;flex-direction:column;gap:10px}
 .state{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px}
 .chip{display:flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:14px;min-width:0}
@@ -190,7 +195,7 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
 .amp ul{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
 .amp li{position:relative;padding-left:18px}
 .amp li::before{content:"";position:absolute;left:0;top:7px;width:10px;height:10px;border-radius:50%;background:var(--c)}
-.region{margin:0;font-size:14px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:8px 12px;align-self:flex-start;max-width:100%}
+.region{font-size:14px;color:var(--muted)}
 .region b{color:var(--accent)}
 .auto{display:flex;flex-direction:column;gap:6px;align-items:stretch;border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:12px}
 .auto .btn.big{display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;font-size:16px;width:100%}
@@ -203,7 +208,8 @@ th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:up
 .auto.done .btn.big{background:transparent;color:var(--accent)}
 /* Lesbare Labels mit Hilfe-Symbol */
 .lbl{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
-.info{width:20px;height:20px;border-radius:50%;border:1px solid var(--accent);background:transparent;color:var(--accent);font:700 12px/1 var(--body);font-style:italic;cursor:pointer;padding:0;display:inline-grid;place-items:center;flex:none}
+.info{position:relative;width:20px;height:20px;border-radius:50%;border:1px solid var(--accent);background:transparent;color:var(--accent);font:700 12px/1 var(--body);font-style:italic;cursor:pointer;padding:0;display:inline-grid;place-items:center;flex:none}
+.info::after{content:"";position:absolute;inset:-12px}
 .info[aria-expanded="true"]{background:var(--accent);color:var(--accent-ink)}
 .tip{display:block;font-weight:400;font-size:13px;color:var(--ink);background:var(--accent-soft);border-radius:8px;padding:8px 10px;margin:2px 0 4px}
 .rlbl{font-size:13px;font-weight:600;color:var(--muted)}
@@ -246,9 +252,67 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 /* Freischaltung */
 .tag{font:500 10px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid currentColor;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:middle}
 .tag.pro{color:var(--gold)}
-.lock{border:1px dashed var(--accent);background:var(--accent-soft);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
+.lock{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px;font-size:14px}
 .lock.pro{border-color:var(--gold);background:var(--gold-soft)}
+.lockline{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;border:1px solid var(--gold);background:var(--gold-soft);border-radius:10px;padding:10px 12px;font-size:14px}
+.lockline span{display:flex;align-items:center;gap:8px}
+.lockline svg{width:16px;height:16px;flex:none;stroke:var(--gold);fill:none;stroke-width:2}
 .lock p{margin:0;color:var(--ink)}
+/* Startbereich */
+.hero{display:flex;flex-direction:column;gap:12px;padding:8px 0 4px}
+.trust{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:15px;color:var(--ink)}
+.trust li{display:flex;align-items:center;gap:7px}
+.trust svg,.checks svg{width:17px;height:17px;flex:none;stroke:var(--accent);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.hero-row{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;margin-top:4px}
+.btn.big{min-height:48px;padding:12px 22px;font-size:17px;border-radius:10px}
+/* Ein Upgrade-Kasten statt vieler */
+.up{border:1px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px}
+.up b.t{font-family:var(--serif);font-weight:600;font-size:18px}
+.checks{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:15px}
+.checks li{display:flex;gap:8px;align-items:flex-start}
+.checks svg{margin-top:3px}
+/* Leeres Ergebnis: ausgegrautes Beispiel */
+.result-head.is-empty #range,.result-head.is-empty .scale,.result-head.is-empty .meta{display:none}
+.ghostres{display:flex;flex-direction:column;gap:6px;opacity:.45;filter:grayscale(1);user-select:none}
+.ghostres span{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.ghostres b{font-family:var(--display);font-weight:700;font-size:clamp(24px,4vw,34px)}
+.ghostres i{display:block;height:8px;border-radius:4px;background:var(--line);width:100%}
+/* Anzeige übernehmen in Schritt 1 */
+.imp{border:1px solid var(--gold);border-radius:10px;padding:10px 12px;margin-bottom:4px}
+/* Preise */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.plan-c{position:relative;border:1px solid var(--line);border-radius:14px;padding:20px 18px;display:flex;flex-direction:column;gap:12px;background:var(--surface)}
+.plan-c.hl{border:2px solid var(--gold);background:var(--gold-soft)}
+.plan-c .badge{position:absolute;top:-11px;left:18px;background:var(--gold);color:var(--surface);font-size:12px;font-weight:700;border-radius:999px;padding:2px 10px}
+.plan-c h3{font-family:var(--serif);font-weight:600;font-size:21px;margin:0}
+.plan-c .pr{font-weight:700;font-size:30px;line-height:1;font-variant-numeric:tabular-nums}
+.plan-c .pr small{font-size:14px;font-weight:400;color:var(--muted)}
+.plan-c .checks{flex:1}
+.plan-c .note{font-size:13px;color:var(--muted);margin:0}
+.plan-c .cur{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.plan-c .btn{min-height:44px}
+.alt{display:flex;flex-direction:column;gap:8px}
+.alt>div{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:10px;font-size:15px}
+.cmp summary{color:var(--accent);font-weight:600}
+.cmp table{width:100%;min-width:0;border-collapse:collapse;margin-top:10px;font-size:14px;table-layout:fixed}
+.cmp th:first-child{width:46%}
+.cmp th{font-size:12px;letter-spacing:.02em;text-transform:none;font-weight:700;color:var(--ink)}
+@media (max-width:560px){.cmp table{font-size:13px}.cmp th,.cmp td{padding:7px 3px}}
+.cmp th,.cmp td{padding:8px 6px;border-bottom:1px solid var(--line);text-align:center;font-family:var(--body)}
+.cmp th:first-child,.cmp td:first-child{text-align:left}
+.cmp td:last-child{font-family:var(--body);text-align:center}
+.cmp .y{color:var(--g);font-weight:700}.cmp .n{color:var(--muted)}
+/* Fußbereich */
+.foot{border-top:1px solid var(--line);padding-top:22px;display:flex;flex-direction:column;gap:12px;font-size:14px;color:var(--muted)}
+.foot .fb{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.foot .valoro-logo{font-size:26px}
+.foot nav{display:flex;flex-wrap:wrap;gap:6px 18px}
+.foot nav a{color:var(--ink);text-decoration:none;font-weight:600;padding:6px 0}
+.foot nav a:hover{text-decoration:underline}
+.foot details{border-top:0;padding-top:0}
+.foot details ul{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
+.foot p{margin:0}
+
 /* Ausstattung Bereich für Bereich */
 .arow{display:flex;flex-direction:column;gap:6px;padding:10px 0 0;border-top:1px solid var(--line)}
 .arow:first-child{border-top:0;padding-top:0}
@@ -262,11 +326,11 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 /* Premium: Anzeige übernehmen */
 .imp{gap:0;padding:14px 16px;border-color:var(--gold)}
 .imp>details{border-top:0;padding-top:0}
-.imp>details>summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:15px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;list-style:none}
+.imp>details>summary{cursor:pointer;font-family:var(--display);font-weight:700;font-size:16px;display:block;position:relative;padding-left:22px;list-style:none}
 .imp>details>summary::-webkit-details-marker{display:none}
-.imp>details>summary::before{content:"";width:8px;height:8px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg);margin:0 8px 0 2px;transition:transform .15s}
+.imp>details>summary::before{content:"";position:absolute;left:3px;top:.55em;width:8px;height:8px;border-right:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg);transition:transform .15s}
 .imp>details[open]>summary::before{transform:rotate(45deg)}
-.imp>details>summary .sub{font:400 12px var(--body);color:var(--muted);flex-basis:100%;margin-left:20px}
+.imp>details>summary .sub{display:block;font:400 13px var(--body);color:var(--muted);margin-top:2px}
 .pc .row{align-items:end}
 .imp-in{display:flex;flex-direction:column;gap:12px;margin-top:12px}
 .imp textarea{font:400 14px var(--body);color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:8px 10px;width:100%;min-height:110px;resize:vertical}
@@ -324,7 +388,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .tiers{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
 .tier{border:1px solid var(--line);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:10px;min-width:0}
 .tier.hl{border-color:var(--gold);background:var(--gold-soft)}
-.tier h3{font-family:var(--display);font-size:17px;margin:0}
+.tier h3{font-family:var(--serif);font-weight:600;font-size:19px;margin:0}
 .price{font-family:var(--display);font-weight:800;font-size:26px;font-variant-numeric:tabular-nums}
 .price small{font:400 13px var(--body);color:var(--muted);white-space:nowrap;display:inline-block}
 .tier ul{margin:0;padding-left:18px;font-size:14px;display:flex;flex-direction:column;gap:4px;flex:1}
@@ -340,9 +404,9 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .demo{font-size:12px;color:var(--note);background:var(--note-bg);border-radius:6px;padding:6px 10px}
 .x{align-self:flex-end;background:transparent;border:0;color:var(--muted);font-size:14px;cursor:pointer;margin:-8px -6px -6px 0}
-.consent{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px))}
+.consent{position:fixed;left:0;right:0;bottom:0;z-index:15;background:var(--surface);border-top:1px solid var(--line);box-shadow:0 -4px 16px rgba(0,0,0,.06);padding:8px 16px calc(8px + env(safe-area-inset-bottom,0px))}
 .consent .in{max-width:1140px;margin:0 auto;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px}
-.consent p{margin:0;max-width:62ch}
+.consent p{margin:0;max-width:62ch;font-size:13px;line-height:1.35}
 @media (prefers-reduced-motion:no-preference){.step .bar i,.scale i,.split i{transition:all .25s ease}}
 </style>
 </head>
@@ -351,18 +415,21 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 <div class="wrap">
   <div class="top">
     <div class="brand">
-      <a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 70" aria-hidden="true"><path d="M6 30 L28 62 L60 8" fill="none" stroke="#0E6B6A" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a>
-      <p class="valoro-slogan">Was ist dein Haus wirklich wert?</p>
+      <a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 64" aria-hidden="true"><path d="M6 6 L31 58 L62 2" fill="none" stroke="#0E6B6A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a>
     </div>
     <div class="acct" id="acct"></div>
   </div>
 
-  <div class="ad banner" data-ad><div><b>Banner 728 × 90 · mobil 320 × 100</b>Werbefläche, z. B. über Google AdSense</div></div>
 
-  <header>
-    <h1>Wertcheck</h1>
-    <p class="lead">Schätzt den Marktwert aus amtlichen Daten, bewertet Ihre Immobilie und zeigt, welche Sanierungskosten anstehen.</p>
-    <p class="region"><b>Derzeit nur für Immobilien in Nordrhein-Westfalen.</b> Weitere Bundesländer folgen.</p>
+  <header class="hero">
+    <h1>Was ist Ihr Haus wirklich wert?</h1>
+    <p class="lead">Kostenlose Wertschätzung aus amtlichen Daten, mit Sanierungskosten und Preis-Check für Immobilienanzeigen.</p>
+    <ul class="trust">
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Amtliche Bodenrichtwerte (BORIS-NRW)</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Marktdaten des Gutachterausschusses</li>
+      <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>Kostenlos, ohne Makler-Anruf</li>
+    </ul>
+    <div class="hero-row"><button type="button" class="btn big" id="heroGo">Jetzt Wert ermitteln</button><span class="region">Derzeit für Immobilien in Nordrhein-Westfalen</span></div>
   </header>
 
   <div class="types" role="group" aria-label="Objektart" id="types"></div>
@@ -370,27 +437,6 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
   <div class="grid">
     <div class="col">
-      <div class="panel imp" id="imp">
-        <details id="impD">
-          <summary>Anzeige übernehmen <span class="tag pro">Premium</span><span class="sub">Eckdaten aus Immobilienportalen einlesen, per Text oder Screenshot</span></summary>
-          <div class="imp-in">
-            <div class="lock pro" id="impLock">
-              <p>Mit Premium übernehmen Sie eine Immobilienanzeige mit wenigen Fingertipps: Anzeigentext kopieren oder Screenshots hochladen. Der Wertcheck füllt das Formular aus und vergleicht den Angebotspreis mit dem angemessenen Kaufpreis.</p>
-              <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
-            </div>
-            <div class="imp-in" id="impOn" hidden style="margin-top:0">
-              <p class="hint">Öffnen Sie die Anzeige im Portal oder in der App. Entweder den Text markieren, kopieren und hier einfügen, oder Screenshots der Anzeige machen und hochladen. Die Screenshots werden direkt auf Ihrem Gerät gelesen und nicht hochgeladen.</p>
-              <label>Anzeigentext<textarea id="impTxt" placeholder="Text der Anzeige hier einfügen, zum Beispiel Kaufpreis, Wohnfläche, Baujahr und Beschreibung …"></textarea></label>
-              <div class="acts">
-                <button type="button" class="btn" id="impGo">Text übernehmen</button>
-                <span class="btn ghost filebtn" role="button">Screenshots wählen<input type="file" id="impFile" accept="image/*" multiple aria-label="Screenshots der Anzeige wählen"></span>
-              </div>
-              <div id="impSt" class="impres" role="status" hidden><p id="impStT"></p><div class="prog" id="impBar"><i id="impBarI"></i></div></div>
-              <div id="impRes" class="impres" hidden></div>
-            </div>
-          </div>
-        </details>
-      </div>
 
       <form class="panel" id="f" autocomplete="off" novalidate>
         <div class="sample" id="sampleBar"><span id="sampleTxt">Geben Sie Ihre Immobilie ein oder sehen Sie sich zuerst ein Beispiel an.</span><span class="actions"><button type="button" class="btn small" id="reset">Beispiel ansehen</button><button type="button" class="btn small" id="clear" hidden>Leeren</button></span></div>
@@ -399,6 +445,27 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
 
         <fieldset data-step="1">
           <legend>1 · Lage</legend>
+          <div class="imp" id="imp">
+            <details id="impD">
+              <summary>Sie haben eine Anzeige? Daten übernehmen <span class="tag pro">Premium</span><span class="sub">Aus Immobilienportalen, per Text oder Screenshot</span></summary>
+              <div class="imp-in">
+                <div class="lock pro" id="impLock">
+                  <p>Mit Premium übernehmen Sie eine Immobilienanzeige mit wenigen Fingertipps: Anzeigentext kopieren oder Screenshots hochladen. Der Wertcheck füllt das Formular aus und vergleicht den Angebotspreis mit dem angemessenen Kaufpreis.</p>
+                  <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
+                </div>
+                <div class="imp-in" id="impOn" hidden style="margin-top:0">
+                  <p class="hint">Öffnen Sie die Anzeige im Portal oder in der App. Entweder den Text markieren, kopieren und hier einfügen, oder Screenshots der Anzeige machen und hochladen. Die Screenshots werden direkt auf Ihrem Gerät gelesen und nicht hochgeladen.</p>
+                  <label>Anzeigentext<textarea id="impTxt" placeholder="Text der Anzeige hier einfügen, zum Beispiel Kaufpreis, Wohnfläche, Baujahr und Beschreibung …"></textarea></label>
+                  <div class="acts">
+                    <button type="button" class="btn" id="impGo">Text übernehmen</button>
+                    <span class="btn ghost filebtn" role="button">Screenshots wählen<input type="file" id="impFile" accept="image/*" multiple aria-label="Screenshots der Anzeige wählen"></span>
+                  </div>
+                  <div id="impSt" class="impres" role="status" hidden><p id="impStT"></p><div class="prog" id="impBar"><i id="impBarI"></i></div></div>
+                  <div id="impRes" class="impres" hidden></div>
+                </div>
+              </div>
+            </details>
+          </div>
           <div class="lage-sum" id="lageSum" hidden>
             <div class="ls-t"><b id="lageAdr"></b><span id="lageInfo"></span></div>
             <button type="button" class="btn ghost small" id="lageEdit" aria-controls="lageBody" aria-expanded="false">Ändern</button>
@@ -557,24 +624,21 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         </div>
         <p class="hint" id="rangeHint" hidden>In diesem Bereich ist ein Kaufpreis je nach Situation vor Ort angemessen, etwa Lage in der Straße, Grundriss, Eindruck bei der Besichtigung und Nachfrage. Liegt ein Angebot deutlich darüber, lohnt sich ein genauer Blick oder eine Verhandlung.</p>
         <div class="empty" id="emptyHint" hidden>
+          <div class="ghostres" aria-hidden="true"><span>So sieht Ihr Ergebnis aus</span><b>320.000 € bis 380.000 €</b><i></i></div>
           <p id="emptyTxt"></p>
           <button type="button" class="btn ghost small" data-sample="1">Beispiel ansehen</button>
         </div>
       </div>
       <div class="plaus" id="plaus" hidden></div>
 
-      <div class="blk haus-only" id="splitBlk">
-        <div class="split" aria-hidden="true"><i id="pB" style="background:var(--accent)"></i><i id="pG" style="background:var(--muted)"></i></div>
-        <div class="keys"><span style="--c:var(--accent)" id="kB">Boden</span><span style="--c:var(--muted)" id="kG">Gebäude</span></div>
-      </div>
-
       <div class="actions">
         <button type="button" class="btn" id="save">Bewertung speichern</button>
         <button type="button" class="btn ghost" id="pdf">PDF-Bericht</button>
         <span class="toast" id="toast" role="status"></span>
       </div>
-      <div class="cta" id="cta" hidden></div>
       <div class="saved" id="saved"></div>
+      <div id="resLock" hidden></div>
+      <div class="cta" id="cta" hidden></div>
 
       <div class="blk" id="pcBlk">
         <h2>Preis-Check <span class="tag" id="pcTag">Konto</span></h2>
@@ -591,29 +655,9 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         </div>
       </div>
 
-      <div class="lock" id="resLock" hidden>
-        <b>Zustand und Sanierungskosten sehen</b>
-        <p>Mit einem kostenlosen Konto zeigt der Wertcheck, welche Bereiche jetzt und in 5–10 Jahren Geld kosten, und rechnet Modernisierungen in den Wert ein.</p>
-        <div class="actions"><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button></div>
-      </div>
-
       <div class="blk resOn">
         <h2>Zustand auf einen Blick</h2>
         <div class="state" id="state"></div>
-      </div>
-
-      <div class="blk resOn">
-        <h2>Lohnt sich die Sanierung? <span class="tag pro">Premium</span></h2>
-        <div class="lock pro" id="szLock">
-          <p>Premium rechnet aus, was Ihre Immobilie nach der Sanierung der rot markierten Bereiche wert wäre, und stellt den Wertzuwachs den Kosten gegenüber.</p>
-          <div class="actions"><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
-        </div>
-        <p class="hint" id="szDenkmal" hidden>Bei Baudenkmälern lassen sich Sanierungskosten oft erhöht steuerlich absetzen (§ 7i EStG für Vermieter, § 10f EStG für Selbstnutzer), wenn die Denkmalbehörde die Maßnahme vorher bescheinigt. Das ist im Ergebnis nicht eingerechnet, Details bitte mit der Steuerberatung klären.</p>
-        <div class="szen" id="szen" hidden>
-          <div class="cost"><span class="label">Wert nach Sanierung</span><span class="v" id="szV">–</span><p id="szD"></p></div>
-          <div class="cost"><span class="label">Kosten</span><span class="v" id="szK">–</span><p>Rote Bereiche</p></div>
-          <div class="cost" id="szNbox"><span class="label">Ergebnis</span><span class="v" id="szN">–</span><p id="szT"></p></div>
-        </div>
       </div>
 
       <div class="blk resOn">
@@ -625,9 +669,24 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
         <p class="hint" id="kostenHint">Richtwerte für eine typische Ausführung, angepasst an die aktuellen Baupreise. Die tatsächlichen Kosten hängen von Region, Handwerkerauslastung, Material und Zustand der Bausubstanz ab. „In 5–10 Jahren“ zeigt, was anfällt, wenn alle gelb markierten Bereiche erneuert werden. Für die Planung lohnen sich Angebote von Fachbetrieben vor Ort.</p>
       </div>
 
-      <div class="blk" style="gap:4px">
+      <div class="blk resOn">
+        <h2>Lohnt sich die Sanierung? <span class="tag pro">Premium</span></h2>
+        <div class="lockline" id="szLock"><span><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Wert nach der Sanierung gegen die Kosten: mit Premium</span><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button></div>
+        <p class="hint" id="szDenkmal" hidden>Bei Baudenkmälern lassen sich Sanierungskosten oft erhöht steuerlich absetzen (§ 7i EStG für Vermieter, § 10f EStG für Selbstnutzer), wenn die Denkmalbehörde die Maßnahme vorher bescheinigt. Das ist im Ergebnis nicht eingerechnet, Details bitte mit der Steuerberatung klären.</p>
+        <div class="szen" id="szen" hidden>
+          <div class="cost"><span class="label">Wert nach Sanierung</span><span class="v" id="szV">–</span><p id="szD"></p></div>
+          <div class="cost"><span class="label">Kosten</span><span class="v" id="szK">–</span><p>Rote Bereiche</p></div>
+          <div class="cost" id="szNbox"><span class="label">Ergebnis</span><span class="v" id="szN">–</span><p id="szT"></p></div>
+        </div>
+      </div>
+
+      <div class="blk" id="stepsBlk" style="gap:4px">
         <h2>So setzt sich der Wert zusammen</h2>
         <ol class="steps" id="steps"></ol>
+      <div class="blk haus-only" id="splitBlk" style="margin-top:10px">
+          <div class="split" aria-hidden="true"><i id="pB" style="background:var(--accent)"></i><i id="pG" style="background:var(--muted)"></i></div>
+          <div class="keys"><span style="--c:var(--accent)" id="kB">Boden</span><span style="--c:var(--muted)" id="kG">Gebäude</span></div>
+        </div>
       </div>
 
       <div class="notice" id="denkmalHint" hidden>
@@ -642,11 +701,33 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     </section>
   </div>
 
+  <div class="ad banner" data-ad><div><b>Banner 728 × 90 · mobil 320 × 100</b>Werbefläche, z. B. über Google AdSense</div></div>
+
   <section class="panel" id="tarife" aria-labelledby="ht">
-    <h2 id="ht">Tarife</h2>
-    <div class="tiers" id="tiers"></div>
+    <h2 id="ht">Preise</h2>
+    <p class="lead" style="font-size:16px">Der Wertcheck ist kostenlos. Mit einem Konto rechnen Sie den Zustand ein, mit Premium prüfen Sie Anzeigen bis ins Detail.</p>
+    <div class="plans" id="tiers"></div>
+    <div class="alt" id="tiersAlt"></div>
+    <details class="cmp"><summary>Alle Funktionen vergleichen</summary><div><table id="cmpT"></table></div></details>
     <p class="hint">Beispielpreise für den Prototyp. Anmeldung und Bezahlung sind hier nur simuliert, es werden keine Daten übertragen. <button type="button" class="btn ghost small" id="trialReset">Test zurücksetzen (Demo)</button></p>
   </section>
+
+  <footer class="foot">
+    <div class="fb"><a href="./" class="valoro-logo" aria-label="Valoro – Startseite"><svg viewBox="0 0 66 64" aria-hidden="true"><path d="M6 6 L31 58 L62 2" fill="none" stroke="#0E6B6A" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/></svg><span>aloro</span></a><span>Was ist Ihr Haus wirklich wert?</span></div>
+    <nav aria-label="Rechtliches"><a href="impressum.html">Impressum</a><a href="datenschutz.html">Datenschutz</a><a href="impressum.html#kontakt">Kontakt</a></nav>
+    <details>
+      <summary>Datenquellen und Lizenzen</summary>
+      <ul>
+        <li>Bodenrichtwerte: BORIS-NRW, Gutachterausschüsse in NRW, Datenlizenz Deutschland – Zero – Version 2.0</li>
+        <li>Sachwertfaktoren und Grundstücksgrößen: Grundstücksmarktbericht 2026 des Gutachterausschusses in der Städteregion Aachen, Datenlizenz Deutschland – Zero – Version 2.0</li>
+        <li>Baupreisindex: Statistisches Bundesamt (Destatis)</li>
+        <li>Adresssuche: © OpenStreetMap-Mitwirkende, Nominatim (ODbL)</li>
+        <li>Postleitzahlen: OpenPLZ API</li>
+        <li>Schriften: Fraunces und Source Sans 3 (SIL Open Font License)</li>
+      </ul>
+    </details>
+    <p>© 2026 Valoro · Automatisierte Schätzung, kein Verkehrswertgutachten nach § 194 BauGB.</p>
+  </footer>
 </div>
 
 <div class="mbar" id="mbar" hidden>
@@ -817,26 +898,32 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   if(plan==='trial'&&testTage()===0){ plan='premium'; ls.set(AKEY,plan); } // nach dem Test läuft das Abo weiter (Demo)
   const upTxt=()=>plan==='trial'?'Premium jetzt kaufen':trial?'Premium freischalten':'Premium 7 Tage testen';
   function upLabels(){ document.querySelectorAll('[data-up="premium"]').forEach(b=>b.textContent=upTxt()); }
+  const CK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg>';
   const TIERS=[
-    {id:'guest',nm:'Ohne Anmeldung',price:'0 €',per:'',items:['Wertcheck für Haus und Wohnung in NRW','Übersicht der Wertbestandteile','Zustand pauschal als durchschnittlich','Mit Werbung']},
-    {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Modernisierungen und Modernisierungsampel','Sanierungskosten jetzt und in 5–10 Jahren','Preis-Ampel: Passt der Angebotspreis?','3 Bewertungen speichern','Mit Werbung']},
-    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Alles aus dem kostenlosen Konto','Monatlich kündbar','Anzeige übernehmen: Text oder Screenshots aus Immobilienportalen','Preis-Check ausführlich: Verhandlungsspielraum, Nebenkosten, Gesamtkosten','„Lohnt sich die Sanierung?“: Wert nach Sanierung gegen Kosten','PDF-Bericht für Bank und Käufer','Unbegrenzt speichern','Ohne Werbung','Ertragswert für Vermieter (folgt)']},
-    {id:'pass',nm:'Kaufphasen-Pass',price:'24,90 €',per:'für 3 Monate',items:['Alles aus Premium','Passend zur Suche nach einer Immobilie','Endet automatisch, kein Abo, nichts zu kündigen','Entspricht 8,30 € im Monat']},
-    {id:'single',nm:'Einzelbericht',price:'14,90 €',per:'einmalig',items:['Ein PDF-Bericht zu dieser Bewertung','Für Bank, Käufer oder Verkäufer','Ohne Abo']}
+    {id:'free',nm:'Kostenloses Konto',price:'0 €',per:'',items:['Zustand und Modernisierungen einrechnen','Sanierungskosten jetzt und in 5–10 Jahren','Preis-Ampel für Immobilienanzeigen','3 Bewertungen speichern']},
+    {id:'premium',nm:'Premium',price:'9,90 €',per:'/ Monat',hl:true,items:['Anzeigen per Text oder Screenshot übernehmen','Preis-Check mit Verhandlungsspielraum und Nebenkosten','„Lohnt sich die Sanierung?“','PDF-Bericht, unbegrenzt speichern, ohne Werbung']},
+    {id:'pass',nm:'Kaufphasen-Pass',price:'24,90 €',per:'/ 3 Monate',items:['Alles aus Premium','Für die Zeit der Haussuche','Endet automatisch, kein Abo','Entspricht 8,30&nbsp;€ im Monat']}
   ];
+  // Funktionsvergleich: [Funktion, Gast, Konto, Premium/Pass]
+  const CMP=[['Wertspanne und Schätzwert',1,1,1],['Amtliche Bodenrichtwerte und Marktdaten',1,1,1],['Zustand und Modernisierungen einrechnen',0,1,1],['Sanierungskosten',0,1,1],['Preis-Ampel für Anzeigen',0,1,1],['Bewertungen speichern',0,'3','unbegrenzt'],['Anzeige per Text oder Screenshot übernehmen',0,0,1],['Preis-Check mit Verhandlungsspielraum und Nebenkosten',0,0,1],['„Lohnt sich die Sanierung?“',0,0,1],['PDF-Bericht',0,0,1],['Ohne Werbung',0,0,1]];
   function renderAcct(){
     const lbl={guest:'Gast',free:'Kostenloses Konto',premium:'Premium',trial:`Premium-Test · noch ${testTage()} ${testTage()===1?'Tag':'Tage'}`,pass:`Kaufphasen-Pass · bis ${new Date(passEnde).toLocaleDateString('de-DE')}`}[plan];
     $('acct').innerHTML = plan==='guest'
       ? `<span class="plan">${lbl}</span><button type="button" class="btn ghost small" data-open="in">Anmelden</button><button type="button" class="btn small" data-open="up">Registrieren</button>`
       : `<span class="plan${isPro()?' premium':''}">${lbl}</span>${plan==='free'||plan==='trial'?'<button type="button" class="btn gold small" data-up="premium"></button>':''}<button type="button" class="btn ghost small" id="logout">Abmelden</button>`;
+    const cur=t=>t===plan||(t==='premium'&&plan==='trial');
     $('tiers').innerHTML=TIERS.map(t=>{
-      let btn='';
-      if(t.id==='free'&&plan==='guest') btn='<button type="button" class="btn" data-open="up">Kostenlos registrieren</button>';
+      let btn='', note='';
+      if(t.id==='free') btn=plan==='guest'?'<button type="button" class="btn" data-open="up">Kostenlos registrieren</button>':'';
+      if(t.id==='premium'){ if(plan!=='premium') btn='<button type="button" class="btn gold" data-up="premium"></button>'; note=(!trial&&plan!=='trial')?'Monatlich kündbar. Im Test: PDF mit Wasserzeichen, 3&nbsp;Anzeigen.':'Monatlich kündbar.'; }
       if(t.id==='pass'&&plan!=='pass') btn='<button type="button" class="btn" data-up="pass">Pass kaufen</button>';
-      if(t.id==='premium'&&plan!=='premium') btn=(!trial&&plan!=='trial'?'<p class="hint">7 Tage testen, danach 9,90 € im Monat, vorher jederzeit kündbar. Im Test: PDF-Bericht mit Wasserzeichen, 3 Anzeigen übernehmen, 3 Bewertungen speichern.</p>':'')+'<button type="button" class="btn gold" data-up="premium"></button>';
-      if(t.id==='single') btn='<button type="button" class="btn ghost" data-up="single">Bericht kaufen</button>';
-      return `<div class="tier${t.hl?' hl':''}">${t.id===plan||(t.id==='premium'&&plan==='trial')?`<span class="cur">${plan==='trial'?'Sie testen gerade':'Ihr aktueller Tarif'}</span>`:''}<h3>${t.nm}</h3><div class="price">${t.price} <small>${t.per}</small></div><ul>${t.items.map(i=>`<li>${i}</li>`).join('')}</ul>${btn}</div>`;
+      const badge=t.id==='premium'&&!trial&&plan!=='trial'&&plan!=='premium'?'<span class="badge">7 Tage kostenlos testen</span>':'';
+      return `<div class="plan-c${t.hl?' hl':''}">${badge}${cur(t.id)?`<span class="cur">${plan==='trial'?'Sie testen gerade':'Ihr aktueller Tarif'}</span>`:''}<h3>${t.nm}</h3><div class="pr">${t.price} <small>${t.per}</small></div><ul class="checks">${t.items.map(i=>`<li>${CK}${i}</li>`).join('')}</ul>${note?`<p class="note">${note}</p>`:''}${btn}</div>`;
     }).join('');
+    $('tiersAlt').innerHTML=`<div><span><b>Nur einen Bericht?</b> Einzelbericht als PDF für 14,90&nbsp;€, ohne Abo.</span><button type="button" class="btn ghost small" data-up="single">Bericht kaufen</button></div>`
+      +`<div><span><b>Ohne Anmeldung</b> nutzen Sie den Wertcheck kostenlos, der Zustand wird dann als durchschnittlich angenommen.</span>${plan==='guest'?'<span class="cur" style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)">Ihr aktueller Stand</span>':''}</div>`;
+    const cell=v=>v===1?`<td class="y" aria-label="ja">✓</td>`:v===0?`<td class="n" aria-label="nein">–</td>`:`<td>${v}</td>`;
+    $('cmpT').innerHTML='<thead><tr><th>Funktion</th><th>Gast</th><th>Konto</th><th>Premium</th></tr></thead><tbody>'+CMP.map(r=>`<tr><td>${r[0]}</td>${cell(r[1])}${cell(r[2])}${cell(r[3])}</tr>`).join('')+'</tbody>';
     document.querySelectorAll('[data-ad]').forEach(a=>a.hidden=isPro());
     $('pdf').textContent = vollPro()?'PDF-Bericht erstellen':plan==='trial'?'PDF-Bericht (Testversion)':'PDF-Bericht (Premium)';
     renderSaved(); calc(); upLabels();
@@ -909,7 +996,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     $('brwAuto').hidden = !(API_URL && t==='haus');
     $('impLock').hidden=isPro(); $('impOn').hidden=!isPro();
     const on=plan!=='guest';
-    $('compsLock').hidden=on; $('resLock').hidden=on;
+    $('compsLock').hidden=on; $('resLock').hidden=true;
     document.querySelectorAll('.compsOn,.resOn').forEach(e=>e.hidden=!on);
     $('method').innerHTML = t==='haus'
       ? 'Verfahren: <b>Sachwertverfahren</b> (Bodenwert + Gebäudewert, an den Markt angepasst)'
@@ -967,6 +1054,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
     ['mid','sqm'].forEach(i=>$(i).textContent='–'); $('rangeHint').hidden=true; $('steps').innerHTML=''; $('save').disabled=true;
     $('pB').style.width='0'; $('pG').style.width='0';
     $('emptyHint').hidden=!empty; if(empty) $('emptyTxt').textContent=msg;
+    document.querySelector('.result-head').classList.toggle('is-empty',!!empty); $('stepsBlk').hidden=true;
     $('plaus').hidden=true; $('cta').hidden=true; mbarUpdate(); preisCheck(state.data[state.type]);
   }
 
@@ -1061,7 +1149,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
       return fail(nothing ? 'Geben Sie Adresse, Wohnfläche und Baujahr ein. Das Ergebnis erscheint hier sofort.' : 'Es fehlen noch: '+missing.map(k=>LABEL[k]).join(', '), nothing);
     }
     if(d.bj>YEAR){ $('bj').setAttribute('aria-invalid','true'); return fail(`Baujahr bitte bis ${YEAR} angeben`); }
-    $('emptyHint').hidden=true;
+    $('emptyHint').hidden=true; document.querySelector('.result-head').classList.remove('is-empty'); $('stepsBlk').hidden=false;
     const M=model(t,d,effComp(d)), {steps,v,unc,vorl,extra,K,bw}=M;
     const mid=Math.round(v/1000)*1000, r5=n=>Math.round(n/5000)*5000;
     let lo=r5(mid*(1-unc)), hi=r5(mid*(1+unc));
@@ -1153,7 +1241,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   const GREST=0.065, NOTAR=0.02; // Grunderwerbsteuer NRW, Notar und Grundbuch rund 2 %
   function preisCheck(d){
     const pro=isPro(), free=plan==='free';
-    $('pcLock').hidden=pro||free; $('pcOn').hidden=!(pro||free); $('provWrap').hidden=!pro;
+    $('pcBlk').hidden=!(pro||free); $('pcLock').hidden=true; $('pcOn').hidden=!(pro||free); $('provWrap').hidden=!pro;
     $('pcTag').textContent=pro?'Premium':'Konto'; $('pcTag').className='tag'+(pro?' pro':'');
     if(!pro&&!free) return;
     const o=$('pcOut'), ap=d.ap;
@@ -1506,8 +1594,7 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   // ---- Nächster Schritt nach dem Ergebnis ----
   function ctaUpdate(){
     const c=$('cta');
-    if(plan==='guest'){ c.className='cta'; c.innerHTML='<p><b>Ergebnis behalten?</b> Mit einem kostenlosen Konto speichern Sie bis zu 3 Bewertungen und bewerten Modernisierungen.</p><button type="button" class="btn small" data-open="up">Kostenlos registrieren</button>'; }
-    else if(plan==='free'){ c.className='cta pro'; c.innerHTML='<p><b>Für Bank oder Käufer:</b> PDF-Bericht mit allen Werten, dazu „Lohnt sich die Sanierung?“. Mit Premium, dem Kaufphasen-Pass oder als Einzelbericht für 14,90 €.</p><button type="button" class="btn gold small" data-up="premium">Premium 7 Tage testen</button>'; }
+    if(plan==='guest'){ c.className='up'; c.innerHTML=`<b class="t">Mehr aus Ihrer Bewertung holen, kostenlos</b><ul class="checks">${['Zustand und Modernisierungen einrechnen','Sanierungskosten jetzt und in 5–10 Jahren','Preis-Ampel: Passt der Angebotspreis einer Anzeige?','Bis zu 3 Bewertungen speichern'].map(x=>`<li>${CK}${x}</li>`).join('')}</ul><div class="actions"><button type="button" class="btn" data-open="up">Kostenloses Konto erstellen</button><button type="button" class="btn ghost" data-open="in">Anmelden</button></div>`; }
     else if(plan==='trial'){ c.className='cta pro'; c.innerHTML=`<p><b>Premium-Test: noch ${testTage()} ${testTage()===1?'Tag':'Tage'}.</b> Im Test hat der PDF-Bericht ein Wasserzeichen. Anzeigen übernommen: ${Math.min(TEST_ANZEIGEN,trial?trial.anzeigen:0)} von ${TEST_ANZEIGEN}.</p><button type="button" class="btn gold small" data-up="premium"></button>`; }
     else { c.innerHTML=''; }
     c.hidden=!c.innerHTML; upLabels();
@@ -1547,6 +1634,13 @@ body.has-mbar{padding-bottom:calc(76px + env(safe-area-inset-bottom,0px))}
   $('stepBack').addEventListener('click',()=>zeigeSchritt(step-1,true));
   $('stepNext').addEventListener('click',()=>{ if(step===STEPS.length) $('ergebnis').scrollIntoView({behavior:'smooth',block:'start'}); else { if(step===1) lageZu(); zeigeSchritt(step+1,true); } });
 
+  $('heroGo').addEventListener('click',()=>{
+    if(narrow.matches) zeigeSchritt(1,false);
+    if($('lageBody').hidden) lageAuf();
+    $('types').scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(()=>{ try{ $('str').focus({preventScroll:true}); }catch(e){} },450);
+  });
+  ['input','change'].forEach(ev=>$('imp').addEventListener(ev,e=>e.stopPropagation()));
   $('types').addEventListener('click',e=>{ const b=e.target.closest('.type'); if(b) setObj(b.dataset.o); });
   $('comps').addEventListener('click',e=>{ const b=e.target.closest('button[data-c]'); if(!b) return;
     state.data[state.type].comp[b.dataset.c]=b.dataset.s; renderComps(); calc(); });
